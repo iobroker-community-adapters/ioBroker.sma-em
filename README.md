@@ -4,7 +4,7 @@
 
 ## Changelog
 
-### 0.0.0
+### 0.0.1
   (Marcolotti) initial release
 
 ## License
