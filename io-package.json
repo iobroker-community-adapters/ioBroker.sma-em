@@ -1,7 +1,7 @@
 {
     "common": {
         "name": "sma-em",
-        "version": "0.5.0",
+        "version": "0.0.1",
         "news": {
             "0.5.0": {
                 "en": "beta version",
@@ -20,7 +20,7 @@
                 "nl": "Eerste release"
             }
         },
-        "title": "Javascript/Node.js based sma-em adapter",
+        "title": "SMA Energy Meter",
         "desc": {
             "en": "ioBroker sma-em Adapter",
             "de": "ioBroker Sma-em Adapter",
