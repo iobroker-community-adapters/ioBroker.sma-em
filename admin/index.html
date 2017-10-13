@@ -1,0 +1,93 @@
+<html>
+<link rel="stylesheet" type="text/css" href="../../lib/css/themes/jquery-ui/redmond/jquery-ui.min.css"/>
+<script type="text/javascript" src="../../lib/js/jquery-1.11.1.min.js"></script>
+<script type="text/javascript" src="../../socket.io/socket.io.js"></script>
+<script type="text/javascript" src="../../lib/js/jquery-ui-1.10.3.full.min.js"></script>
+
+<link rel="stylesheet" type="text/css" href="../../css/adapter.css"/>
+<script type="text/javascript" src="../../js/translate.js"></script>
+<script type="text/javascript" src="../../js/adapter-settings.js"></script>
+
+<script type="text/javascript">
+    systemDictionary = {
+        "SMA Energy Meter Settings": {
+            "en": "SMA Energy Meter settings",
+            "de": "SMA Energy Meter Einstellungen",
+            "ru": "Настройки измерителя энергии SMA"
+        },
+        "Settings": {"en": "Settings", "de": "Einstellungen", "ru": "Настройки"},
+        "Broadcast-IP": {"en": "Broadcast-IP", "de": "Broadcast-IP", "ru": "Трансляция IP"},
+        "Broadcast-Port": {"en": "Broadcast-Port", "de": "Broadcast-Port", "ru": "Широковещательный порт"},
+    };
+
+    function setValue(id, value, onChange) {
+        // example: select elements with id=key and class=value and insert value
+        if ($('#' + id + '.value').attr('type') == 'checkbox') {
+            $('#' + id + '.value').prop('checked', value).change(function() {
+                onChange();
+            });
+        } else {
+            $('#' + id + '.value').val(value).change(function() {
+                onChange();
+            }).keyup(function() {
+                $(this).trigger('change');
+            });
+        }
+    }
+
+    // the function loadSettings has to exist ...
+    function load(settings, onChange) {
+        for (var key in settings) {
+            setValue(key, settings[key], onChange);
+        }
+        onChange(false);
+    }
+
+    // ... and the function save has to exist.
+    // you have to make sure the callback is called with the settings object as first param!
+    function save(callback) {
+        // example: select elements with class=value and build settings object
+        var obj = {};
+        $('.value').each(function () {
+            var $this = $(this);
+            if ($this.attr('type') == 'checkbox') {
+                obj[$this.attr('id')] = $this.prop('checked');
+            } else {
+                obj[$this.attr('id')] = $this.val();
+            }
+        });
+        $('.check').each(function () {
+            var $this = $(this);
+            obj[$this.attr('id')] = $this.is('checked');
+        });
+        callback(obj);
+    }
+
+    $(document).ready(function () {
+        $('#tabs').tabs();
+    });
+</script>
+<style>
+    #settings tr { line-height: 2.5em; }
+</style>
+
+<!-- you have to put your config page in a div with id adapter-container -->
+<div id="adapter-container">
+    <table><tr><td><img src="em.png" width="64" height="64"></td><td><h3 class="translate">SMA Energy Meter Settings</h3></td></tr></table>
+        <div id="settings">
+            <table>
+                <tr>
+                    <td class="translate">Broadcast-IP</td>
+                    <td><input type="text" id="BIP" class="value" disabled></td>
+                    <td></td>
+                </tr>
+                <tr>
+                    <td class="translate">Broadcast-Port</td>
+                    <td><input type="text" id="BPO" class="value" disabled></td>
+                    <td></td>
+                </tr>
+            </table>
+        </div>
+</div>
+
+</html>
