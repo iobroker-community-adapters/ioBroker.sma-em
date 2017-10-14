@@ -203,7 +203,9 @@ adapter.setObject('SMASerial', {
         name: "pregard",
     type: 'number',
     def: '0',
-    role: 'value'
+    role: 'value',
+    desc: 'Bezugs-Wirkleistung gesamt',
+    unit: 'W'
         },
         native: {}
     });
@@ -213,7 +215,9 @@ adapter.setObject('SMASerial', {
         name: "pregardcounter",
     type: 'number',
     def: '0',
-    role: 'value'
+    role: 'value',
+    desc: 'Wirkarbeit Bezug gesamt',
+    unit: 'kWh'
         },
         native: {}
     });
@@ -223,7 +227,9 @@ adapter.setObject('SMASerial', {
         name: "psurplus",
     type: 'number',
     def: '0',
-    role: 'value'
+    role: 'value',
+    desc: 'Einspeise Wirkleistung gesamt',
+    unit: 'W'
         },
         native: {}
     });
@@ -233,7 +239,9 @@ adapter.setObject('SMASerial', {
         name: "psurpluscounter",
     type: 'number',
     def: '0',
-    role: 'value'
+    role: 'value',
+    desc: 'Wirkarbeit Einspeisung gesamt',
+    unit: 'kWh'
         },
         native: {}
     });
@@ -243,7 +251,9 @@ adapter.setObject('SMASerial', {
         name: "qregard",
     type: 'number',
     def: '0',
-    role: 'value'
+    role: 'value',
+    desc: 'Blindleistung Bezug gesamt',
+    unit: 'var'
         },
         native: {}
     });
@@ -253,7 +263,9 @@ adapter.setObject('SMASerial', {
         name: "qregardcounter",
     type: 'number',
     def: '0',
-    role: 'value'
+    role: 'value',
+    desc: 'Blindarbeit Bezug gesamt',
+    unit: 'varh'
         },
         native: {}
     });
@@ -263,7 +275,9 @@ adapter.setObject('SMASerial', {
         name: "qsurplus",
     type: 'number',
     def: '0',
-    role: 'value'
+    role: 'value',
+    desc: 'Blindleistung Einspeisung gesamt',
+    unit: 'var'
         },
         native: {}
     });
@@ -273,7 +287,9 @@ adapter.setObject('SMASerial', {
         name: "qsurpluscounter",
     type: 'number',
     def: '0',
-    role: 'value'
+    role: 'value',
+    desc: 'Blindarbeit Einspeisung gesamt',
+    unit: 'varh'
         },
         native: {}
     });
@@ -283,7 +299,9 @@ adapter.setObject('SMASerial', {
         name: "sregard",
     type: 'number',
     def: '0',
-    role: 'value'
+    role: 'value',
+    desc: 'Scheinleistung Bezug gesamt',
+    unit: 'VA'
         },
         native: {}
     });
@@ -293,7 +311,9 @@ adapter.setObject('SMASerial', {
         name: "sregardcounter",
     type: 'number',
     def: '0',
-    role: 'value'
+    role: 'value',
+    desc: 'Scheinarbeit Bezug gesamt',
+    unit: 'VAh'
         },
         native: {}
     });
@@ -303,7 +323,9 @@ adapter.setObject('SMASerial', {
         name: "ssurplus",
     type: 'number',
     def: '0',
-    role: 'value'
+    role: 'value',
+    desc: 'Scheinleistung Einspeisung gesamt',
+    unit: 'VA'
         },
         native: {}
     });
@@ -313,7 +335,9 @@ adapter.setObject('SMASerial', {
         name: "ssurpluscounter",
     type: 'number',
     def: '0',
-    role: 'value'
+    role: 'value',
+    desc: 'Scheinarbeit Einspeisung gesamt',
+    unit: 'VAh'
         },
         native: {}
     });
@@ -323,7 +347,9 @@ adapter.setObject('SMASerial', {
         name: "cosphi",
     type: 'number',
     def: '0',
-    role: 'value'
+    role: 'value',
+    desc: 'aktueller Leistungsfaktor cos phi gesamt',
+    unit: ''
         },
         native: {}
     });
@@ -333,7 +359,9 @@ adapter.setObject('SMASerial', {
         name: "p1regard",
     type: 'number',
     def: '0',
-    role: 'value'
+    role: 'value',
+    desc: 'Wirkleistung auf L1',
+    unit: 'W'
         },
         native: {}
     });
@@ -343,7 +371,9 @@ adapter.setObject('SMASerial', {
         name: "p1regardcounter",
     type: 'number',
     def: '0',
-    role: 'value'
+    role: 'value',
+    desc: 'Wirkarbeit Bezug auf L1',
+    unit: 'kWh'
         },
         native: {}
     });
@@ -353,7 +383,9 @@ adapter.setObject('SMASerial', {
         name: "p1surplus",
     type: 'number',
     def: '0',
-    role: 'value'
+    role: 'value',
+    desc: 'Wirkleistung Einspeisung L1',
+    unit: 'W'
         },
         native: {}
     });
@@ -363,7 +395,9 @@ adapter.setObject('SMASerial', {
         name: "p1surpluscounter",
     type: 'number',
     def: '0',
-    role: 'value'
+    role: 'value',
+    desc: 'Wirkarbeit Einspeisung auf L1',
+    unit: 'kWh'
         },
         native: {}
     });
@@ -373,7 +407,9 @@ adapter.setObject('SMASerial', {
         name: "q1regard",
     type: 'number',
     def: '0',
-    role: 'value'
+    role: 'value',
+    desc: 'Blindleistung Bezug auf L1',
+    unit: 'var'
         },
         native: {}
     });
@@ -383,7 +419,9 @@ adapter.setObject('SMASerial', {
         name: "q1regardcounter",
     type: 'number',
     def: '0',
-    role: 'value'
+    role: 'value',
+    desc: 'Blindarbeit Bezug auf L1',
+    unit: 'varh'
         },
         native: {}
     });
@@ -393,7 +431,9 @@ adapter.setObject('SMASerial', {
         name: "q1surplus",
     type: 'number',
     def: '0',
-    role: 'value'
+    role: 'value',
+    desc: 'Blindleistung Einspeisung auf L1',
+    unit: 'var'
         },
         native: {}
     });
@@ -403,7 +443,9 @@ adapter.setObject('SMASerial', {
         name: "q1surpluscounter",
     type: 'number',
     def: '0',
-    role: 'value'
+    role: 'value',
+    desc: 'Blindarbeit Einspeisung auf L1',
+    unit: 'varh'
         },
         native: {}
     });
@@ -413,7 +455,9 @@ adapter.setObject('SMASerial', {
         name: "s1regard",
     type: 'number',
     def: '0',
-    role: 'value'
+    role: 'value',
+    desc: 'Scheinleistung Bezug auf L1',
+    unit: 'VA'
         },
         native: {}
     });
@@ -423,7 +467,9 @@ adapter.setObject('SMASerial', {
         name: "sregardcounter",
     type: 'number',
     def: '0',
-    role: 'value'
+    role: 'value',
+    desc: 'Scheinarbeit Bezug auf L1',
+    unit: 'VAh'
         },
         native: {}
     });
@@ -433,7 +479,9 @@ adapter.setObject('SMASerial', {
         name: "s1surplus",
     type: 'number',
     def: '0',
-    role: 'value'
+    role: 'value',
+    desc: 'Scheinleistung Einspeisung auf L1',
+    unit: 'VA'
         },
         native: {}
     });
@@ -443,7 +491,9 @@ adapter.setObject('SMASerial', {
         name: "s1surpluscounter",
     type: 'number',
     def: '0',
-    role: 'value'
+    role: 'value',
+    desc: 'Scheinarbeit Einspeisung auf L1',
+    unit: 'VAh'
         },
         native: {}
     });
@@ -453,7 +503,9 @@ adapter.setObject('SMASerial', {
         name: "thd1",
     type: 'number',
     def: '0',
-    role: 'value'
+    role: 'value',
+    desc: 'harmonische Verzerrung auf L1',
+    unit: ''
         },
         native: {}
     });
@@ -463,7 +515,9 @@ adapter.setObject('SMASerial', {
         name: "v1",
     type: 'number',
     def: '0',
-    role: 'value'
+    role: 'value',
+    desc: 'aktuelle Spannung auf L1',
+    unit: 'V'
         },
         native: {}
     });
@@ -473,7 +527,9 @@ adapter.setObject('SMASerial', {
         name: "cosphi1",
     type: 'number',
     def: '0',
-    role: 'value'
+    role: 'value',
+    desc: 'aktueller Leistungsfaktor cos phi auf L1',
+    unit: ''
         },
         native: {}
     });
@@ -483,7 +539,9 @@ adapter.setObject('SMASerial', {
             name: "p2regard",
             type: 'number',
             def: '0',
-            role: 'value'
+            role: 'value',
+    desc: 'Wirkleistung auf L2',
+    unit: 'W'
         },
         native: {}
     });
@@ -493,7 +551,9 @@ adapter.setObject('SMASerial', {
             name: "p2regardcounter",
             type: 'number',
             def: '0',
-            role: 'value'
+            role: 'value',
+    desc: 'Wirkarbeit Bezug auf L2',
+    unit: 'kWh'
         },
         native: {}
     });
@@ -503,7 +563,9 @@ adapter.setObject('SMASerial', {
             name: "p2surplus",
             type: 'number',
             def: '0',
-            role: 'value'
+            role: 'value',
+    desc: 'Wirkleistung Einspeisung L2',
+    unit: 'W'
         },
         native: {}
     });
@@ -513,7 +575,9 @@ adapter.setObject('SMASerial', {
             name: "p2surpluscounter",
             type: 'number',
             def: '0',
-            role: 'value'
+            role: 'value',
+    desc: 'Wirkarbeit Einspeisung auf L2',
+    unit: 'kWh'
         },
         native: {}
     });
@@ -523,7 +587,9 @@ adapter.setObject('SMASerial', {
             name: "q2regard",
             type: 'number',
             def: '0',
-            role: 'value'
+            role: 'value',
+    desc: 'Blindleistung Bezug auf L2',
+    unit: 'var'
         },
         native: {}
     });
@@ -533,7 +599,9 @@ adapter.setObject('SMASerial', {
             name: "q2regardcounter",
             type: 'number',
             def: '0',
-            role: 'value'
+            role: 'value',
+    desc: 'Blindarbeit Bezug auf L2',
+    unit: 'varh'
         },
         native: {}
     });
@@ -543,7 +611,9 @@ adapter.setObject('SMASerial', {
             name: "q2surplus",
             type: 'number',
             def: '0',
-            role: 'value'
+            role: 'value',
+    desc: 'Blindleistung Einspeisung auf L2',
+    unit: 'var'
         },
         native: {}
     });
@@ -553,7 +623,9 @@ adapter.setObject('SMASerial', {
             name: "q2surpluscounter",
             type: 'number',
             def: '0',
-            role: 'value'
+            role: 'value',
+    desc: 'Blindarbeit Einspeisung auf L2',
+    unit: 'varh'
         },
         native: {}
     });
@@ -563,7 +635,9 @@ adapter.setObject('SMASerial', {
             name: "s2regard",
             type: 'number',
             def: '0',
-            role: 'value'
+            role: 'value',
+    desc: 'Scheinleistung Bezug auf L2',
+    unit: 'VA'
         },
         native: {}
     });
@@ -573,7 +647,9 @@ adapter.setObject('SMASerial', {
             name: "s2regardcounter",
             type: 'number',
             def: '0',
-            role: 'value'
+            role: 'value',
+    desc: 'Scheinarbeit Bezug auf L2',
+    unit: 'VAh'
         },
         native: {}
     });
@@ -583,7 +659,9 @@ adapter.setObject('SMASerial', {
             name: "s2surplus",
             type: 'number',
             def: '0',
-            role: 'value'
+            role: 'value',
+    desc: 'Scheinleistung Einspeisung auf L2',
+    unit: 'VA'
         },
         native: {}
     });
@@ -593,7 +671,9 @@ adapter.setObject('SMASerial', {
             name: "s2surpluscounter",
             type: 'number',
             def: '0',
-            role: 'value'
+            role: 'value',
+    desc: 'Scheinarbeit Einspeisung auf L2',
+    unit: 'VAh'
         },
         native: {}
     });
@@ -603,7 +683,9 @@ adapter.setObject('SMASerial', {
             name: "thd2",
             type: 'number',
             def: '0',
-            role: 'value'
+            role: 'value',
+    desc: 'harmonische Verzerrung auf L2',
+    unit: ''
         },
         native: {}
     });
@@ -613,7 +695,9 @@ adapter.setObject('SMASerial', {
             name: "v2",
             type: 'number',
             def: '0',
-            role: 'value'
+            role: 'value',
+    desc: 'aktuelle Spannung auf L2',
+    unit: 'V'
         },
         native: {}
     });
@@ -623,7 +707,9 @@ adapter.setObject('SMASerial', {
             name: "cosphi2",
             type: 'number',
             def: '0',
-            role: 'value'
+            role: 'value',
+    desc: 'aktueller Leistungsfaktor cos phi auf L2',
+    unit: ''
         },
         native: {}
     });
@@ -633,7 +719,9 @@ adapter.setObject('SMASerial', {
             name: "p3regard",
             type: 'number',
             def: '0',
-            role: 'value'
+            role: 'value',
+    desc: 'Wirkleistung auf L3',
+    unit: 'W'
         },
         native: {}
     });
@@ -643,7 +731,9 @@ adapter.setObject('SMASerial', {
             name: "p3regardcounter",
             type: 'number',
             def: '0',
-            role: 'value'
+            role: 'value',
+    desc: 'Wirkarbeit Bezug auf L3',
+    unit: 'kWh'
         },
         native: {}
     });
@@ -653,7 +743,9 @@ adapter.setObject('SMASerial', {
             name: "p3surplus",
             type: 'number',
             def: '0',
-            role: 'value'
+            role: 'value',
+    desc: 'Wirkleistung Einspeisung L3',
+    unit: 'W'
         },
         native: {}
     });
@@ -663,7 +755,9 @@ adapter.setObject('SMASerial', {
             name: "p3surpluscounter",
             type: 'number',
             def: '0',
-            role: 'value'
+            role: 'value',
+    desc: 'Wirkarbeit Einspeisung auf L3',
+    unit: 'kWh'
         },
         native: {}
     });
@@ -673,7 +767,9 @@ adapter.setObject('SMASerial', {
             name: "q3regard",
             type: 'number',
             def: '0',
-            role: 'value'
+            role: 'value',
+    desc: 'Blindleistung Bezug auf L3',
+    unit: 'var'
         },
         native: {}
     });
@@ -683,7 +779,9 @@ adapter.setObject('SMASerial', {
             name: "q3regardcounter",
             type: 'number',
             def: '0',
-            role: 'value'
+            role: 'value',
+    desc: 'Blindarbeit Bezug auf L3',
+    unit: 'varh'
         },
         native: {}
     });
@@ -693,7 +791,9 @@ adapter.setObject('SMASerial', {
             name: "q3surplus",
             type: 'number',
             def: '0',
-            role: 'value'
+            role: 'value',
+    desc: 'Blindleistung Einspeisung auf L3',
+    unit: 'var'
         },
         native: {}
     });
@@ -703,7 +803,9 @@ adapter.setObject('SMASerial', {
             name: "q3surpluscounter",
             type: 'number',
             def: '0',
-            role: 'value'
+            role: 'value',
+    desc: 'Blindarbeit Einspeisung auf L3',
+    unit: 'varh'
         },
         native: {}
     });
@@ -713,7 +815,9 @@ adapter.setObject('SMASerial', {
             name: "s3regard",
             type: 'number',
             def: '0',
-            role: 'value'
+            role: 'value',
+    desc: 'Scheinleistung Bezug auf L3',
+    unit: 'VA'
         },
         native: {}
     });
@@ -723,7 +827,9 @@ adapter.setObject('SMASerial', {
             name: "s3regardcounter",
             type: 'number',
             def: '0',
-            role: 'value'
+            role: 'value',
+    desc: 'Scheinarbeit Bezug auf L3',
+    unit: 'VAh'
         },
         native: {}
     });
@@ -733,7 +839,9 @@ adapter.setObject('SMASerial', {
             name: "s3surplus",
             type: 'number',
             def: '0',
-            role: 'value'
+            role: 'value',
+    desc: 'Scheinleistung Einspeisung auf L3',
+    unit: 'VA'
         },
         native: {}
     });
@@ -743,7 +851,9 @@ adapter.setObject('SMASerial', {
             name: "s3surpluscounter",
             type: 'number',
             def: '0',
-            role: 'value'
+            role: 'value',
+    desc: 'Scheinarbeit Einspeisung auf L3,
+    unit: 'VAh'
         },
         native: {}
     });
@@ -753,7 +863,9 @@ adapter.setObject('SMASerial', {
             name: "thd3",
             type: 'number',
             def: '0',
-            role: 'value'
+            role: 'value',
+    desc: 'harmonische Verzerrung auf L3',
+    unit: ''
         },
         native: {}
     });
@@ -763,7 +875,9 @@ adapter.setObject('SMASerial', {
             name: "v3",
             type: 'number',
             def: '0',
-            role: 'value'
+            role: 'value',
+    desc: 'aktuelle Spannung auf L3',
+    unit: 'V'
         },
         native: {}
     });
@@ -773,7 +887,9 @@ adapter.setObject('SMASerial', {
             name: "cosphi3",
             type: 'number',
             def: '0',
-            role: 'value'
+            role: 'value',
+    desc: 'aktueller Leistungsfaktor cos phi auf L3',
+    unit: ''
         },
         native: {}
     });
