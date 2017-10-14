@@ -852,7 +852,7 @@ adapter.setObject('SMASerial', {
             type: 'number',
             def: '0',
             role: 'value',
-    desc: 'Scheinarbeit Einspeisung auf L3,
+    desc: 'Scheinarbeit Einspeisung auf L3',
     unit: 'VAh'
         },
         native: {}
