@@ -107,7 +107,7 @@ function main() {
     var PORT = 9522;
     var MULTICAST_ADDR = '239.12.255.254';
 
-    
+
 
     client.on('listening', function () {
         client.setBroadcast(true);
@@ -115,7 +115,7 @@ function main() {
     });
 
     client.on('message', function (message, rinfo) {
-    
+
         var smainfoasci = message.toString('hex');
 
         adapter.setState('SMASerial', parseInt(smainfoasci.substr(40, 8), 16), true);
@@ -187,7 +187,7 @@ function main() {
     client.bind(PORT, function () {
         client.addMembership(MULTICAST_ADDR);
     });
-adapter.setObject('SMASerial', {
+adapter.setObjectNotExists('SMASerial', {
     type: 'state',
     common: {
     name: "SMASerial",
@@ -197,7 +197,7 @@ adapter.setObject('SMASerial', {
     },
     native: {}
     });
-    adapter.setObject('pregard', {
+    adapter.setObjectNotExists('pregard', {
         type: 'state',
         common: {
         name: "pregard",
@@ -209,7 +209,7 @@ adapter.setObject('SMASerial', {
         },
         native: {}
     });
-    adapter.setObject('pregardcounter', {
+    adapter.setObjectNotExists('pregardcounter', {
         type: 'state',
         common: {
         name: "pregardcounter",
@@ -221,7 +221,7 @@ adapter.setObject('SMASerial', {
         },
         native: {}
     });
-    adapter.setObject('psurplus', {
+    adapter.setObjectNotExists('psurplus', {
         type: 'state',
         common: {
         name: "psurplus",
@@ -233,7 +233,7 @@ adapter.setObject('SMASerial', {
         },
         native: {}
     });
-    adapter.setObject('psurpluscounter', {
+    adapter.setObjectNotExists('psurpluscounter', {
         type: 'state',
         common: {
         name: "psurpluscounter",
@@ -245,7 +245,7 @@ adapter.setObject('SMASerial', {
         },
         native: {}
     });
-    adapter.setObject('qregard', {
+    adapter.setObjectNotExists('qregard', {
         type: 'state',
         common: {
         name: "qregard",
@@ -257,7 +257,7 @@ adapter.setObject('SMASerial', {
         },
         native: {}
     });
-    adapter.setObject('qregardcounter', {
+    adapter.setObjectNotExists('qregardcounter', {
         type: 'state',
         common: {
         name: "qregardcounter",
@@ -269,7 +269,7 @@ adapter.setObject('SMASerial', {
         },
         native: {}
     });
-    adapter.setObject('qsurplus', {
+    adapter.setObjectNotExists('qsurplus', {
         type: 'state',
         common: {
         name: "qsurplus",
@@ -281,7 +281,7 @@ adapter.setObject('SMASerial', {
         },
         native: {}
     });
-    adapter.setObject('qsurpluscounter', {
+    adapter.setObjectNotExists('qsurpluscounter', {
         type: 'state',
         common: {
         name: "qsurpluscounter",
@@ -293,7 +293,7 @@ adapter.setObject('SMASerial', {
         },
         native: {}
     });
-    adapter.setObject('sregard', {
+    adapter.setObjectNotExists('sregard', {
         type: 'state',
         common: {
         name: "sregard",
@@ -305,7 +305,7 @@ adapter.setObject('SMASerial', {
         },
         native: {}
     });
-    adapter.setObject('sregardcounter', {
+    adapter.setObjectNotExists('sregardcounter', {
         type: 'state',
         common: {
         name: "sregardcounter",
@@ -317,7 +317,7 @@ adapter.setObject('SMASerial', {
         },
         native: {}
     });
-    adapter.setObject('ssurplus', {
+    adapter.setObjectNotExists('ssurplus', {
         type: 'state',
         common: {
         name: "ssurplus",
@@ -329,7 +329,7 @@ adapter.setObject('SMASerial', {
         },
         native: {}
     });
-    adapter.setObject('ssurpluscounter', {
+    adapter.setObjectNotExists('ssurpluscounter', {
         type: 'state',
         common: {
         name: "ssurpluscounter",
@@ -341,7 +341,7 @@ adapter.setObject('SMASerial', {
         },
         native: {}
     });
-    adapter.setObject('cosphi', {
+    adapter.setObjectNotExists('cosphi', {
         type: 'state',
         common: {
         name: "cosphi",
@@ -353,7 +353,7 @@ adapter.setObject('SMASerial', {
         },
         native: {}
     });
-    adapter.setObject('L1.p1regard', {
+    adapter.setObjectNotExists('L1.p1regard', {
         type: 'state',
         common: {
         name: "p1regard",
@@ -365,7 +365,7 @@ adapter.setObject('SMASerial', {
         },
         native: {}
     });
-    adapter.setObject('L1.p1regardcounter', {
+    adapter.setObjectNotExists('L1.p1regardcounter', {
         type: 'state',
         common: {
         name: "p1regardcounter",
@@ -377,7 +377,7 @@ adapter.setObject('SMASerial', {
         },
         native: {}
     });
-    adapter.setObject('L1.p1surplus', {
+    adapter.setObjectNotExists('L1.p1surplus', {
         type: 'state',
         common: {
         name: "p1surplus",
@@ -389,7 +389,7 @@ adapter.setObject('SMASerial', {
         },
         native: {}
     });
-    adapter.setObject('L1.p1surpluscounter', {
+    adapter.setObjectNotExists('L1.p1surpluscounter', {
         type: 'state',
         common: {
         name: "p1surpluscounter",
@@ -401,7 +401,7 @@ adapter.setObject('SMASerial', {
         },
         native: {}
     });
-    adapter.setObject('L1.q1regard', {
+    adapter.setObjectNotExists('L1.q1regard', {
         type: 'state',
         common: {
         name: "q1regard",
@@ -413,7 +413,7 @@ adapter.setObject('SMASerial', {
         },
         native: {}
     });
-    adapter.setObject('L1.q1regardcounter', {
+    adapter.setObjectNotExists('L1.q1regardcounter', {
         type: 'state',
         common: {
         name: "q1regardcounter",
@@ -425,7 +425,7 @@ adapter.setObject('SMASerial', {
         },
         native: {}
     });
-    adapter.setObject('L1.q1surplus', {
+    adapter.setObjectNotExists('L1.q1surplus', {
         type: 'state',
         common: {
         name: "q1surplus",
@@ -437,7 +437,7 @@ adapter.setObject('SMASerial', {
         },
         native: {}
     });
-    adapter.setObject('L1.q1surpluscounter', {
+    adapter.setObjectNotExists('L1.q1surpluscounter', {
         type: 'state',
         common: {
         name: "q1surpluscounter",
@@ -449,7 +449,7 @@ adapter.setObject('SMASerial', {
         },
         native: {}
     });
-    adapter.setObject('L1.s1regard', {
+    adapter.setObjectNotExists('L1.s1regard', {
         type: 'state',
         common: {
         name: "s1regard",
@@ -461,7 +461,7 @@ adapter.setObject('SMASerial', {
         },
         native: {}
     });
-    adapter.setObject('L1.s1regardcounter', {
+    adapter.setObjectNotExists('L1.s1regardcounter', {
         type: 'state',
         common: {
         name: "sregardcounter",
@@ -473,7 +473,7 @@ adapter.setObject('SMASerial', {
         },
         native: {}
     });
-    adapter.setObject('L1.s1surplus', {
+    adapter.setObjectNotExists('L1.s1surplus', {
         type: 'state',
         common: {
         name: "s1surplus",
@@ -485,7 +485,7 @@ adapter.setObject('SMASerial', {
         },
         native: {}
     });
-    adapter.setObject('L1.s1surpluscounter', {
+    adapter.setObjectNotExists('L1.s1surpluscounter', {
         type: 'state',
         common: {
         name: "s1surpluscounter",
@@ -497,7 +497,7 @@ adapter.setObject('SMASerial', {
         },
         native: {}
     });
-    adapter.setObject('L1.thd1', {
+    adapter.setObjectNotExists('L1.thd1', {
         type: 'state',
         common: {
         name: "thd1",
@@ -509,7 +509,7 @@ adapter.setObject('SMASerial', {
         },
         native: {}
     });
-    adapter.setObject('L1.v1', {
+    adapter.setObjectNotExists('L1.v1', {
         type: 'state',
         common: {
         name: "v1",
@@ -521,7 +521,7 @@ adapter.setObject('SMASerial', {
         },
         native: {}
     });
-    adapter.setObject('L1.cosphi1', {
+    adapter.setObjectNotExists('L1.cosphi1', {
         type: 'state',
         common: {
         name: "cosphi1",
@@ -533,7 +533,7 @@ adapter.setObject('SMASerial', {
         },
         native: {}
     });
-    adapter.setObject('L2.p2regard', {
+    adapter.setObjectNotExists('L2.p2regard', {
         type: 'state',
         common: {
             name: "p2regard",
@@ -545,7 +545,7 @@ adapter.setObject('SMASerial', {
         },
         native: {}
     });
-    adapter.setObject('L2.p2regardcounter', {
+    adapter.setObjectNotExists('L2.p2regardcounter', {
         type: 'state',
         common: {
             name: "p2regardcounter",
@@ -557,7 +557,7 @@ adapter.setObject('SMASerial', {
         },
         native: {}
     });
-    adapter.setObject('L2.p2surplus', {
+    adapter.setObjectNotExists('L2.p2surplus', {
         type: 'state',
         common: {
             name: "p2surplus",
@@ -569,7 +569,7 @@ adapter.setObject('SMASerial', {
         },
         native: {}
     });
-    adapter.setObject('L2.p2surpluscounter', {
+    adapter.setObjectNotExists('L2.p2surpluscounter', {
         type: 'state',
         common: {
             name: "p2surpluscounter",
@@ -581,7 +581,7 @@ adapter.setObject('SMASerial', {
         },
         native: {}
     });
-    adapter.setObject('L2.q2regard', {
+    adapter.setObjectNotExists('L2.q2regard', {
         type: 'state',
         common: {
             name: "q2regard",
@@ -593,7 +593,7 @@ adapter.setObject('SMASerial', {
         },
         native: {}
     });
-    adapter.setObject('L2.q2regardcounter', {
+    adapter.setObjectNotExists('L2.q2regardcounter', {
         type: 'state',
         common: {
             name: "q2regardcounter",
@@ -605,7 +605,7 @@ adapter.setObject('SMASerial', {
         },
         native: {}
     });
-    adapter.setObject('L2.q2surplus', {
+    adapter.setObjectNotExists('L2.q2surplus', {
         type: 'state',
         common: {
             name: "q2surplus",
@@ -617,7 +617,7 @@ adapter.setObject('SMASerial', {
         },
         native: {}
     });
-    adapter.setObject('L2.q2surpluscounter', {
+    adapter.setObjectNotExists('L2.q2surpluscounter', {
         type: 'state',
         common: {
             name: "q2surpluscounter",
@@ -629,7 +629,7 @@ adapter.setObject('SMASerial', {
         },
         native: {}
     });
-    adapter.setObject('L2.s2regard', {
+    adapter.setObjectNotExists('L2.s2regard', {
         type: 'state',
         common: {
             name: "s2regard",
@@ -641,7 +641,7 @@ adapter.setObject('SMASerial', {
         },
         native: {}
     });
-    adapter.setObject('L2.s2regardcounter', {
+    adapter.setObjectNotExists('L2.s2regardcounter', {
         type: 'state',
         common: {
             name: "s2regardcounter",
@@ -653,7 +653,7 @@ adapter.setObject('SMASerial', {
         },
         native: {}
     });
-    adapter.setObject('L2.s2surplus', {
+    adapter.setObjectNotExists('L2.s2surplus', {
         type: 'state',
         common: {
             name: "s2surplus",
@@ -665,7 +665,7 @@ adapter.setObject('SMASerial', {
         },
         native: {}
     });
-    adapter.setObject('L2.s2surpluscounter', {
+    adapter.setObjectNotExists('L2.s2surpluscounter', {
         type: 'state',
         common: {
             name: "s2surpluscounter",
@@ -677,7 +677,7 @@ adapter.setObject('SMASerial', {
         },
         native: {}
     });
-    adapter.setObject('L2.thd2', {
+    adapter.setObjectNotExists('L2.thd2', {
         type: 'state',
         common: {
             name: "thd2",
@@ -689,7 +689,7 @@ adapter.setObject('SMASerial', {
         },
         native: {}
     });
-    adapter.setObject('L2.v2', {
+    adapter.setObjectNotExists('L2.v2', {
         type: 'state',
         common: {
             name: "v2",
@@ -701,7 +701,7 @@ adapter.setObject('SMASerial', {
         },
         native: {}
     });
-    adapter.setObject('L2.cosphi2', {
+    adapter.setObjectNotExists('L2.cosphi2', {
         type: 'state',
         common: {
             name: "cosphi2",
@@ -713,7 +713,7 @@ adapter.setObject('SMASerial', {
         },
         native: {}
     });
-    adapter.setObject('L3.p3regard', {
+    adapter.setObjectNotExists('L3.p3regard', {
         type: 'state',
         common: {
             name: "p3regard",
@@ -725,7 +725,7 @@ adapter.setObject('SMASerial', {
         },
         native: {}
     });
-    adapter.setObject('L3.p3regardcounter', {
+    adapter.setObjectNotExists('L3.p3regardcounter', {
         type: 'state',
         common: {
             name: "p3regardcounter",
@@ -737,7 +737,7 @@ adapter.setObject('SMASerial', {
         },
         native: {}
     });
-    adapter.setObject('L3.p3surplus', {
+    adapter.setObjectNotExists('L3.p3surplus', {
         type: 'state',
         common: {
             name: "p3surplus",
@@ -749,7 +749,7 @@ adapter.setObject('SMASerial', {
         },
         native: {}
     });
-    adapter.setObject('L3.p3surpluscounter', {
+    adapter.setObjectNotExists('L3.p3surpluscounter', {
         type: 'state',
         common: {
             name: "p3surpluscounter",
@@ -761,7 +761,7 @@ adapter.setObject('SMASerial', {
         },
         native: {}
     });
-    adapter.setObject('L3.q3regard', {
+    adapter.setObjectNotExists('L3.q3regard', {
         type: 'state',
         common: {
             name: "q3regard",
@@ -773,7 +773,7 @@ adapter.setObject('SMASerial', {
         },
         native: {}
     });
-    adapter.setObject('L3.q3regardcounter', {
+    adapter.setObjectNotExists('L3.q3regardcounter', {
         type: 'state',
         common: {
             name: "q3regardcounter",
@@ -785,7 +785,7 @@ adapter.setObject('SMASerial', {
         },
         native: {}
     });
-    adapter.setObject('L3.q3surplus', {
+    adapter.setObjectNotExists('L3.q3surplus', {
         type: 'state',
         common: {
             name: "q3surplus",
@@ -797,7 +797,7 @@ adapter.setObject('SMASerial', {
         },
         native: {}
     });
-    adapter.setObject('L3.q3surpluscounter', {
+    adapter.setObjectNotExists('L3.q3surpluscounter', {
         type: 'state',
         common: {
             name: "q3surpluscounter",
@@ -809,7 +809,7 @@ adapter.setObject('SMASerial', {
         },
         native: {}
     });
-    adapter.setObject('L3.s3regard', {
+    adapter.setObjectNotExists('L3.s3regard', {
         type: 'state',
         common: {
             name: "s3regard",
@@ -821,7 +821,7 @@ adapter.setObject('SMASerial', {
         },
         native: {}
     });
-    adapter.setObject('L3.s3regardcounter', {
+    adapter.setObjectNotExists('L3.s3regardcounter', {
         type: 'state',
         common: {
             name: "s3regardcounter",
@@ -833,7 +833,7 @@ adapter.setObject('SMASerial', {
         },
         native: {}
     });
-    adapter.setObject('L3.s3surplus', {
+    adapter.setObjectNotExists('L3.s3surplus', {
         type: 'state',
         common: {
             name: "s3surplus",
@@ -845,7 +845,7 @@ adapter.setObject('SMASerial', {
         },
         native: {}
     });
-    adapter.setObject('L3.s3surpluscounter', {
+    adapter.setObjectNotExists('L3.s3surpluscounter', {
         type: 'state',
         common: {
             name: "s3surpluscounter",
@@ -857,7 +857,7 @@ adapter.setObject('SMASerial', {
         },
         native: {}
     });
-    adapter.setObject('L3.thd3', {
+    adapter.setObjectNotExists('L3.thd3', {
         type: 'state',
         common: {
             name: "thd3",
@@ -869,7 +869,7 @@ adapter.setObject('SMASerial', {
         },
         native: {}
     });
-    adapter.setObject('L3.v3', {
+    adapter.setObjectNotExists('L3.v3', {
         type: 'state',
         common: {
             name: "v3",
@@ -881,7 +881,7 @@ adapter.setObject('SMASerial', {
         },
         native: {}
     });
-    adapter.setObject('L3.cosphi3', {
+    adapter.setObjectNotExists('L3.cosphi3', {
         type: 'state',
         common: {
             name: "cosphi3",

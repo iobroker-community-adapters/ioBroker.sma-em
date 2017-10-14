@@ -1,6 +1,6 @@
 {
   "name": "iobroker.sma-em",
-  "version": "0.5.0",
+  "version": "0.0.1",
   "description": "ioBroker sma-em Adapter",
   "author": {
     "name": "Marcolotti",
