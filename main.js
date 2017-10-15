@@ -2,29 +2,6 @@
  *
  * sma-em adapter
  *
- *
- *  file io-package.json comments:
- *
- *  {
- *      "common": {
- *          "name":         "sma-em",                  // name has to be set and has to be equal to adapters folder name and main file name excluding extension
- *          "version":      "0.0.0",                    // use "Semantic Versioning"! see http://semver.org/
- *          "title":        "Node.js sma-em Adapter",  // Adapter title shown in User Interfaces
- *          "authors":  [                               // Array of authord
- *              "name <mail@sma-em.com>"
- *          ]
- *          "desc":         "sma-em adapter",          // Adapter description shown in User Interfaces. Can be a language object {de:"...",ru:"..."} or a string
- *          "platform":     "Javascript/Node.js",       // possible values "javascript", "javascript/Node.js" - more coming
- *          "mode":         "daemon",                   // possible values "daemon", "schedule", "subscribe"
- *          "schedule":     "0 0 * * *"                 // cron-style schedule. Only needed if mode=schedule
- *          "loglevel":     "info"                      // Adapters Log Level
- *      },
- *      "native": {                                     // the native object is available via adapter.config in your adapters code - use it for configuration
- *          "test1": true,
- *          "test2": 42
- *      }
- *  }
- *
  */
 
 /* jshint -W097 */// jshint strict:false
@@ -34,7 +11,6 @@
 // you have to require the utils module and call adapter function
 var utils = require(__dirname + '/lib/utils'); // Get common adapter utils
 var dgram = require('dgram');
-var client = dgram.createSocket('udp4');
 
 // you have to call the adapter function and pass a options object
 // name has to be set and has to be equal to adapters folder name and main file name excluding extension
@@ -52,12 +28,17 @@ adapter.on('unload', function (callback) {
 });
 
 // is called if a subscribed object changes
+// only needed when you want to do special things on object change
+/*
 adapter.on('objectChange', function (id, obj) {
     // Warning, obj can be null if it was deleted
     adapter.log.info('objectChange ' + id + ' ' + JSON.stringify(obj));
 });
+*/
 
 // is called if a subscribed state changes
+// only needed when you allow that someone changes states, not needed here
+/*
 adapter.on('stateChange', function (id, state) {
     // Warning, state can be null if it was deleted
     adapter.log.info('stateChange ' + id + ' ' + JSON.stringify(state));
@@ -67,8 +48,10 @@ adapter.on('stateChange', function (id, state) {
         adapter.log.info('ack is not set!');
     }
 });
+*/
 
 // Some message was sent to adapter instance over message box. Used by email, pushover, text2speech, ...
+/*
 adapter.on('message', function (obj) {
     if (typeof obj == 'object' && obj.message) {
         if (obj.command == 'send') {
@@ -80,6 +63,7 @@ adapter.on('message', function (obj) {
         }
     }
 });
+*/
 
 // is called when databases are connected and adapter received configuration.
 // start here!
@@ -87,35 +71,14 @@ adapter.on('ready', function () {
     main();
 });
 
-function main() {
-
-    // The adapters config (in the instance object everything under the attribute "native") is accessible via
-    // adapter.config:
-    adapter.log.info('config test1: ' + adapter.config.test1);
-    adapter.log.info('config test1: ' + adapter.config.test2);
-
-
-    /**
-     *
-     *      For every state in the system there has to be also an object of type state
-     *
-     *      Here a simple sma-em for a boolean variable named "testVariable"
-     *
-     *      Because every adapter instance uses its own unique namespace variable names can't collide with other adapters variables
-     *
-     */
-    var PORT = 9522;
-    var MULTICAST_ADDR = '239.12.255.254';
-
-
+function readData() {
+    var client = dgram.createSocket('udp4');
 
     client.on('listening', function () {
         client.setBroadcast(true);
-        var address = client.address();
     });
 
     client.on('message', function (message, rinfo) {
-
         var smainfoasci = message.toString('hex');
 
         adapter.setState('SMASerial', parseInt(smainfoasci.substr(40, 8), 16), true);
@@ -184,352 +147,364 @@ function main() {
         adapter.setState('L3.v3', parseInt(smainfoasci.substr(1152, 8), 16) / 1000, true);
 
     });
-    client.bind(PORT, function () {
-        client.addMembership(MULTICAST_ADDR);
+    client.bind(adapter.config.BPO, function () {
+        adapter.log.info('Listen via UDP on Port ' + adapter.config.BPO + ' for Multicast IP ' + adapter.config.BIP);
+        client.addMembership(adapter.config.BIP);
     });
-adapter.setObjectNotExists('SMASerial', {
-    type: 'state',
-    common: {
-    name: "SMASerial",
-        type: 'number',
-        def: '0',
-        role: 'value'
-    },
-    native: {}
+    client.on('close', function () {
+        adapter.log.info('UDP Socket closed ...');
+        setTimeout(readData, 2000);
+    });
+    client.on('error', function (err) {
+        adapter.log.info('UDP Socket error: ' + err);
+        setTimeout(readData, 2000);
+    });
+}
+
+function main() {
+    adapter.setObjectNotExists('SMASerial', {
+        type: 'state',
+        common: {
+            name: "SMASerial",
+            type: 'number',
+            def: '0',
+            role: 'value'
+        },
+        native: {}
     });
     adapter.setObjectNotExists('pregard', {
         type: 'state',
         common: {
-        name: "pregard",
-    type: 'number',
-    def: '0',
-    role: 'value',
-    desc: 'Bezugs-Wirkleistung gesamt',
-    unit: 'W'
+            name: "pregard",
+            type: 'number',
+            def: '0',
+            role: 'value',
+            desc: 'Bezugs-Wirkleistung gesamt',
+            unit: 'W'
         },
         native: {}
     });
     adapter.setObjectNotExists('pregardcounter', {
         type: 'state',
         common: {
-        name: "pregardcounter",
-    type: 'number',
-    def: '0',
-    role: 'value',
-    desc: 'Wirkarbeit Bezug gesamt',
-    unit: 'kWh'
+            name: "pregardcounter",
+            type: 'number',
+            def: '0',
+            role: 'value',
+            desc: 'Wirkarbeit Bezug gesamt',
+            unit: 'kWh'
         },
         native: {}
     });
     adapter.setObjectNotExists('psurplus', {
         type: 'state',
         common: {
-        name: "psurplus",
-    type: 'number',
-    def: '0',
-    role: 'value',
-    desc: 'Einspeise Wirkleistung gesamt',
-    unit: 'W'
+            name: "psurplus",
+            type: 'number',
+            def: '0',
+            role: 'value',
+            desc: 'Einspeise Wirkleistung gesamt',
+            unit: 'W'
         },
         native: {}
     });
     adapter.setObjectNotExists('psurpluscounter', {
         type: 'state',
         common: {
-        name: "psurpluscounter",
-    type: 'number',
-    def: '0',
-    role: 'value',
-    desc: 'Wirkarbeit Einspeisung gesamt',
-    unit: 'kWh'
+            name: "psurpluscounter",
+            type: 'number',
+            def: '0',
+            role: 'value',
+            desc: 'Wirkarbeit Einspeisung gesamt',
+            unit: 'kWh'
         },
         native: {}
     });
     adapter.setObjectNotExists('qregard', {
         type: 'state',
         common: {
-        name: "qregard",
-    type: 'number',
-    def: '0',
-    role: 'value',
-    desc: 'Blindleistung Bezug gesamt',
-    unit: 'var'
+            name: "qregard",
+            type: 'number',
+            def: '0',
+            role: 'value',
+            desc: 'Blindleistung Bezug gesamt',
+            unit: 'var'
         },
         native: {}
     });
     adapter.setObjectNotExists('qregardcounter', {
         type: 'state',
         common: {
-        name: "qregardcounter",
-    type: 'number',
-    def: '0',
-    role: 'value',
-    desc: 'Blindarbeit Bezug gesamt',
-    unit: 'varh'
+            name: "qregardcounter",
+            type: 'number',
+            def: '0',
+            role: 'value',
+            desc: 'Blindarbeit Bezug gesamt',
+            unit: 'varh'
         },
         native: {}
     });
     adapter.setObjectNotExists('qsurplus', {
         type: 'state',
         common: {
-        name: "qsurplus",
-    type: 'number',
-    def: '0',
-    role: 'value',
-    desc: 'Blindleistung Einspeisung gesamt',
-    unit: 'var'
+            name: "qsurplus",
+            type: 'number',
+            def: '0',
+            role: 'value',
+            desc: 'Blindleistung Einspeisung gesamt',
+            unit: 'var'
         },
         native: {}
     });
     adapter.setObjectNotExists('qsurpluscounter', {
         type: 'state',
         common: {
-        name: "qsurpluscounter",
-    type: 'number',
-    def: '0',
-    role: 'value',
-    desc: 'Blindarbeit Einspeisung gesamt',
-    unit: 'varh'
+            name: "qsurpluscounter",
+            type: 'number',
+            def: '0',
+            role: 'value',
+            desc: 'Blindarbeit Einspeisung gesamt',
+            unit: 'varh'
         },
         native: {}
     });
     adapter.setObjectNotExists('sregard', {
         type: 'state',
         common: {
-        name: "sregard",
-    type: 'number',
-    def: '0',
-    role: 'value',
-    desc: 'Scheinleistung Bezug gesamt',
-    unit: 'VA'
+            name: "sregard",
+            type: 'number',
+            def: '0',
+            role: 'value',
+            desc: 'Scheinleistung Bezug gesamt',
+            unit: 'VA'
         },
         native: {}
     });
     adapter.setObjectNotExists('sregardcounter', {
         type: 'state',
         common: {
-        name: "sregardcounter",
-    type: 'number',
-    def: '0',
-    role: 'value',
-    desc: 'Scheinarbeit Bezug gesamt',
-    unit: 'VAh'
+            name: "sregardcounter",
+            type: 'number',
+            def: '0',
+            role: 'value',
+            desc: 'Scheinarbeit Bezug gesamt',
+            unit: 'VAh'
         },
         native: {}
     });
     adapter.setObjectNotExists('ssurplus', {
         type: 'state',
         common: {
-        name: "ssurplus",
-    type: 'number',
-    def: '0',
-    role: 'value',
-    desc: 'Scheinleistung Einspeisung gesamt',
-    unit: 'VA'
+            name: "ssurplus",
+            type: 'number',
+            def: '0',
+            role: 'value',
+            desc: 'Scheinleistung Einspeisung gesamt',
+            unit: 'VA'
         },
         native: {}
     });
     adapter.setObjectNotExists('ssurpluscounter', {
         type: 'state',
         common: {
-        name: "ssurpluscounter",
-    type: 'number',
-    def: '0',
-    role: 'value',
-    desc: 'Scheinarbeit Einspeisung gesamt',
-    unit: 'VAh'
+            name: "ssurpluscounter",
+            type: 'number',
+            def: '0',
+            role: 'value',
+            desc: 'Scheinarbeit Einspeisung gesamt',
+            unit: 'VAh'
         },
         native: {}
     });
     adapter.setObjectNotExists('cosphi', {
         type: 'state',
         common: {
-        name: "cosphi",
-    type: 'number',
-    def: '0',
-    role: 'value',
-    desc: 'aktueller Leistungsfaktor cos phi gesamt',
-    unit: ''
+            name: "cosphi",
+            type: 'number',
+            def: '0',
+            role: 'value',
+            desc: 'aktueller Leistungsfaktor cos phi gesamt',
+            unit: ''
         },
         native: {}
     });
     adapter.setObjectNotExists('L1.p1regard', {
         type: 'state',
         common: {
-        name: "p1regard",
-    type: 'number',
-    def: '0',
-    role: 'value',
-    desc: 'Wirkleistung auf L1',
-    unit: 'W'
+            name: "p1regard",
+            type: 'number',
+            def: '0',
+            role: 'value',
+            desc: 'Wirkleistung auf L1',
+            unit: 'W'
         },
         native: {}
     });
     adapter.setObjectNotExists('L1.p1regardcounter', {
         type: 'state',
         common: {
-        name: "p1regardcounter",
-    type: 'number',
-    def: '0',
-    role: 'value',
-    desc: 'Wirkarbeit Bezug auf L1',
-    unit: 'kWh'
+            name: "p1regardcounter",
+            type: 'number',
+            def: '0',
+            role: 'value',
+            desc: 'Wirkarbeit Bezug auf L1',
+            unit: 'kWh'
         },
         native: {}
     });
     adapter.setObjectNotExists('L1.p1surplus', {
         type: 'state',
         common: {
-        name: "p1surplus",
-    type: 'number',
-    def: '0',
-    role: 'value',
-    desc: 'Wirkleistung Einspeisung L1',
-    unit: 'W'
+            name: "p1surplus",
+            type: 'number',
+            def: '0',
+            role: 'value',
+            desc: 'Wirkleistung Einspeisung L1',
+            unit: 'W'
         },
         native: {}
     });
     adapter.setObjectNotExists('L1.p1surpluscounter', {
         type: 'state',
         common: {
-        name: "p1surpluscounter",
-    type: 'number',
-    def: '0',
-    role: 'value',
-    desc: 'Wirkarbeit Einspeisung auf L1',
-    unit: 'kWh'
+            name: "p1surpluscounter",
+            type: 'number',
+            def: '0',
+            role: 'value',
+            desc: 'Wirkarbeit Einspeisung auf L1',
+            unit: 'kWh'
         },
         native: {}
     });
     adapter.setObjectNotExists('L1.q1regard', {
         type: 'state',
         common: {
-        name: "q1regard",
-    type: 'number',
-    def: '0',
-    role: 'value',
-    desc: 'Blindleistung Bezug auf L1',
-    unit: 'var'
+            name: "q1regard",
+            type: 'number',
+            def: '0',
+            role: 'value',
+            desc: 'Blindleistung Bezug auf L1',
+            unit: 'var'
         },
         native: {}
     });
     adapter.setObjectNotExists('L1.q1regardcounter', {
         type: 'state',
         common: {
-        name: "q1regardcounter",
-    type: 'number',
-    def: '0',
-    role: 'value',
-    desc: 'Blindarbeit Bezug auf L1',
-    unit: 'varh'
+            name: "q1regardcounter",
+            type: 'number',
+            def: '0',
+            role: 'value',
+            desc: 'Blindarbeit Bezug auf L1',
+            unit: 'varh'
         },
         native: {}
     });
     adapter.setObjectNotExists('L1.q1surplus', {
         type: 'state',
         common: {
-        name: "q1surplus",
-    type: 'number',
-    def: '0',
-    role: 'value',
-    desc: 'Blindleistung Einspeisung auf L1',
-    unit: 'var'
+            name: "q1surplus",
+            type: 'number',
+            def: '0',
+            role: 'value',
+            desc: 'Blindleistung Einspeisung auf L1',
+            unit: 'var'
         },
         native: {}
     });
     adapter.setObjectNotExists('L1.q1surpluscounter', {
         type: 'state',
         common: {
-        name: "q1surpluscounter",
-    type: 'number',
-    def: '0',
-    role: 'value',
-    desc: 'Blindarbeit Einspeisung auf L1',
-    unit: 'varh'
+            name: "q1surpluscounter",
+            type: 'number',
+            def: '0',
+            role: 'value',
+            desc: 'Blindarbeit Einspeisung auf L1',
+            unit: 'varh'
         },
         native: {}
     });
     adapter.setObjectNotExists('L1.s1regard', {
         type: 'state',
         common: {
-        name: "s1regard",
-    type: 'number',
-    def: '0',
-    role: 'value',
-    desc: 'Scheinleistung Bezug auf L1',
-    unit: 'VA'
+            name: "s1regard",
+            type: 'number',
+            def: '0',
+            role: 'value',
+            desc: 'Scheinleistung Bezug auf L1',
+            unit: 'VA'
         },
         native: {}
     });
     adapter.setObjectNotExists('L1.s1regardcounter', {
         type: 'state',
         common: {
-        name: "sregardcounter",
-    type: 'number',
-    def: '0',
-    role: 'value',
-    desc: 'Scheinarbeit Bezug auf L1',
-    unit: 'VAh'
+            name: "sregardcounter",
+            type: 'number',
+            def: '0',
+            role: 'value',
+            desc: 'Scheinarbeit Bezug auf L1',
+            unit: 'VAh'
         },
         native: {}
     });
     adapter.setObjectNotExists('L1.s1surplus', {
         type: 'state',
         common: {
-        name: "s1surplus",
-    type: 'number',
-    def: '0',
-    role: 'value',
-    desc: 'Scheinleistung Einspeisung auf L1',
-    unit: 'VA'
+            name: "s1surplus",
+            type: 'number',
+            def: '0',
+            role: 'value',
+            desc: 'Scheinleistung Einspeisung auf L1',
+            unit: 'VA'
         },
         native: {}
     });
     adapter.setObjectNotExists('L1.s1surpluscounter', {
         type: 'state',
         common: {
-        name: "s1surpluscounter",
-    type: 'number',
-    def: '0',
-    role: 'value',
-    desc: 'Scheinarbeit Einspeisung auf L1',
-    unit: 'VAh'
+            name: "s1surpluscounter",
+            type: 'number',
+            def: '0',
+            role: 'value',
+            desc: 'Scheinarbeit Einspeisung auf L1',
+            unit: 'VAh'
         },
         native: {}
     });
     adapter.setObjectNotExists('L1.thd1', {
         type: 'state',
         common: {
-        name: "thd1",
-    type: 'number',
-    def: '0',
-    role: 'value',
-    desc: 'harmonische Verzerrung auf L1',
-    unit: ''
+            name: "thd1",
+            type: 'number',
+            def: '0',
+            role: 'value',
+            desc: 'harmonische Verzerrung auf L1',
+            unit: ''
         },
         native: {}
     });
     adapter.setObjectNotExists('L1.v1', {
         type: 'state',
         common: {
-        name: "v1",
-    type: 'number',
-    def: '0',
-    role: 'value',
-    desc: 'aktuelle Spannung auf L1',
-    unit: 'V'
+            name: "v1",
+            type: 'number',
+            def: '0',
+            role: 'value',
+            desc: 'aktuelle Spannung auf L1',
+            unit: 'V'
         },
         native: {}
     });
     adapter.setObjectNotExists('L1.cosphi1', {
         type: 'state',
         common: {
-        name: "cosphi1",
-    type: 'number',
-    def: '0',
-    role: 'value',
-    desc: 'aktueller Leistungsfaktor cos phi auf L1',
-    unit: ''
+            name: "cosphi1",
+            type: 'number',
+            def: '0',
+            role: 'value',
+            desc: 'aktueller Leistungsfaktor cos phi auf L1',
+            unit: ''
         },
         native: {}
     });
@@ -540,8 +515,8 @@ adapter.setObjectNotExists('SMASerial', {
             type: 'number',
             def: '0',
             role: 'value',
-    desc: 'Wirkleistung auf L2',
-    unit: 'W'
+            desc: 'Wirkleistung auf L2',
+            unit: 'W'
         },
         native: {}
     });
@@ -552,8 +527,8 @@ adapter.setObjectNotExists('SMASerial', {
             type: 'number',
             def: '0',
             role: 'value',
-    desc: 'Wirkarbeit Bezug auf L2',
-    unit: 'kWh'
+            desc: 'Wirkarbeit Bezug auf L2',
+            unit: 'kWh'
         },
         native: {}
     });
@@ -564,8 +539,8 @@ adapter.setObjectNotExists('SMASerial', {
             type: 'number',
             def: '0',
             role: 'value',
-    desc: 'Wirkleistung Einspeisung L2',
-    unit: 'W'
+            desc: 'Wirkleistung Einspeisung L2',
+            unit: 'W'
         },
         native: {}
     });
@@ -576,8 +551,8 @@ adapter.setObjectNotExists('SMASerial', {
             type: 'number',
             def: '0',
             role: 'value',
-    desc: 'Wirkarbeit Einspeisung auf L2',
-    unit: 'kWh'
+            desc: 'Wirkarbeit Einspeisung auf L2',
+            unit: 'kWh'
         },
         native: {}
     });
@@ -588,8 +563,8 @@ adapter.setObjectNotExists('SMASerial', {
             type: 'number',
             def: '0',
             role: 'value',
-    desc: 'Blindleistung Bezug auf L2',
-    unit: 'var'
+            desc: 'Blindleistung Bezug auf L2',
+            unit: 'var'
         },
         native: {}
     });
@@ -600,8 +575,8 @@ adapter.setObjectNotExists('SMASerial', {
             type: 'number',
             def: '0',
             role: 'value',
-    desc: 'Blindarbeit Bezug auf L2',
-    unit: 'varh'
+            desc: 'Blindarbeit Bezug auf L2',
+            unit: 'varh'
         },
         native: {}
     });
@@ -612,8 +587,8 @@ adapter.setObjectNotExists('SMASerial', {
             type: 'number',
             def: '0',
             role: 'value',
-    desc: 'Blindleistung Einspeisung auf L2',
-    unit: 'var'
+            desc: 'Blindleistung Einspeisung auf L2',
+            unit: 'var'
         },
         native: {}
     });
@@ -624,8 +599,8 @@ adapter.setObjectNotExists('SMASerial', {
             type: 'number',
             def: '0',
             role: 'value',
-    desc: 'Blindarbeit Einspeisung auf L2',
-    unit: 'varh'
+            desc: 'Blindarbeit Einspeisung auf L2',
+            unit: 'varh'
         },
         native: {}
     });
@@ -636,8 +611,8 @@ adapter.setObjectNotExists('SMASerial', {
             type: 'number',
             def: '0',
             role: 'value',
-    desc: 'Scheinleistung Bezug auf L2',
-    unit: 'VA'
+            desc: 'Scheinleistung Bezug auf L2',
+            unit: 'VA'
         },
         native: {}
     });
@@ -648,8 +623,8 @@ adapter.setObjectNotExists('SMASerial', {
             type: 'number',
             def: '0',
             role: 'value',
-    desc: 'Scheinarbeit Bezug auf L2',
-    unit: 'VAh'
+            desc: 'Scheinarbeit Bezug auf L2',
+            unit: 'VAh'
         },
         native: {}
     });
@@ -660,8 +635,8 @@ adapter.setObjectNotExists('SMASerial', {
             type: 'number',
             def: '0',
             role: 'value',
-    desc: 'Scheinleistung Einspeisung auf L2',
-    unit: 'VA'
+            desc: 'Scheinleistung Einspeisung auf L2',
+            unit: 'VA'
         },
         native: {}
     });
@@ -672,8 +647,8 @@ adapter.setObjectNotExists('SMASerial', {
             type: 'number',
             def: '0',
             role: 'value',
-    desc: 'Scheinarbeit Einspeisung auf L2',
-    unit: 'VAh'
+            desc: 'Scheinarbeit Einspeisung auf L2',
+            unit: 'VAh'
         },
         native: {}
     });
@@ -684,8 +659,8 @@ adapter.setObjectNotExists('SMASerial', {
             type: 'number',
             def: '0',
             role: 'value',
-    desc: 'harmonische Verzerrung auf L2',
-    unit: ''
+            desc: 'harmonische Verzerrung auf L2',
+            unit: ''
         },
         native: {}
     });
@@ -696,8 +671,8 @@ adapter.setObjectNotExists('SMASerial', {
             type: 'number',
             def: '0',
             role: 'value',
-    desc: 'aktuelle Spannung auf L2',
-    unit: 'V'
+            desc: 'aktuelle Spannung auf L2',
+            unit: 'V'
         },
         native: {}
     });
@@ -708,8 +683,8 @@ adapter.setObjectNotExists('SMASerial', {
             type: 'number',
             def: '0',
             role: 'value',
-    desc: 'aktueller Leistungsfaktor cos phi auf L2',
-    unit: ''
+            desc: 'aktueller Leistungsfaktor cos phi auf L2',
+            unit: ''
         },
         native: {}
     });
@@ -720,8 +695,8 @@ adapter.setObjectNotExists('SMASerial', {
             type: 'number',
             def: '0',
             role: 'value',
-    desc: 'Wirkleistung auf L3',
-    unit: 'W'
+            desc: 'Wirkleistung auf L3',
+            unit: 'W'
         },
         native: {}
     });
@@ -732,8 +707,8 @@ adapter.setObjectNotExists('SMASerial', {
             type: 'number',
             def: '0',
             role: 'value',
-    desc: 'Wirkarbeit Bezug auf L3',
-    unit: 'kWh'
+            desc: 'Wirkarbeit Bezug auf L3',
+            unit: 'kWh'
         },
         native: {}
     });
@@ -744,8 +719,8 @@ adapter.setObjectNotExists('SMASerial', {
             type: 'number',
             def: '0',
             role: 'value',
-    desc: 'Wirkleistung Einspeisung L3',
-    unit: 'W'
+            desc: 'Wirkleistung Einspeisung L3',
+            unit: 'W'
         },
         native: {}
     });
@@ -756,8 +731,8 @@ adapter.setObjectNotExists('SMASerial', {
             type: 'number',
             def: '0',
             role: 'value',
-    desc: 'Wirkarbeit Einspeisung auf L3',
-    unit: 'kWh'
+            desc: 'Wirkarbeit Einspeisung auf L3',
+            unit: 'kWh'
         },
         native: {}
     });
@@ -768,8 +743,8 @@ adapter.setObjectNotExists('SMASerial', {
             type: 'number',
             def: '0',
             role: 'value',
-    desc: 'Blindleistung Bezug auf L3',
-    unit: 'var'
+            desc: 'Blindleistung Bezug auf L3',
+            unit: 'var'
         },
         native: {}
     });
@@ -780,8 +755,8 @@ adapter.setObjectNotExists('SMASerial', {
             type: 'number',
             def: '0',
             role: 'value',
-    desc: 'Blindarbeit Bezug auf L3',
-    unit: 'varh'
+            desc: 'Blindarbeit Bezug auf L3',
+            unit: 'varh'
         },
         native: {}
     });
@@ -792,8 +767,8 @@ adapter.setObjectNotExists('SMASerial', {
             type: 'number',
             def: '0',
             role: 'value',
-    desc: 'Blindleistung Einspeisung auf L3',
-    unit: 'var'
+            desc: 'Blindleistung Einspeisung auf L3',
+            unit: 'var'
         },
         native: {}
     });
@@ -804,8 +779,8 @@ adapter.setObjectNotExists('SMASerial', {
             type: 'number',
             def: '0',
             role: 'value',
-    desc: 'Blindarbeit Einspeisung auf L3',
-    unit: 'varh'
+            desc: 'Blindarbeit Einspeisung auf L3',
+            unit: 'varh'
         },
         native: {}
     });
@@ -816,8 +791,8 @@ adapter.setObjectNotExists('SMASerial', {
             type: 'number',
             def: '0',
             role: 'value',
-    desc: 'Scheinleistung Bezug auf L3',
-    unit: 'VA'
+            desc: 'Scheinleistung Bezug auf L3',
+            unit: 'VA'
         },
         native: {}
     });
@@ -828,8 +803,8 @@ adapter.setObjectNotExists('SMASerial', {
             type: 'number',
             def: '0',
             role: 'value',
-    desc: 'Scheinarbeit Bezug auf L3',
-    unit: 'VAh'
+            desc: 'Scheinarbeit Bezug auf L3',
+            unit: 'VAh'
         },
         native: {}
     });
@@ -840,8 +815,8 @@ adapter.setObjectNotExists('SMASerial', {
             type: 'number',
             def: '0',
             role: 'value',
-    desc: 'Scheinleistung Einspeisung auf L3',
-    unit: 'VA'
+            desc: 'Scheinleistung Einspeisung auf L3',
+            unit: 'VA'
         },
         native: {}
     });
@@ -852,8 +827,8 @@ adapter.setObjectNotExists('SMASerial', {
             type: 'number',
             def: '0',
             role: 'value',
-    desc: 'Scheinarbeit Einspeisung auf L3',
-    unit: 'VAh'
+            desc: 'Scheinarbeit Einspeisung auf L3',
+            unit: 'VAh'
         },
         native: {}
     });
@@ -864,8 +839,8 @@ adapter.setObjectNotExists('SMASerial', {
             type: 'number',
             def: '0',
             role: 'value',
-    desc: 'harmonische Verzerrung auf L3',
-    unit: ''
+            desc: 'harmonische Verzerrung auf L3',
+            unit: ''
         },
         native: {}
     });
@@ -876,8 +851,8 @@ adapter.setObjectNotExists('SMASerial', {
             type: 'number',
             def: '0',
             role: 'value',
-    desc: 'aktuelle Spannung auf L3',
-    unit: 'V'
+            desc: 'aktuelle Spannung auf L3',
+            unit: 'V'
         },
         native: {}
     });
@@ -888,49 +863,15 @@ adapter.setObjectNotExists('SMASerial', {
             type: 'number',
             def: '0',
             role: 'value',
-    desc: 'aktueller Leistungsfaktor cos phi auf L3',
-    unit: ''
+            desc: 'aktueller Leistungsfaktor cos phi auf L3',
+            unit: ''
         },
         native: {}
     });
 
-
-
-
-
-
     // in this sma-em all states changes inside the adapters namespace are subscribed
+    /*
     adapter.subscribeStates('*');
-
-
-    /**
-     *   setState examples
-     *
-     *   you will notice that each setState will cause the stateChange event to fire (because of above subscribeStates cmd)
-     *
-     */
-
-    // the variable testVariable is set to true as command (ack=false)
-    adapter.setState('testVariable', true);
-
-    // same thing, but the value is flagged "ack"
-    // ack should be always set to true if the value is received from or acknowledged from the target system
-    adapter.setState('testVariable', {val: true, ack: true});
-
-    // same thing, but the state is deleted after 30s (getState will return null afterwards)
-    adapter.setState('testVariable', {val: true, ack: true, expire: 30});
-
-
-
-    // examples for the checkPassword/checkGroup functions
-    adapter.checkPassword('admin', 'iobroker', function (res) {
-        console.log('check user admin pw ioboker: ' + res);
-    });
-
-    adapter.checkGroup('admin', 'admin', function (res) {
-        console.log('check group user admin group admin: ' + res);
-    });
-
-
-
+    */
+    readData();
 }
