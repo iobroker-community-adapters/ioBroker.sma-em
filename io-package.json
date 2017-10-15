@@ -37,12 +37,12 @@
         "keywords": ["sma-em", "vis", "GUI", "graphical", "scada"],
         "readme": "https://github.com/ioBroker/ioBroker.sma-em/blob/master/README.md",
         "loglevel": "info",
-        "type": "general",
-        "restartAdapters": ["vis"]
+        "type": "energy",
+        "restartAdapters": []
     },
     "native": {
-        "test1": true,
-        "test2": 42
+        "BIP": "239.12.255.254",
+        "BPO": 9522
     },
     "objects": [
 
