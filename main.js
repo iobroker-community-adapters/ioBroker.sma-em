@@ -147,9 +147,9 @@ function readData() {
         adapter.setState('L3.v3', parseInt(smainfoasci.substr(1152, 8), 16) / 1000, true);
 
     });
-    client.bind(adapter.config.BPO, function () {
+    client.bind("9522", function () {
         adapter.log.info('Listen via UDP on Port ' + adapter.config.BPO + ' for Multicast IP ' + adapter.config.BIP);
-        client.addMembership(adapter.config.BIP);
+        client.addMembership("239.12.255.254");
     });
     client.on('close', function () {
         adapter.log.info('UDP Socket closed ...');
