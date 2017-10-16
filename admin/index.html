@@ -72,12 +72,14 @@
     #settings tr { line-height: 2.5em; }
 </style>
     
+<p>&nbsp;</p>
+<!-- you have to put your config page in a div with id adapter-container -->
 <div>
 <div id="adapter-container">
 <table>
 <tbody>
 <tr>
-<td><img src="sma-em.png" alt="" width="64" height="64" /></td>
+<td><img src="sma-em.png" width="64" height="64" /></td>
 <td>
 <h3 class="translate">SMA Energy Meter Settings</h3>
 </td>
@@ -85,24 +87,44 @@
 </tbody>
 </table>
 <div id="settings">
-<table style="width: 278px; float: left;" cellspacing="50">
+<table>
 <tbody>
 <tr>
-<td class="translate" style="width: 124px;">Multicast-IP</td>
-<td style="width: 153px;"><input id="BIP" class="value" disabled="disabled" type="text" value="239.12.255.254" /></td>
+<td class="translate">Multicast-IP</td>
+<td><input id="BIP" class="value" disabled="disabled" type="text" value="239.12.255.254" /></td>
+<td>&nbsp;</td>
 </tr>
 <tr>
-<td class="translate" style="width: 124px;">Multicast-Port</td>
-<td style="width: 153px;"><input id="BPO" class="value" disabled="disabled" type="text" value="9522" /></td>
+<td class="translate">Multicast-Port</td>
+<td><input id="BPO" class="value" disabled="disabled" type="text" value="9522" /></td>
+<td>&nbsp;</td>
 </tr>
 <tr>
-<td class="translate" style="width: 124px;">Auto-Reconnect</td>
-<td style="width: 153px;"><input id="recon" type="checkbox" /></td>
+<td class="translate">Details-L1</td>
+<td><input id="L1" class="value" type="checkbox" /></td>
 </tr>
+<tr>
+<td class="translate">Details-L2</td>
+<td><input id="L2" class="value" type="checkbox" /></td>
+</tr>
+<tr>
+<td class="translate">Details-L3</td>
+<td><input id="L3" class="value" type="checkbox" /></td>
+</tr>
+  <tr><td><label class="translate" for="poll">Polling</label></td><td>
+            <select  class="value" id="poll">
+                <option value="0" class="translate">1 Sek</option>
+                <option value="2000" class="translate">2 Sek</option>
+                <option value="3000" class="translate">3 Sek</option>
+                <option value="4000" class="translate">4 Sek</option>
+                <option value="5000" class="translate">5 Sek</option>
+                <option value="60000" class="translate">1 Min</option>
+                <option value="120000" class="translate">2 Min</option>
+                <option value="300000" class="translate">monthly</option>
+            </select>
 </tbody>
 </table>
 </div>
 </div>
 </div>
-
 </html>
