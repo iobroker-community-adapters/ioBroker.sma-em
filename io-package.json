@@ -1,7 +1,7 @@
 {
     "common": {
         "name": "sma-em",
-        "version": "0.0.1",
+        "version": "0.0.2",
         "news": {
             "0.5.0": {
                 "en": "beta version",
@@ -34,7 +34,7 @@
         "icon": "sma-em.png",
         "enabled": true,
         "extIcon": "https://raw.githubusercontent.com/ioBroker/ioBroker.sma-em/master/admin/sma-em.png",
-        "keywords": ["sma-em", "vis", "GUI", "graphical", "scada"],
+        "keywords": ["SMA Energy Meter"],
         "readme": "https://github.com/ioBroker/ioBroker.sma-em/blob/master/README.md",
         "loglevel": "info",
         "type": "energy",
