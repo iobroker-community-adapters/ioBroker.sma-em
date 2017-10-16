@@ -1,7 +1,7 @@
 {
   "name": "iobroker.sma-em",
-  "version": "0.0.1",
-  "description": "ioBroker sma-em Adapter",
+  "version": "0.0.2",
+  "description": "ioBroker SMA-Energy Meter Adapter",
   "author": {
     "name": "Marcolotti",
     "email": "info@ct-j.de"
