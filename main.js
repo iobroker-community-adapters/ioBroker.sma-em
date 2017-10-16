@@ -147,6 +147,7 @@ function readData() {
     });
     client.bind("9522", function () {
         adapter.log.info('Listen via UDP on Port ' + adapter.config.BPO + ' for Multicast IP ' + adapter.config.BIP);
+        adapter.log.info('Details L1 ' + adapter.config.L1 + ' Details L2 ' + adapter.config.L2 + ' Details L3 ' + adapter.config.L3);
         client.addMembership("239.12.255.254");
     });
     client.on('close', function () {
