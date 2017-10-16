@@ -79,22 +79,8 @@ function readData() {
     });
 
     client.on('message', function (message, rinfo) {
-        adapter.setStateChanged('SMASerial', message.readUIntBE(20,4), true);
-        adapter.setStateChanged('pregard', message.readUIntBE(32, 4) / 10, true);
-        adapter.setStateChanged('pregardcounter', message.readUIntBE(40, 8)/ 3600000, true);
-        adapter.setStateChanged('psurplus', message.readUIntBE(52, 4) / 10, true);
-        adapter.setStateChanged('psurpluscounter', message.readUIntBE(60, 8)/ 3600000, true);
-        adapter.setStateChanged('qregard', message.readUIntBE(72, 4)/ 10, true);
-        adapter.setStateChanged('qregardcounter', message.readUIntBE(80, 8)/ 3600000, true);
-        adapter.setStateChanged('qsurplus', message.readUIntBE(92, 4)/ 10, true);
-        adapter.setStateChanged('qsurpluscounter', message.readUIntBE(100, 8)/ 3600000, true);
-        adapter.setStateChanged('sregard', message.readUIntBE(112, 4)/ 10, true);
-        adapter.setStateChanged('sregardcounter', message.readUIntBE(120, 8)/ 3600000, true);
-        adapter.setStateChanged('ssurplus', message.readUIntBE(132, 4)/ 10, true);
-        adapter.setStateChanged('ssurpluscounter', message.readUIntBE(140, 8)/ 3600000, true);
-        adapter.setStateChanged('cosphi', message.readUIntBE(152, 4)/ 1000);
-
         //L1
+	if(adapter.config.L1 === true){
         adapter.setStateChanged('L1.p1regard', message.readUIntBE(160, 4)/ 10, true);
         adapter.setStateChanged('L1.p1regardcounter', message.readUIntBE(168, 8)/ 3600000, true);
         adapter.setStateChanged('L1.p1surplus', message.readUIntBE(180, 4)/ 10, true);
@@ -110,7 +96,10 @@ function readData() {
         adapter.setStateChanged('L1.cosphi1', message.readUIntBE(296, 4)/ 1000, true);
         adapter.setStateChanged('L1.thd1', message.readUIntBE(280, 4)/ 1000, true);
         adapter.setStateChanged('L1.v1', message.readUIntBE(288, 4)/ 1000, true);
+	};
+
 	//L2
+	if(adapter.config.L2 === true){
  	adapter.setStateChanged('L2.p2regard', message.readUIntBE(304, 4)/ 10, true);
         adapter.setStateChanged('L2.p2regardcounter', message.readUIntBE(312, 8)/ 3600000, true);
         adapter.setStateChanged('L2.p2surplus', message.readUIntBE(324, 4)/ 10, true);
@@ -126,8 +115,10 @@ function readData() {
         adapter.setStateChanged('L2.cosphi2', message.readUIntBE(440, 4)/ 1000);
         adapter.setStateChanged('L2.thd2', message.readUIntBE(424, 4)/ 1000);
         adapter.setStateChanged('L2.v2', message.readUIntBE(432, 4)/ 1000);
+	};
 
         //L3
+ 	if(adapter.config.L3 === true){
         adapter.setStateChanged('L3.p3regard', message.readUIntBE(448, 4)/ 10, true);
         adapter.setStateChanged('L3.p3regardcounter', message.readUIntBE(456, 8)/ 3600000, true);
         adapter.setStateChanged('L3.p3surplus', message.readUIntBE(468, 4)/ 10, true);
@@ -143,6 +134,8 @@ function readData() {
         adapter.setStateChanged('L3.cosphi3', message.readUIntBE(584, 4)/ 1000, true);
         adapter.setStateChanged('L3.thd3', message.readUIntBE(568, 4)/ 1000, true);
         adapter.setStateChanged('L3.v3', message.readUIntBE(576, 4)/ 1000, true);
+	};
+
 
     });
     client.bind(adapter.config.BPO, function () {
