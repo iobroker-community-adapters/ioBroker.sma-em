@@ -70,24 +70,38 @@
 <style>
     #settings tr { line-height: 2.5em; }
 </style>
-
-<!-- you have to put your config page in a div with id adapter-container -->
+    
+<div>
 <div id="adapter-container">
-    <table><tr><td><img src="sma-em.png" width="64" height="64"></td><td><h3 class="translate">SMA Energy Meter Settings</h3></td></tr></table>
-        <div id="settings">
-            <table>
-                <tr>
-                    <td class="translate">Multicast-IP</td>
-                    <td><input type="text" id="BIP" class="value" disabled></td>
-                    <td></td>
-                </tr>
-                <tr>
-                    <td class="translate">Multicast-Port</td>
-                    <td><input type="text" id="BPO" class="value" disabled></td>
-                    <td></td>
-                </tr>
-            </table>
-        </div>
+<table>
+<tbody>
+<tr>
+<td><img src="sma-em.png" alt="" width="64" height="64" /></td>
+<td>
+<h3 class="translate">SMA Energy Meter Settings</h3>
+</td>
+</tr>
+</tbody>
+</table>
+<div id="settings">
+<table style="width: 278px; float: left;" cellspacing="50">
+<tbody>
+<tr>
+<td class="translate" style="width: 124px;">Multicast-IP</td>
+<td style="width: 153px;"><input id="BIP" class="value" disabled="disabled" type="text" value="239.12.255.254" /></td>
+</tr>
+<tr>
+<td class="translate" style="width: 124px;">Multicast-Port</td>
+<td style="width: 153px;"><input id="BPO" class="value" disabled="disabled" type="text" value="9522" /></td>
+</tr>
+<tr>
+<td class="translate" style="width: 124px;">Auto-Reconnect</td>
+<td style="width: 153px;"><input id="recon" type="checkbox" /></td>
+</tr>
+</tbody>
+</table>
+</div>
+</div>
 </div>
 
 </html>
