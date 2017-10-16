@@ -2,18 +2,24 @@
 # ioBroker.sma-em
 =================
 
+[![NPM version](http://img.shields.io/npm/v/iobroker.sma-em.svg)](https://www.npmjs.com/package/iobroker.sma-em)
+[![Downloads](https://img.shields.io/npm/dm/iobroker.sma-em.svg)](https://www.npmjs.com/package/iobroker.sma-em)
+[![Tests](https://travis-ci.org/ioBroker/ioBroker.sma-em.svg?branch=master)](https://travis-ci.org/ioBroker/ioBroker.sma-em)
+
+[![NPM](https://nodei.co/npm/iobroker.rflink.png?downloads=true)](https://nodei.co/npm/iobroker.sma-em/)
+
 ## Changelog
+### 0.5.0
+* (Bluefox) Optimize Performance
+
 ### 0.0.2
-  (Marcolotti) Add options for detailed View of L1, L2, L3
-  
-               Optimize Performance (Bluefox)
-               
-  (Apollon66)  Clean Template
-  
-               Bugfixes
+* (Marcolotti) Add options for detailed View of L1, L2, L3
+* (Marcolotti) Bugfixes
+* (Bluefox) Optimize Performance
+* (Apollon66) Clean Template
 
 ### 0.0.1
-  (Marcolotti) initial release
+* (Marcolotti) initial release
 
 ## License
 The MIT License (MIT)
