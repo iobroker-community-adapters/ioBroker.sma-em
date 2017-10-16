@@ -79,7 +79,22 @@ function readData() {
     });
 
     client.on('message', function (message, rinfo) {
-        //L1
+	adapter.setStateChanged('SMASerial', message.readUIntBE(20, 4), true);
+        adapter.setStateChanged('pregard', message.readUIntBE(32, 4) / 10, true);
+        adapter.setStateChanged('pregardcounter', message.readUIntBE(40, 8)/ 3600000, true);
+        adapter.setStateChanged('psurplus', message.readUIntBE(52, 4) / 10, true);
+        adapter.setStateChanged('psurpluscounter', message.readUIntBE(60, 8)/ 3600000, true);
+        adapter.setStateChanged('qregard', message.readUIntBE(72, 4)/ 10, true);
+        adapter.setStateChanged('qregardcounter', message.readUIntBE(80, 8)/ 3600000, true);
+        adapter.setStateChanged('qsurplus', message.readUIntBE(92, 4)/ 10, true);
+        adapter.setStateChanged('qsurpluscounter', message.readUIntBE(100, 8)/ 3600000, true);
+        adapter.setStateChanged('sregard', message.readUIntBE(112, 4)/ 10, true);
+        adapter.setStateChanged('sregardcounter', message.readUIntBE(120, 8)/ 3600000, true);
+        adapter.setStateChanged('ssurplus', message.readUIntBE(132, 4)/ 10, true);
+        adapter.setStateChanged('ssurpluscounter', message.readUIntBE(140, 8)/ 3600000, true);
+        adapter.setStateChanged('cosphi', message.readUIntBE(152, 4)/ 1000)
+        
+	    //L1
 	if(adapter.config.L1 === true){
         adapter.setStateChanged('L1.p1regard', message.readUIntBE(160, 4)/ 10, true);
         adapter.setStateChanged('L1.p1regardcounter', message.readUIntBE(168, 8)/ 3600000, true);
