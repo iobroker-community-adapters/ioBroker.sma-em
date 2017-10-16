@@ -34,6 +34,7 @@ adapter.on('ready', main);
 
 var connected = false;
 var points = {
+
     'SMASerial': 	            {offset: 20,  length: 4, factor: 1},
     'pregard':	                {offset: 32,  length: 4, factor: 1 / 10},
     'pregardcounter':           {offset: 40,  length: 8, factor: 1 / 3600000},
@@ -93,6 +94,7 @@ var points = {
     'L3.cosphi3':               {offset: 584, length: 4, factor: 1/ 1000},
     'L3.thd3':           	    {offset: 568, length: 4, factor: 1/ 1000},
     'L3.v3':           	        {offset: 576, length: 4, factor: 1/ 1000},
+
 };
 
 function readData() {
