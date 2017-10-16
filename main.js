@@ -1,6 +1,6 @@
 /**
  *
- * sma-em adapter, Copyritgh CTJager 2017, MIT
+ * sma-em adapter, Copyright CTJaeger 2017, MIT
  *
  */
 
