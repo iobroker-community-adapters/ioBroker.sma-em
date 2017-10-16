@@ -1,7 +1,7 @@
 {
     "common": {
         "name": "sma-em",
-        "version": "0.0.2",
+        "version": "0.5.0",
         "news": {
             "0.5.0": {
                 "en": "beta version",
@@ -54,6 +54,27 @@
     },
     "objects": [],
     "instanceObjects": [
+        {
+            "_id": "info",
+            "type": "channel",
+            "common": {
+                "name": "Information"
+            },
+            "native": {}
+        },
+        {
+            "_id": "info.connection",
+            "type": "state",
+            "common": {
+                "role": "indicator.connected",
+                "name": "If connected to SMA-EM",
+                "type": "boolean",
+                "read": true,
+                "write": false,
+                "def": false
+            },
+            "native": {}
+        },
         {
             "_id": "L1",
             "type": "channel",
