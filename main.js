@@ -34,14 +34,8 @@ adapter.on('ready', main);
 
 var connected = false
 var points = {
-	'SMASerial': 		{offset: 20, length 4, factor: 1},
-	'pregard':    		{offset: 32, length 4, factor: 1 / 10},
-	'pregardcounter':   {offset: 40, length 8, factor: 1 / 3600000},
-	'SMASerial': 		{offset: 20, length 4, factor: 1},
-	'pregard':    		{offset: 32, length 4, factor: 1 / 10},
-	'pregardcounter':   {offset: 40, length 8, factor: 1 / 3600000},
-	'SMASerial': 		{offset: 20, length 4, factor: 1},
-	'pregard':    		{offset: 32, length 4, factor: 1 / 10},
+	'SMASerial': 	    {offset: 20, length 4, factor: 1},
+	'pregard':	    {offset: 32, length 4, factor: 1 / 10},
 	'pregardcounter':   {offset: 40, length 8, factor: 1 / 3600000},
 	'psurplus',         {offset: 52, length 4, factor: 1 / 10},
         'psurpluscounter',  {offset: 60, length 8, factor: 1 / 3600000},
