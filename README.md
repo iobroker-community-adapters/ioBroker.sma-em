@@ -6,7 +6,7 @@
 [![Downloads](https://img.shields.io/npm/dm/iobroker.sma-em.svg)](https://www.npmjs.com/package/iobroker.sma-em)
 [![Tests](https://travis-ci.org/ioBroker/ioBroker.sma-em.svg?branch=master)](https://travis-ci.org/ioBroker/ioBroker.sma-em)
 
-[![NPM](https://nodei.co/npm/iobroker.rflink.png?downloads=true)](https://nodei.co/npm/iobroker.sma-em/)
+[![NPM](https://nodei.co/npm/iobroker.sma-em.png?downloads=true)](https://nodei.co/npm/iobroker.sma-em/)
 
 ## Changelog
 ### 0.5.0
