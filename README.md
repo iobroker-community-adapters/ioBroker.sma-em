@@ -16,7 +16,7 @@
 * (Marcolotti) Add options for detailed View of L1, L2, L3
 * (Marcolotti) Bugfixes
 * (Bluefox) Optimize Performance
-* (Apollon66) Clean Template
+* (Apollon77) Clean Template
 
 ### 0.0.1
 * (Marcolotti) initial release
