@@ -32,67 +32,69 @@ adapter.on('unload', function (callback) {
 // start here!
 adapter.on('ready', main);
 
-var connected = false
+var connected = false;
 var points = {
-	'SMASerial': 	    {offset: 20, length: 4, factor: 1},
-	'pregard':	    {offset: 32, length: 4, factor: 1 / 10},
-	'pregardcounter':   {offset: 40, length: 8, factor: 1 / 3600000},
-	'psurplus',         {offset: 52, length: 4, factor: 1 / 10},
-        'psurpluscounter',  {offset: 60, length: 8, factor: 1 / 3600000},
-        'qregard',          {offset: 72, length: 4, factor: 1 / 10},
-    	'qregardcounter',   {offset: 80, length: 8, factor: 1 / 3600000},
-    	'qsurplus',         {offset: 92, length: 4, factor: 1 / 10},
-    	'qsurpluscounter',  {offset: 100, length: 8, factor: 1 / 3600000},
-    	'sregard',          {offset: 112, length: 4, factor: 1 / 10},
-    	'sregardcounter',   {offset: 120, length: 8, factor: 1 / 3600000},
-    	'ssurplus',         {offset: 132, length: 4, factor: 1 / 10},
-    	'ssurpluscounter',  {offset: 140, length: 8, factor: 1 / 3600000},
-    	'cosphi',           {offset: 152, length: 4, factor: 1/ 1000)
-	'L1.p1regard'       {offset: 160, length: 4, factor: 1/ 10},
-	'L1.p1regardcounter'	{offset: 168, length: 8, factor: 1/ 3600000},
-	'L1.p1surplus'          {offset: 180, length: 4, factor: 1/ 10},
-	'L1.p1surpluscounter'   {offset: 188, length: 8, factor: 1/ 3600000},
-	'L1.q1regard'           {offset: 200, length: 4, factor: 1/ 10},
-	'L1.q1regardcounter'    {offset: 208, length: 8, factor: 1/ 3600000},
-	'L1.q1surplus'          {offset: 220, length: 4, factor: 1/ 10},
-	'L1.q1surpluscounter'   {offset: 228, length: 8, factor: 1/ 3600000},
-	'L1.s1regard'           {offset: 240, length: 4, factor: 1/ 10},
-	'L1.s1regardcounter'    {offset: 248, length: 8, factor: 1/ 3600000},
-	'L1.s1surplus'          {offset: 260, length: 4, factor: 1/ 10},
-	'L1.s1surpluscounter'   {offset: 268, length: 8, factor: 1/ 3600000},
-	'L1.cosphi1'            {offset: 296, length: 4, factor: 1/ 1000},
-	'L1.thd1'               {offset: 280, length: 4, factor: 1/ 1000},
-	'L1.v1'			{offset: 288, length: 4, factor: 1/ 1000},
-	'L2.p2regard'          	{offset: 304, length: 4, factor: 1/ 10},
-	'L2.p2regardcounter'   	{offset: 312, length: 8, factor: 1/ 3600000},
-	'L2.p2surplus'         	{offset: 324, length: 4, factor: 1/ 10},
-	'L2.p2surpluscounter'  	{offset: 332, length: 8, factor: 1/ 3600000},
-	'L2.q2regard'          	{offset: 344, length: 4, factor: 1/ 10},
-	'L2.q2regardcounter'   	{offset: 352, length: 8, factor: 1/ 3600000},
-	'L2.q2surplus'         	{offset: 364, length: 4, factor: 1/ 10},
-	'L2.q2surpluscounter'  	{offset: 372, length: 8, factor: 1/ 3600000},
-	'L2.s2regard'          	{offset: 384, length: 4, factor: 1/ 10},
-	'L2.s2regardcounter'   	{offset: 392, length: 8, factor: 1/ 3600000},
-	'L2.s2surplus'         	{offset: 404, length: 4, factor: 1/ 10},
-	'L2.s2surpluscounter'  	{offset: 412, length: 8, factor: 1/ 3600000},
-	'L2.cosphi2'           	{offset: 440, length: 4, factor: 1/ 1000);
-	'L2.thd2'           	{offset: 424, length: 4, factor: 1/ 1000);
-	'L2.v2'           	{offset: 432, length: 4, factor: 1/ 1000);
-	'L3.p3regard'           {offset: 448, length: 4, factor: 1/ 10},
-	'L3.p3regardcounter'    {offset: 456, length: 8, factor: 1/ 3600000},
-	'L3.p3surplus'          {offset: 468, length: 4, factor: 1/ 10},
-	'L3.p3surpluscounter'   {offset: 476, length: 8, factor: 1/ 3600000},
-	'L3.q3regard'           {offset: 488, length: 4, factor: 1/ 10},
-	'L3.q3regardcounter'    {offset: 496, length: 8, factor: 1/ 3600000},
-	'L3.q3surplus'          {offset: 508, length: 4, factor: 1/ 10},
-	'L3.q3surpluscounter'   {offset: 516, length: 8, factor: 1/ 3600000},
-	'L3.s3regard'           {offset: 529, length: 4, factor: 1/ 10},
-	'L3.s3regardcounter'    {offset: 536, length: 8, factor: 1/ 3600000},
-	'L3.s3surplus'          {offset: 548, length: 4, factor: 1/ 10},
-	'L3.s3surpluscounter'   {offset: 556, length: 8, factor: 1/ 3600000},
-	'L3.cosphi3'            {offset: 584, length: 4, factor: 1/ 1000},
-	'L3.thd3'           	{offset: 568, length: 4, factor: 1/ 1000},
-	'L3.v3'           	{offset: 576, length: 4, factor: 1/ 1000},
+
+    'SMASerial': 	            {offset: 20,  length: 4, factor: 1},
+    'pregard':	                {offset: 32,  length: 4, factor: 1 / 10},
+    'pregardcounter':           {offset: 40,  length: 8, factor: 1 / 3600000},
+    'psurplus':                 {offset: 52,  length: 4, factor: 1 / 10},
+    'psurpluscounter':          {offset: 60,  length: 8, factor: 1 / 3600000},
+    'qregard':                  {offset: 72,  length: 4, factor: 1 / 10},
+    'qregardcounter':           {offset: 80,  length: 8, factor: 1 / 3600000},
+    'qsurplus':                 {offset: 92,  length: 4, factor: 1 / 10},
+    'qsurpluscounter':          {offset: 100, length: 8, factor: 1 / 3600000},
+    'sregard':                  {offset: 112, length: 4, factor: 1 / 10},
+    'sregardcounter':           {offset: 120, length: 8, factor: 1 / 3600000},
+    'ssurplus':                 {offset: 132, length: 4, factor: 1 / 10},
+    'ssurpluscounter':          {offset: 140, length: 8, factor: 1 / 3600000},
+    'cosphi':                   {offset: 152, length: 4, factor: 1/ 1000},
+    'L1.p1regard':              {offset: 160, length: 4, factor: 1/ 10},
+    'L1.p1regardcounter':	    {offset: 168, length: 8, factor: 1/ 3600000},
+    'L1.p1surplus':             {offset: 180, length: 4, factor: 1/ 10},
+    'L1.p1surpluscounter':      {offset: 188, length: 8, factor: 1/ 3600000},
+    'L1.q1regard':              {offset: 200, length: 4, factor: 1/ 10},
+    'L1.q1regardcounter':       {offset: 208, length: 8, factor: 1/ 3600000},
+    'L1.q1surplus':             {offset: 220, length: 4, factor: 1/ 10},
+    'L1.q1surpluscounter':      {offset: 228, length: 8, factor: 1/ 3600000},
+    'L1.s1regard':              {offset: 240, length: 4, factor: 1/ 10},
+    'L1.s1regardcounter':       {offset: 248, length: 8, factor: 1/ 3600000},
+    'L1.s1surplus':             {offset: 260, length: 4, factor: 1/ 10},
+    'L1.s1surpluscounter':      {offset: 268, length: 8, factor: 1/ 3600000},
+    'L1.cosphi1':               {offset: 296, length: 4, factor: 1/ 1000},
+    'L1.thd1':                  {offset: 280, length: 4, factor: 1/ 1000},
+    'L1.v1':			        {offset: 288, length: 4, factor: 1/ 1000},
+    'L2.p2regard':          	{offset: 304, length: 4, factor: 1/ 10},
+    'L2.p2regardcounter':   	{offset: 312, length: 8, factor: 1/ 3600000},
+    'L2.p2surplus':         	{offset: 324, length: 4, factor: 1/ 10},
+    'L2.p2surpluscounter':  	{offset: 332, length: 8, factor: 1/ 3600000},
+    'L2.q2regard':          	{offset: 344, length: 4, factor: 1/ 10},
+    'L2.q2regardcounter':   	{offset: 352, length: 8, factor: 1/ 3600000},
+    'L2.q2surplus':         	{offset: 364, length: 4, factor: 1/ 10},
+    'L2.q2surpluscounter':  	{offset: 372, length: 8, factor: 1/ 3600000},
+    'L2.s2regard':          	{offset: 384, length: 4, factor: 1/ 10},
+    'L2.s2regardcounter':   	{offset: 392, length: 8, factor: 1/ 3600000},
+    'L2.s2surplus':         	{offset: 404, length: 4, factor: 1/ 10},
+    'L2.s2surpluscounter':  	{offset: 412, length: 8, factor: 1/ 3600000},
+    'L2.cosphi2':           	{offset: 440, length: 4, factor: 1/ 1000},
+    'L2.thd2':           	    {offset: 424, length: 4, factor: 1/ 1000},
+    'L2.v2':           	        {offset: 432, length: 4, factor: 1/ 1000},
+    'L3.p3regard':              {offset: 448, length: 4, factor: 1/ 10},
+    'L3.p3regardcounter':       {offset: 456, length: 8, factor: 1/ 3600000},
+    'L3.p3surplus':             {offset: 468, length: 4, factor: 1/ 10},
+    'L3.p3surpluscounter':      {offset: 476, length: 8, factor: 1/ 3600000},
+    'L3.q3regard':              {offset: 488, length: 4, factor: 1/ 10},
+    'L3.q3regardcounter':       {offset: 496, length: 8, factor: 1/ 3600000},
+    'L3.q3surplus':             {offset: 508, length: 4, factor: 1/ 10},
+    'L3.q3surpluscounter':      {offset: 516, length: 8, factor: 1/ 3600000},
+    'L3.s3regard':              {offset: 529, length: 4, factor: 1/ 10},
+    'L3.s3regardcounter':       {offset: 536, length: 8, factor: 1/ 3600000},
+    'L3.s3surplus':             {offset: 548, length: 4, factor: 1/ 10},
+    'L3.s3surpluscounter':      {offset: 556, length: 8, factor: 1/ 3600000},
+    'L3.cosphi3':               {offset: 584, length: 4, factor: 1/ 1000},
+    'L3.thd3':           	    {offset: 568, length: 4, factor: 1/ 1000},
+    'L3.v3':           	        {offset: 576, length: 4, factor: 1/ 1000},
+
 };
 
 function readData() {
@@ -103,48 +105,48 @@ function readData() {
     });
 
     client.on('message', function (message, rinfo) {
-		if (!connected) {
-			connected = true;
-			adapter.setState('info.connection', true, true);
-		}
-		
-		for (var point in points) {
-			if (points.hasOwnProperty(point)) {
-				var val = message.readUIntBE(points[point].offset, points[point].length) * points[point].factor;
-				if (points[point].val === undefined || points[point].val !== val) {
-					points[point].val = val;
-					adapter.setState(point, val, true);
-				}
-			}
-		}
+        if (!connected) {
+            connected = true;
+            adapter.setState('info.connection', true, true);
+        }
+
+        for (var point in points) {
+            if (points.hasOwnProperty(point)) {
+                var val = message.readUIntBE(points[point].offset, points[point].length) * points[point].factor;
+                if (points[point].val === undefined || points[point].val !== val) {
+                    points[point].val = val;
+                    adapter.setState(point, val, true);
+                }
+            }
+        }
     });
-	
+
     client.bind(adapter.config.BPO, function () {
         adapter.log.info('Listen via UDP on Port ' + adapter.config.BPO + ' for Multicast IP ' + adapter.config.BIP);
         adapter.log.info('Details L1 ' + adapter.config.L1 + ' Details L2 ' + adapter.config.L2 + ' Details L3 ' + adapter.config.L3);
         client.addMembership(adapter.config.BIP);
     });
-	
+
     client.on('close', function () {
         adapter.log.info('UDP Socket closed ...');
         setTimeout(readData, 2000);
-		if (connected) {
-			connected = false;
-			adapter.setState('info.connection', false, true);
-		}
+        if (connected) {
+            connected = false;
+            adapter.setState('info.connection', false, true);
+        }
     });
-	
+
     client.on('error', function (err) {
         adapter.log.error('UDP Socket error: ' + err);
         setTimeout(readData, 2000);
-		if (connected) {
-			connected = false;
-			adapter.setState('info.connection', false, true);
-		}
+        if (connected) {
+            connected = false;
+            adapter.setState('info.connection', false, true);
+        }
     });
 }
 
 function main() {
-	adapter.setState('info.connection', false, true);
+    adapter.setState('info.connection', false, true);
     readData();
 }
