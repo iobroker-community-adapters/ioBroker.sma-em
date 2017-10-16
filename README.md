@@ -3,6 +3,11 @@
 =================
 
 ## Changelog
+### 0.0.2
+  (Marcolotti) Add options for detailed View of L1, L2, L3
+               Optimize Performance
+  (Apollon66)  Clean Template
+               Bugfixes
 
 ### 0.0.1
   (Marcolotti) initial release
