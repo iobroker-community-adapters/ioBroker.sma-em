@@ -37,7 +37,68 @@ var points = {
 	'SMASerial': 		{offset: 20, length 4, factor: 1},
 	'pregard':    		{offset: 32, length 4, factor: 1 / 10},
 	'pregardcounter':   {offset: 40, length 8, factor: 1 / 3600000},
-	// ...
+	'SMASerial': 		{offset: 20, length 4, factor: 1},
+	'pregard':    		{offset: 32, length 4, factor: 1 / 10},
+	'pregardcounter':   {offset: 40, length 8, factor: 1 / 3600000},
+	'SMASerial': 		{offset: 20, length 4, factor: 1},
+	'pregard':    		{offset: 32, length 4, factor: 1 / 10},
+	'pregardcounter':   {offset: 40, length 8, factor: 1 / 3600000},
+	'psurplus',         {offset: 52, length 4, factor: 1 / 10},
+        'psurpluscounter',  {offset: 60, length 8, factor: 1 / 3600000},
+        'qregard',          {offset: 72, length 4, factor: 1 / 10},
+    	'qregardcounter',   {offset: 80, length 8, factor: 1 / 3600000},
+    	'qsurplus',         {offset: 92, length 4, factor: 1 / 10},
+    	'qsurpluscounter',  {offset: 100, length 8, factor: 1 / 3600000},
+    	'sregard',          {offset: 112, length 4, factor: 1 / 10},
+    	'sregardcounter',   {offset: 120, length 8, factor: 1 / 3600000},
+    	'ssurplus',         {offset: 132, length 4, factor: 1 / 10},
+    	'ssurpluscounter',  {offset: 140, length 8, factor: 1 / 3600000},
+    	'cosphi',           {offset: 152, length 4, factor: 1/ 1000)
+	'L1.p1regard'       {offset: 160, length 4, factor: 1/ 10},
+	'L1.p1regardcounter'	{offset: 168, length 8, factor: 1/ 3600000},
+	'L1.p1surplus'          {offset: 180, length 4, factor: 1/ 10},
+	'L1.p1surpluscounter'   {offset: 188, length 8, factor: 1/ 3600000},
+	'L1.q1regard'           {offset: 200, length 4, factor: 1/ 10},
+	'L1.q1regardcounter'    {offset: 208, length 8, factor: 1/ 3600000},
+	'L1.q1surplus'          {offset: 220, length 4, factor: 1/ 10},
+	'L1.q1surpluscounter'   {offset: 228, length 8, factor: 1/ 3600000},
+	'L1.s1regard'           {offset: 240, length 4, factor: 1/ 10},
+	'L1.s1regardcounter'    {offset: 248, length 8, factor: 1/ 3600000},
+	'L1.s1surplus'          {offset: 260, length 4, factor: 1/ 10},
+	'L1.s1surpluscounter'   {offset: 268, length 8, factor: 1/ 3600000},
+	'L1.cosphi1'            {offset: 296, length 4, factor: 1/ 1000},
+	'L1.thd1'               {offset: 280, length 4, factor: 1/ 1000},
+	'L1.v1'			{offset: 288, length 4, factor: 1/ 1000},
+	'L2.p2regard'          	{offset: 304, length 4, factor: 1/ 10},
+	'L2.p2regardcounter'   	{offset: 312, length 8, factor: 1/ 3600000},
+	'L2.p2surplus'         	{offset: 324, length 4, factor: 1/ 10},
+	'L2.p2surpluscounter'  	{offset: 332, length 8, factor: 1/ 3600000},
+	'L2.q2regard'          	{offset: 344, length 4, factor: 1/ 10},
+	'L2.q2regardcounter'   	{offset: 352, length 8, factor: 1/ 3600000},
+	'L2.q2surplus'         	{offset: 364, length 4, factor: 1/ 10},
+	'L2.q2surpluscounter'  	{offset: 372, length 8, factor: 1/ 3600000},
+	'L2.s2regard'          	{offset: 384, length 4, factor: 1/ 10},
+	'L2.s2regardcounter'   	{offset: 392, length 8, factor: 1/ 3600000},
+	'L2.s2surplus'         	{offset: 404, length 4, factor: 1/ 10},
+	'L2.s2surpluscounter'  	{offset: 412, length 8, factor: 1/ 3600000},
+	'L2.cosphi2'           	{offset: 440, length 4, factor: 1/ 1000);
+	'L2.thd2'           	{offset: 424, length 4, factor: 1/ 1000);
+	'L2.v2'           	{offset: 432, length 4, factor: 1/ 1000);
+	'L3.p3regard'           {offset: 448, length 4, factor: 1/ 10},
+	'L3.p3regardcounter'    {offset: 456, length 8, factor: 1/ 3600000},
+	'L3.p3surplus'          {offset: 468, length 4, factor: 1/ 10},
+	'L3.p3surpluscounter'   {offset: 476, length 8, factor: 1/ 3600000},
+	'L3.q3regard'           {offset: 488, length 4, factor: 1/ 10},
+	'L3.q3regardcounter'    {offset: 496, length 8, factor: 1/ 3600000},
+	'L3.q3surplus'          {offset: 508, length 4, factor: 1/ 10},
+	'L3.q3surpluscounter'   {offset: 516, length 8, factor: 1/ 3600000},
+	'L3.s3regard'           {offset: 529, length 4, factor: 1/ 10},
+	'L3.s3regardcounter'    {offset: 536, length 8, factor: 1/ 3600000},
+	'L3.s3surplus'          {offset: 548, length 4, factor: 1/ 10},
+	'L3.s3surpluscounter'   {offset: 556, length 8, factor: 1/ 3600000},
+	'L3.cosphi3'            {offset: 584, length 4, factor: 1/ 1000},
+	'L3.thd3'           	{offset: 568, length 4, factor: 1/ 1000},
+	'L3.v3'           	{offset: 576, length 4, factor: 1/ 1000},
 };
 
 function readData() {
@@ -62,77 +123,6 @@ function readData() {
 				}
 			}
 		}
-		// adapter.setStateChanged('SMASerial',       message.readUIntBE(20, 4), true);
-        // adapter.setStateChanged('pregard',         message.readUIntBE(32, 4) / 10, true);
-        // adapter.setStateChanged('pregardcounter',  message.readUIntBE(40, 8) / 3600000, true);
-        adapter.setStateChanged('psurplus',        message.readUIntBE(52, 4) / 10, true);
-        adapter.setStateChanged('psurpluscounter', message.readUIntBE(60, 8) / 3600000, true);
-        adapter.setStateChanged('qregard',         message.readUIntBE(72, 4) / 10, true);
-        adapter.setStateChanged('qregardcounter',  message.readUIntBE(80, 8) / 3600000, true);
-        adapter.setStateChanged('qsurplus',        message.readUIntBE(92, 4) / 10, true);
-        adapter.setStateChanged('qsurpluscounter', message.readUIntBE(100, 8) / 3600000, true);
-        adapter.setStateChanged('sregard',         message.readUIntBE(112, 4) / 10, true);
-        adapter.setStateChanged('sregardcounter',  message.readUIntBE(120, 8) / 3600000, true);
-        adapter.setStateChanged('ssurplus',        message.readUIntBE(132, 4) / 10, true);
-        adapter.setStateChanged('ssurpluscounter', message.readUIntBE(140, 8) / 3600000, true);
-        adapter.setStateChanged('cosphi',          message.readUIntBE(152, 4)/ 1000)
-        
-	    //L1
-		if (adapter.config.L1 === true) {
-			adapter.setStateChanged('L1.p1regard', message.readUIntBE(160, 4)/ 10, true);
-			adapter.setStateChanged('L1.p1regardcounter', message.readUIntBE(168, 8)/ 3600000, true);
-			adapter.setStateChanged('L1.p1surplus', message.readUIntBE(180, 4)/ 10, true);
-			adapter.setStateChanged('L1.p1surpluscounter', message.readUIntBE(188, 8)/ 3600000, true);
-			adapter.setStateChanged('L1.q1regard', message.readUIntBE(200, 4)/ 10, true);
-			adapter.setStateChanged('L1.q1regardcounter', message.readUIntBE(208, 8)/ 3600000, true);
-			adapter.setStateChanged('L1.q1surplus', message.readUIntBE(220, 4)/ 10, true);
-			adapter.setStateChanged('L1.q1surpluscounter', message.readUIntBE(228, 8)/ 3600000, true);
-			adapter.setStateChanged('L1.s1regard', message.readUIntBE(240, 4)/ 10, true);
-			adapter.setStateChanged('L1.s1regardcounter', message.readUIntBE(248, 8)/ 3600000, true);
-			adapter.setStateChanged('L1.s1surplus', message.readUIntBE(260, 4)/ 10, true);
-			adapter.setStateChanged('L1.s1surpluscounter', message.readUIntBE(268, 8)/ 3600000, true);
-			adapter.setStateChanged('L1.cosphi1', message.readUIntBE(296, 4)/ 1000, true);
-			adapter.setStateChanged('L1.thd1', message.readUIntBE(280, 4)/ 1000, true);
-			adapter.setStateChanged('L1.v1', message.readUIntBE(288, 4)/ 1000, true);
-		}
-
-		//L2
-		if (adapter.config.L2 === true) {
-			adapter.setStateChanged('L2.p2regard', message.readUIntBE(304, 4)/ 10, true);
-			adapter.setStateChanged('L2.p2regardcounter', message.readUIntBE(312, 8)/ 3600000, true);
-			adapter.setStateChanged('L2.p2surplus', message.readUIntBE(324, 4)/ 10, true);
-			adapter.setStateChanged('L2.p2surpluscounter', message.readUIntBE(332, 8)/ 3600000, true);
-			adapter.setStateChanged('L2.q2regard', message.readUIntBE(344, 4)/ 10, true);
-			adapter.setStateChanged('L2.q2regardcounter', message.readUIntBE(352, 8)/ 3600000, true);
-			adapter.setStateChanged('L2.q2surplus', message.readUIntBE(364, 4)/ 10, true);
-			adapter.setStateChanged('L2.q2surpluscounter', message.readUIntBE(372, 8)/ 3600000, true);
-			adapter.setStateChanged('L2.s2regard', message.readUIntBE(384, 4)/ 10, true);
-			adapter.setStateChanged('L2.s2regardcounter', message.readUIntBE(392, 8)/ 3600000, true);
-			adapter.setStateChanged('L2.s2surplus', message.readUIntBE(404, 4)/ 10, true);
-			adapter.setStateChanged('L2.s2surpluscounter', message.readUIntBE(412, 8)/ 3600000, true);
-			adapter.setStateChanged('L2.cosphi2', message.readUIntBE(440, 4)/ 1000);
-			adapter.setStateChanged('L2.thd2', message.readUIntBE(424, 4)/ 1000);
-			adapter.setStateChanged('L2.v2', message.readUIntBE(432, 4)/ 1000);
-		}
-
-			//L3
-		if (adapter.config.L3 === true) {
-			adapter.setStateChanged('L3.p3regard', message.readUIntBE(448, 4)/ 10, true);
-			adapter.setStateChanged('L3.p3regardcounter', message.readUIntBE(456, 8)/ 3600000, true);
-			adapter.setStateChanged('L3.p3surplus', message.readUIntBE(468, 4)/ 10, true);
-			adapter.setStateChanged('L3.p3surpluscounter', message.readUIntBE(476, 8)/ 3600000, true);
-			adapter.setStateChanged('L3.q3regard', message.readUIntBE(488, 4)/ 10, true);
-			adapter.setStateChanged('L3.q3regardcounter', message.readUIntBE(496, 8)/ 3600000, true);
-			adapter.setStateChanged('L3.q3surplus', message.readUIntBE(508, 4)/ 10, true);
-			adapter.setStateChanged('L3.q3surpluscounter', message.readUIntBE(516, 8)/ 3600000, true);
-			adapter.setStateChanged('L3.s3regard', message.readUIntBE(529, 4)/ 10, true);
-			adapter.setStateChanged('L3.s3regardcounter', message.readUIntBE(536, 8)/ 3600000, true);
-			adapter.setStateChanged('L3.s3surplus', message.readUIntBE(548, 4)/ 10, true);
-			adapter.setStateChanged('L3.s3surpluscounter', message.readUIntBE(556, 8)/ 3600000, true);
-			adapter.setStateChanged('L3.cosphi3', message.readUIntBE(584, 4)/ 1000, true);
-			adapter.setStateChanged('L3.thd3', message.readUIntBE(568, 4)/ 1000, true);
-			adapter.setStateChanged('L3.v3', message.readUIntBE(576, 4)/ 1000, true);
-		};
     });
 	
     client.bind(adapter.config.BPO, function () {
