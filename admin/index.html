@@ -21,26 +21,27 @@
         "Auto-Reconnect" : {"en": "Auto-reconnect", "de": "Wiederverbinden", "ru": "воссоединиться"},
     };
 
-    function setValue(id, value, onChange) {
-        // example: select elements with id=key and class=value and insert value
-        if ($('#' + id + '.value').attr('type') == 'checkbox') {
-            $('#' + id + '.value').prop('checked', value).change(function() {
-                onChange();
-            });
-        } else {
-            $('#' + id + '.value').val(value).change(function() {
-                onChange();
-            }).keyup(function() {
-                $(this).trigger('change');
-            });
-        }
-    }
-
     // the function loadSettings has to exist ...
     function load(settings, onChange) {
-        for (var key in settings) {
-            setValue(key, settings[key], onChange);
-        }
+        // example: select elements with id=key and class=value and insert value
+       if (!settings) return;
+        $('.value').each(function () {
+            var $key = $(this);
+            var id = $key.attr('id');
+            if ($key.attr('type') === 'checkbox') {
+		// do not call onChange direct, because onChange could expect some arguments
+                $key.prop('checked', settings[id]).change(function() {
+                    onChange();
+                });
+            } else {
+		// do not call onChange direct, because onChange could expect some arguments
+                $key.val(settings[id]).change(function() {
+                    onChange();
+                }).keyup(function() {
+                    onChange();
+                });
+            }
+        });
         onChange(false);
     }
 
@@ -51,15 +52,11 @@
         var obj = {};
         $('.value').each(function () {
             var $this = $(this);
-            if ($this.attr('type') == 'checkbox') {
-                obj[$this.attr('id')] = $this.prop('checked');
-            } else {
-                obj[$this.attr('id')] = $this.val();
-            }
-        });
-        $('.check').each(function () {
-            var $this = $(this);
-            obj[$this.attr('id')] = $this.is('checked');
+			if ($this.attr('type') === 'checkbox') {
+				obj[$this.attr('id')] = $this.prop('checked');
+			} else {
+				obj[$this.attr('id')] = $this.val();
+			}
         });
         callback(obj);
     }
@@ -71,7 +68,7 @@
 <style>
     #settings tr { line-height: 2.5em; }
 </style>
-    
+
 <!-- you have to put your config page in a div with id adapter-container -->
 <div id="adapter-container">
 <table>
