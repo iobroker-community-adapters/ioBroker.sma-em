@@ -87,7 +87,7 @@ var points = {
     'L3.q3regardcounter':       {offset: 496, length: 8, factor: 1/ 3600000},
     'L3.q3surplus':             {offset: 508, length: 4, factor: 1/ 10},
     'L3.q3surpluscounter':      {offset: 516, length: 8, factor: 1/ 3600000},
-    'L3.s3regard':              {offset: 529, length: 4, factor: 1/ 10},
+    'L3.s3regard':              {offset: 528, length: 4, factor: 1/ 10},
     'L3.s3regardcounter':       {offset: 536, length: 8, factor: 1/ 3600000},
     'L3.s3surplus':             {offset: 548, length: 4, factor: 1/ 10},
     'L3.s3surpluscounter':      {offset: 556, length: 8, factor: 1/ 3600000},
