@@ -5,7 +5,7 @@
 Der SMA Energy Meter Adapter empfängt den Multicast des Energy-Meters. Dieser sendet etwa jede Sekunde ein Datenpaket ins Netzwerk.
 
 ## Administration / Admin-Seite
-(Picture)[img/adminpage.png]
+(Picture)(img/adminpage.png)
 
 Multicast IP: Standardmäßig eingestellt und von SMA vorgegeben ist die IP-Adresse 239.12.255.254.
 Multicast Port: Standardmäßig eingestellt und von SMA vorgegeben ist der UDP Port: 9522. 
