@@ -39,6 +39,6 @@
     "test": "node node_modules/mocha/bin/mocha"
   },
   "bugs": {
-    "url": "https://github.com/ioBroker/ioBroker.sma-em/issues"
+    "url": "https://github.com/CTJaeger/ioBroker.sma-em/issues"
   }
 }
