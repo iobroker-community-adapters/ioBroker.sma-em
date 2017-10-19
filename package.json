@@ -22,7 +22,7 @@
   ],
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/ioBroker/ioBroker.sma-em.git"
+    "url": "git+https://github.com/CTJaeger/ioBroker.sma-em.git"
   },
   "dependencies": {},
   "devDependencies": {
