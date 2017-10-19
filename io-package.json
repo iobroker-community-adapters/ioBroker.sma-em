@@ -50,7 +50,11 @@
     },
     "native": {
         "BIP": "239.12.255.254",
-        "BPO": 9522
+        "BPO": 9522,
+	"L1": false,
+	"L2": false,
+	"L3": false,
+	"ext": false
     },
     "objects": [],
     "instanceObjects": [
