@@ -37,7 +37,7 @@
 	"keywords": [
             "SMA Energy Meter"
         ],
-        "readme": "https://github.com/ioBroker/ioBroker.sma-em/blob/master/README.md",
+        "readme": "https://github.com/CTJaeger/ioBroker.sma-em/blob/master/README.md",
         "loglevel": "info",
         "type": "energy",
         "restartAdapters": [],
