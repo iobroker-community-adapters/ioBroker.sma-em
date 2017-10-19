@@ -33,8 +33,8 @@
         "mode": "daemon",
         "icon": "sma-em.png",
         "enabled": true,
-        "extIcon": "https://raw.githubusercontent.com/ioBroker/ioBroker.sma-em/master/admin/sma-em.png",
-        "keywords": [
+        "extIcon": "https://raw.githubusercontent.com/CTJaeger/ioBroker.sma-em/master/admin/sma-em.png",
+	"keywords": [
             "SMA Energy Meter"
         ],
         "readme": "https://github.com/ioBroker/ioBroker.sma-em/blob/master/README.md",
