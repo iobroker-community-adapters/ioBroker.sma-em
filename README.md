@@ -32,7 +32,9 @@ This adapter reads information from SMA Energy Meter.
 
 ### States-Structure
 
-Example:  pregard P-active power / regard 
+Example:  
+
+          pregard P-active power / regard 
           qregard Q-reactive power / regard
           sregard S-apparent power / regard
          
