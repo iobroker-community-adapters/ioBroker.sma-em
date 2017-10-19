@@ -8,7 +8,28 @@
 
 [![NPM](https://nodei.co/npm/iobroker.sma-em.png?downloads=true)](https://nodei.co/npm/iobroker.sma-em/)
 
+### Info
+This adapter reads information from SMA Energy Meter.
+
+### States
+- Total and Counter of active power, reactive power, apparent power
+- cosphi, Total Harmonic Distortion, Voltage
+- Detailed Each of the 3 phases with active power, reactive power, apparent power, cosphi, Total Harmonic Distortion, Voltage
+- Detailed Each of the 3 phases counter
+- Serial Number of SMA Energy Meter
+
+### Options
+- Selection options over each individual phase L1 / L2 / L3
+- Selection non-extended Mode for Total and Counter of active power
+- Selection extended Mode for reactive power, apparent power, cosphi, Total Harmonic Distortion, Voltage (requires more computing power)
+
 ## Changelog
+
+### 0.5.1
+* (Marcolotti) Add Option for extended Mode
+* (Marcolotti) Remove Option for Poll
+* (Marcolotti) several fixes
+
 ### 0.5.0
 * (Bluefox) Optimize Performance
 
