@@ -14,7 +14,8 @@ This adapter reads information from SMA Energy Meter.
 ### States
 - Total and Counter of active power, reactive power, apparent power
 - cosphi, Total Harmonic Distortion, Voltage
-- Detailed Each of the 3 phases with active power, reactive power, apparent power, cosphi, Total Harmonic Distortion, Voltage
+- Detailed Each of the 3 phases with regard of active power, reactive power, apparent power, cosphi, Total Harmonic Distortion, Voltage
+- Detailed Each of the 3 phases with surplus of active power, reactive power, apparent power, cosphi, Total Harmonic Distortion, Voltage
 - Detailed Each of the 3 phases counter
 - Serial Number of SMA Energy Meter
 
@@ -23,6 +24,22 @@ This adapter reads information from SMA Energy Meter.
 - Selection non-extended Mode for Total and Counter of active power
 - Selection extended Mode for reactive power, apparent power, cosphi, Total Harmonic Distortion, Voltage (requires more computing power)
 
+### Folder-Structure
+
+- L1 - Phase 1
+- L2 - Phase 2
+- L3 - Phase 3
+
+### States-Structure
+
+Example:  pregard P-active power / regard 
+          qregard Q-reactive power / regard
+          sregard S-apparent power / regard
+         
+          psurplus P-active power / surplus
+          qsurplus Q-reaktive power /surplus
+          ssurplus S-apparent power /surplus
+        
 ## Changelog
 
 ### 0.5.1
