@@ -49,7 +49,17 @@ function readData() {
     });
 
     client.on('message', function (message, rinfo) {
-        if (!connected) {
+        var ser = message.readUIntBE(points['SMASerial'].offset, points['SMASerial'].length) * points['SMASerial'].factor;
+		 adapter.setObjectNotExists(ser, {
+       		 type: 'channel',
+     		 common: {
+         	 name: ser,
+        	 type: 'channel'
+       		 },
+        native: {}
+    });
+	    
+	if (!connected) {
             connected = true;
             adapter.setState('info.connection', true, true);
         }
@@ -59,7 +69,17 @@ function readData() {
                 var val = message.readUIntBE(points[point].offset, points[point].length) * points[point].factor;
                 if (points[point].val === undefined || points[point].val !== val) {
                     points[point].val = val;
-                    adapter.setState(point, val, true);
+                    adapter.setObjectNotExists (adapter.namespace + '.' + ser + '.' + point, {
+					type: 'state',
+					role: 'value',
+					common: {
+						name: point,
+						type: 'state',
+						role: 'value'
+						},
+					native: {}
+			});
+			adapter.setState (ser + '.' + point, val,true);
                 }
             }
         }
