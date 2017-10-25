@@ -44,6 +44,9 @@ Example:
         
 ## Changelog
 
+### 0.5.2
+* (Marcolotti) support of more than one energy meter 
+
 ### 0.5.1
 * (Marcolotti) Add Option for extended Mode
 * (Marcolotti) Remove Option for Poll
