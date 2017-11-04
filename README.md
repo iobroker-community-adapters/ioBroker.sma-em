@@ -9,7 +9,7 @@
 [![NPM](https://nodei.co/npm/iobroker.sma-em.png?downloads=true)](https://nodei.co/npm/iobroker.sma-em/)
 
 ### Info
-This adapter reads information from SMA Energy Meter.
+This adapter reads information from SMA Energy Meter and SMA Home Manager 2.
 
 ### States
 - Total and Counter of active power, reactive power, apparent power
