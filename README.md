@@ -44,6 +44,9 @@ Example:
         
 ## Changelog
 
+### 0.5.3
+* (Marcolotti) Fix units 
+
 ### 0.5.2
 * (Marcolotti) support of more than one energy meter 
 
