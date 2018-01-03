@@ -16,7 +16,7 @@ var dgram = require('dgram');
 // you have to call the adapter function and pass a options object
 // name has to be set and has to be equal to adapters folder name and main file name excluding extension
 // adapter will be restarted automatically every time as the configuration changed, e.g system.adapter.sma-em.0
-var adapter = utils.adapter('sma-em');
+var adapter = utils.Adapter('sma-em');
 
 // is called when adapter shuts down - callback has to be called under any circumstances!
 adapter.on('unload', function (callback) {
