@@ -8,6 +8,10 @@
 
 [![NPM](https://nodei.co/npm/iobroker.sma-em.png?downloads=true)](https://nodei.co/npm/iobroker.sma-em/)
 
+[![donate](
+https://brianmacdonald.github.io/Ethonate/svg/eth-donate-blue.svg)](
+https://brianmacdonald.github.io/Ethonate/address#0x226ad748dbb5aa7583f588f7c890e6d3a6e41503)
+
 ### Info
 This adapter reads information from SMA Energy Meter and SMA Home Manager 2.
 
