@@ -138,7 +138,7 @@ function main() {
     points['L1.s1surplus'] =             {offset: 260, length: 4, factor: 1/ 10, unit: 'VA'};
     points['L1.s1surpluscounter'] =      {offset: 268, length: 8, factor: 1/ 3600000, unit: 'VAh'};
     points['L1.cosphi1'] =               {offset: 296, length: 4, factor: 1/ 1000, unit: 'Φ'};
-    points['L1.thd1'] =                  {offset: 280, length: 4, factor: 1/ 1000, unit: ''};
+    points['L1.amperage'] =                  {offset: 280, length: 4, factor: 1/ 1000, unit: 'A'};
     points['L1.v1'] =			 {offset: 288, length: 4, factor: 1/ 1000, unit: 'V'};
  };
  };
@@ -158,7 +158,7 @@ if (adapter.config.ext && adapter.config.ext === true) {
     points['L2.s2surplus'] =         	{offset: 404, length: 4, factor: 1/ 10, unit: 'VA'};
     points['L2.s2surpluscounter'] =  	{offset: 412, length: 8, factor: 1/ 3600000, unit: 'VAh'};
     points['L2.cosphi2'] =           	{offset: 440, length: 4, factor: 1/ 1000, unit: 'Φ'};
-    points['L2.thd2'] =           	{offset: 424, length: 4, factor: 1/ 1000, unit: ''};
+    points['L2.amperage'] =           	{offset: 424, length: 4, factor: 1/ 1000, unit: 'A'};
     points['L2.v2'] =           	{offset: 432, length: 4, factor: 1/ 1000, unit: 'V'};
  };
  };
@@ -177,7 +177,7 @@ if (adapter.config.ext && adapter.config.ext === true) {
     points['L3.s3surplus'] =             {offset: 548, length: 4, factor: 1/ 10, unit: 'VA'};
     points['L3.s3surpluscounter'] =      {offset: 556, length: 8, factor: 1/ 3600000, unit: 'VAh'};
     points['L3.cosphi3'] =               {offset: 584, length: 4, factor: 1/ 1000, unit: 'Φ'};
-    points['L3.thd3'] =           	 {offset: 568, length: 4, factor: 1/ 1000, unit: ''};
+    points['L3.amperage'] =           	 {offset: 568, length: 4, factor: 1/ 1000, unit: 'A'};
     points['L3.v3'] =           	 {offset: 576, length: 4, factor: 1/ 1000, unit: 'V'};
  };
  };
