@@ -67,6 +67,7 @@ function readData() {
         for (var point in points) {
             if (points.hasOwnProperty(point)) {
                 var val = message.readUIntBE(points[point].offset, points[point].length) * points[point].factor;
+		var unit = points[point].unit;
                 if (points[point].val === undefined || points[point].val !== val) {
                     points[point].val = val;
                     adapter.setObjectNotExists (adapter.namespace + '.' + ser + '.' + point, {
@@ -75,7 +76,8 @@ function readData() {
 					common: {
 						name: point,
 						type: 'state',
-						role: 'value'
+						role: 'value',
+						unit: unit
 						},
 					native: {}
 			});
