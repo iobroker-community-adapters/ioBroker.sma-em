@@ -24,7 +24,9 @@
     "type": "git",
     "url": "git+https://github.com/CTJaeger/ioBroker.sma-em.git"
   },
-  "dependencies": {},
+  "dependencies": {
+    "@iobroker/adapter-core": "^1.0.3"
+  },
   "devDependencies": {
     "grunt": "^1.0.1",
     "grunt-replace": "^1.0.1",
