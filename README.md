@@ -2,7 +2,7 @@
 # ioBroker.sma-em
 =================
 
-[![NPM version](http://img.shields.io/npm/v/iobroker.sma-em.svg)](https://www.npmjs.com/package/iobroker.sma-em)
+![Number of Installations](http://iobroker.live/badges/sma-em-installed.svg) ![Number of Installations](http://iobroker.live/badges/sma-em-stable.svg) [![NPM version](http://img.shields.io/npm/v/iobroker.sma-em.svg)](https://www.npmjs.com/package/iobroker.sma-em)
 [![Downloads](https://img.shields.io/npm/dm/iobroker.sma-em.svg)](https://www.npmjs.com/package/iobroker.sma-em)
 [![Tests](https://travis-ci.org/CTJaeger/ioBroker.sma-em.svg?branch=master)](https://travis-ci.org/CTJaeger/ioBroker.sma-em)
 
