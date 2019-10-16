@@ -1,8 +1,20 @@
 {
     "common": {
         "name": "sma-em",
-        "version": "0.5.3",
+        "version": "0.5.4",
         "news": {
+            "0.5.4": {
+                "en": "Adapter compatibility extended for Node 10 and higher",
+                "de": "Adapterkompatibilität erweitert für Node 10 und höher",
+                "ru": "Совместимость адаптеров расширена для узла 10 и выше",
+                "pt": "Compatibilidade do adaptador estendida para o Nó 10 e superior",
+                "nl": "Adaptercompatibiliteit uitgebreid voor Node 10 en hoger",
+                "fr": "Compatibilité de l'adaptateur étendue pour les nœuds 10 et supérieurs",
+                "it": "Compatibilità dell'adattatore estesa per Nodo 10 e versioni successive",
+                "es": "Compatibilidad de adaptador extendida para Nodo 10 y superior",
+                "pl": "Rozszerzona kompatybilność adaptera dla Węzła 10 i wyższych",
+                "zh-cn": "适配器兼容性扩展到节点10及更高版本"
+            },
             "0.5.0": {
                 "en": "beta version",
                 "de": "Betaversion",

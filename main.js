@@ -63,10 +63,24 @@ function readData() {
             connected = true;
             adapter.setState('info.connection', true, true);
         }
-
+        const NodeMajorVersion = parseInt(process.versions.node.split(".")[0], 10);
         for (var point in points) {
             if (points.hasOwnProperty(point)) {
-                var val = message.readUIntBE(points[point].offset, points[point].length) * points[point].factor;
+                if((points[point].length === 8) && NodeMajorVersion >= 12){
+                    var val = Number(message.readBigInt64BE(points[point].offset) * points[point].factor);
+                }
+                
+                else if((points[point].length === 8) && NodeMajorVersion == 10){
+                        const lowbyte = BigInt(message.readUInt32BE(points[point].offset +4));
+                        const highbyte = BigInt(message.readUInt32BE(points[point].offset));
+                        var val = Number(((highbyte << 32n) + lowbyte));
+                        val = val * points[point].factor;
+                }
+
+                else{
+                    var val = message.readUIntBE(points[point].offset, points[point].length) * points[point].factor;
+                }
+                
 		var unit = points[point].unit;
                 if (points[point].val === undefined || points[point].val !== val) {
                     points[point].val = val;
