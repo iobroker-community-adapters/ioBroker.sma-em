@@ -1,7 +1,7 @@
 {
     "common": {
         "name": "sma-em",
-        "version": "0.5.5",
+        "version": "0.5.6",
         "news": {
             "0.5.4": {
                 "en": "Adapter compatibility extended for Node 10 and higher",
@@ -41,7 +41,6 @@
             "fr": "ioBroker adaptateur modèle",
             "nl": "ioBroker Sma-em Adapter"
         },
-        "license": "MIT",
         "platform": "Javascript/Node.js",
         "mode": "daemon",
         "icon": "sma-em.png",
@@ -53,6 +52,9 @@
         "readme": "https://github.com/CTJaeger/ioBroker.sma-em/blob/master/README.md",
         "loglevel": "info",
         "type": "energy",
+        "license": "MIT",
+		"compact": true,
+		"materialize": true,
         "restartAdapters": [],
         "authors": [
             {
