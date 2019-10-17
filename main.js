@@ -67,7 +67,7 @@ function readData() {
         for (var point in points) {
             if (points.hasOwnProperty(point)) {
                 if((points[point].length === 8) && NodeMajorVersion >= 12){
-                    var val = Number(message.readBigInt64BE(points[point].offset) * points[point].factor);
+                    var val = Number(message.readBigInt64BE(points[point].offset)) * points[point].factor;
                 }
                 
                 else if((points[point].length === 8) && NodeMajorVersion == 10){
