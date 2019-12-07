@@ -44,6 +44,16 @@ Example:
         
 ## Changelog
 
+### 0.5.7
+* (Sneak-L8) fix detctino of node-js version detection (default to 8)
+* (Sneak-L8) use of readUIntBE only for data with 6 bytes n length at max.
+
+### 0.5.6
+* ???
+
+### 0.5.5
+* ???
+
 ### 0.5.4
 * (Andiling) Adapter compatibility extended for Node 10 and higher
 
