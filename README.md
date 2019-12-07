@@ -45,8 +45,7 @@ Example:
 ## Changelog
 
 ### 0.5.7
-* (Sneak-L8) fix detctino of node-js version detection (default to 8)
-* (Sneak-L8) use of readUIntBE only for data with 6 bytes n length at max.
+* (Sneak-L8) fix << 32n notation to * Math.exp(2, 32) because of Syntax error for Node js V8
 
 ### 0.5.6
 * ???
