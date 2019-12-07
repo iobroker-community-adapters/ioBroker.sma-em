@@ -153,7 +153,8 @@ class SmaEm extends utils.Adapter {
                 else if((points[point].length === 8) && NodeMajorVersion == 10){
                         const lowbyte = BigInt(message.readUInt32BE(points[point].offset +4));
                         const highbyte = BigInt(message.readUInt32BE(points[point].offset));
-                        var val = Number(((highbyte << 32n) + lowbyte));
+                        //var val = Number(((highbyte << 32n) + lowbyte));
+                        var val = Number(((highbyte * Math.pow(2, 32)) + lowbyte));
                         val = val * points[point].factor;
                 }
 
