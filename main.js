@@ -142,7 +142,7 @@ class SmaEm extends utils.Adapter {
 			native: {}
 		});
 
-			 log("Node Version: " + process.versions.node);
+			 log("Node Version: " + process.versions.node, "info");
         const NodeMajorVersion = parseInt(process.versions.node.split(".")[0], 10);
         for (const point in points) {
             if (points.hasOwnProperty(point)) {
