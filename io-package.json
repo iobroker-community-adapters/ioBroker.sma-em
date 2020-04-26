@@ -1,8 +1,20 @@
 {
     "common": {
         "name": "sma-em",
-        "version": "0.5.6",
+        "version": "0.5.7",
         "news": {
+            "0.5.7": {
+                "en": "Solved incorrect stated ID type for JS-controller 3.x",
+                "de": "Der falsch angegebene ID-Typ für JS-Controller 3.x wurde behoben",
+                "ru": "Исправлено неверное указание типа ID для JS-контроллера 3.x",
+                "pt": "Tipo de ID declarado incorreto resolvido para o controlador JS 3.x",
+                "nl": "Opgelost onjuist vermeld ID-type voor JS-controller 3.x",
+                "fr": "Type d'ID déclaré incorrect résolu pour le contrôleur JS 3.x",
+                "it": "Risolto il tipo di ID dichiarato errato per JS-controller 3.x",
+                "es": "Se resolvió un tipo de ID declarado incorrecto para el controlador JS 3.x",
+                "pl": "Rozwiązany niepoprawny podany typ identyfikatora kontrolera JS 3.x",
+                "zh-cn": "解决了JS-controller 3.x的错误声明ID类型"
+            },
             "0.5.4": {
                 "en": "Adapter compatibility extended for Node 10 and higher",
                 "de": "Adapterkompatibilität erweitert für Node 10 und höher",

@@ -133,7 +133,7 @@ class SmaEm extends utils.Adapter {
 
 			this.setState('info.connection', true, true);
 			const ser = message.readUIntBE(points['SMASerial'].offset, points['SMASerial'].length) * points['SMASerial'].factor;
-			 this.setObjectNotExists(ser, {
+			 this.setObjectNotExists(ser.toString(), {
 					type: 'channel',
 				  common: {
 				  name: ser,
