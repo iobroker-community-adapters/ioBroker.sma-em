@@ -164,12 +164,12 @@ class SmaEm extends utils.Adapter {
 		// Bind socket to the multicast address-
 		client.bind(this.config.BPO, () => {
 			this.log.info('Listen via UDP on Port ' + this.config.BPO + ' for Multicast IP ' + this.config.BIP);
-			this.log.info('Details L1 ' + this.config.L1 + ' Details L2 ' + this.config.L2 + ' Details L3 ' + this.config.L3);
+			this.log.info('Details L1 ' + this.config.L1 + ' Details L2 ' + this.config.L2 + ' Details L3 ' + this.config.L3 + ' Extended info ' + this.config.ext);
 			client.addMembership(this.config.BIP);
 		});
 
 		// Event handler in case of UDP packet was received.
-		client.on('message', (message, rinfo) =>{
+		client.on('message', (message, rinfo) => { 
 			if (!connected) {
 				connected = true;
 				this.setState('info.connection', true, true);
@@ -182,7 +182,7 @@ class SmaEm extends utils.Adapter {
 			if(id_path === undefined)
 				id_path = this.createPoints(message, obis_points, protocol_points);
 
-			// Update vales by eval UDP packet content.
+			// Update vales by evaluate UDP packet content.
 			this.updatePoints(id_path, message, obis_points, protocol_points);
     	});
 
@@ -288,7 +288,7 @@ class SmaEm extends utils.Adapter {
 					native: {}
 				});
 			}
-			// Delete point which are not active
+			// Delete point if it is not active
 			else
 				this.delObject(path_pre + points[p].id);
 		}
@@ -334,7 +334,7 @@ class SmaEm extends utils.Adapter {
 				if(obis_num === 0 && pos === message.length - 4)
 					break;
 
-				this.log.warn(`Unkown OBIS value ${obis_num} found in UDP packet. Skip it an going to the next OBIS value.`);
+				this.log.warn(`Unkown OBIS value ${obis_num} found in UDP packet. Skip it and going to the next OBIS value.`);
 				
 				// Extract length from obis number, second byte is the length
 				let offset = message.readUInt8(pos+2);
