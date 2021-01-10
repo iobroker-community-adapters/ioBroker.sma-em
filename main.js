@@ -37,9 +37,18 @@ class SmaEm extends utils.Adapter {
 		connected = false;
 
 		let protocol_points = {
-			'SMASusyID': {name: 'SMA Energy Meter SUSy-ID', addr: 18, length: 2, type: 'number', unit: ''},
-			'SMASerial': {name: 'SMA Energy Meter Serial Number', addr: 20,  length: 4, type: 'number', unit: ''},
-			'TimeTick': {name: 'SMA Time Tick Counter (32-bit overflow)', addr: 24, length: 4, type: 'number', units: 'ms'}
+			'SMASusyID': {name: 'SMA Energy Meter SUSy-ID'               , update: false, addr: 18, length: 2, type: 'number', unit: ''},
+			'SMASerial': {name: 'SMA Energy Meter Serial Number'         , update: false, addr: 20, length: 4, type: 'number', unit: ''},
+			'TimeTick':  {name: 'SMA Time Tick Counter (32-bit overflow)', update: true , addr: 24, length: 4, type: 'number', units: 'ms'}
+		}
+
+		// - Software version as human readable number
+		// - Active flag
+		// - Time stamp of last message received
+		let derived_points = {
+			'sw_version': {name: 'Software Version Number', type: 'string', unit: ''},
+			'last_message': {name: 'Time Stamp of the Last Message Received', type: 'number', unit: 's'},
+			'connected': {name: 'Connection State, true if a valid message was received wihtin the last 5 seconds.', type: 'bool', unit: ''}
 		}
 
 		// Define flags for given parameter to determine the parameters of interest.
@@ -152,11 +161,12 @@ class SmaEm extends utils.Adapter {
 			0x00480400: {id: 'L3.voltage',         name: 'L3 voltage / Spannung',                                  active: cfg_L3_ext_active, length: 4, factor: 1 / 1000,    type: 'number', unit: 'V'},
 			0x00490400: {id: 'L3.cosphi',          name: 'L3 power factor / Leistungsfaktor',                      active: cfg_L3_ext_active, length: 4, factor: 1 / 1000,    type: 'number', unit: 'Φ'},
 
-			0x90000000: {id: 'sw_version',         name: 'Software Version Raw',                                   active: true,              length: 4, factor: 1 ,          type: 'number', unit: ''},
+			0x90000000: {id: 'sw_version_raw',     name: 'Software Version Raw',                                   active: true,              length: 4, factor: 1 ,          type: 'number', unit: ''},
 		};
 
 		// Member variable to store the path to write the value of the current instance.
 		var id_path;
+		var ser_nums_active = [];
 
 		// Open UDPv4 socket to receive SMA multicast packets.
 		let client = dgram.createSocket('udp4');
@@ -178,12 +188,35 @@ class SmaEm extends utils.Adapter {
 			// Can be deleted if connection state is internal track by connected
 			this.setState('info.connection', true, true);
 
+			// Extract serial number as integer of the device in the received messag
+			const ser = message.readUIntBE(protocol_points['SMASerial'].addr, protocol_points['SMASerial'].length);
+			const ser_str = ser.toString();
+			
 			// Check if points must be created and extract id path
+			if(ser_nums_active.includes(ser) === false)
+			{
+				// Create the states tree for the device depending on its serial number
+				this.createPoints(message, ser_str, obis_points, protocol_points);
+
+				// Add the serial number to the list of active SMA EMs
+				ser_nums_active.push(ser);
+
+				// Write all protocol values once
+				for(const p in protocol_points) {
+					let val = message.readUIntBE(protocol_points[p].addr, protocol_points[p].length);
+					this.setState(ser_str + '.' + p, val, true);
+				}
+			}
+				
+			/*id_path = ser_num.to_string();
 			if(id_path === undefined)
-				id_path = this.createPoints(message, obis_points, protocol_points);
+				id_path = this.createPoints(message, obis_points, protocol_points);*/
 
 			// Update vales by evaluate UDP packet content.
-			this.updatePoints(id_path, message, obis_points, protocol_points);
+			this.updatePoints(ser_str, message, obis_points, protocol_points);
+
+			// Update derived states
+
     	});
 
 		client.on('close', () => {
@@ -241,12 +274,8 @@ class SmaEm extends utils.Adapter {
 	}
 
 	// Create or delete iobroker data points and set the fixed data points
-	createPoints(message, points, proto) {
+	createPoints(message, ser_str, points, proto, derived) {
 		
-		// Extract serial number as integer
-		const ser = message.readUIntBE(proto['SMASerial'].addr, proto['SMASerial'].length);
-		const ser_str = ser.toString();
-
 		// Create id tree structure ("adapterid.serialnumber.points")
 		this.setObjectNotExistsAsync(ser_str, {
 			type: 'device',
@@ -293,7 +322,6 @@ class SmaEm extends utils.Adapter {
 				this.delObject(path_pre + points[p].id);
 		}
 
-
 		this.getObject(path_pre + 'L1',  (err, obj ) => { 
 			if(!err)
 				this.extendObject(path_pre + 'L1', {type: 'channel', common: {name: 'Values of phase 1'}});	
@@ -308,11 +336,20 @@ class SmaEm extends utils.Adapter {
 			if(!err)
 				this.extendObject(path_pre + 'L3', {type: 'channel', common: {name: 'Values of phase 3'}});	
 		});
-		//this.extendObject(path_pre + 'L1', {type: 'channel'});
-		//this.extendObject(path_pre + 'L4', {type: 'channel'});
 		
-		// Return serial number as string
-		return ser_str;
+		// Create additional derived states
+		for(const p in derived) {
+			this.setObjectNotExistsAsync (path_pre + p, {
+				type: 'state',
+				common: {
+					name: derived[p].name,
+					type: derived[p].type,
+					role: 'value',
+					unit: derived[p].unit
+				},
+				native: {}
+			});
+		}
 	}
 
 	// Update the values of active points
@@ -376,7 +413,7 @@ class SmaEm extends utils.Adapter {
 			val = Number(val) * points[obis_num].factor;
 			
 			// Write value to data point
-			this.setState (id_path + '.' + points[obis_num].id, val,true);
+			this.setState(id_path + '.' + points[obis_num].id, val, true);
 
 			// Set read address to next obis value
 			pos += length;
