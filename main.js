@@ -47,8 +47,7 @@ class SmaEm extends utils.Adapter {
 		// - Time stamp of last message received
 		let derived_points = {
 			'sw_version': {name: 'Software Version Number', type: 'string', unit: ''},
-			'last_message': {name: 'Time Stamp of the Last Message Received', type: 'number', unit: 's'},
-			'connected': {name: 'Connection State, true if a valid message was received wihtin the last 5 seconds.', type: 'bool', unit: ''}
+			'last_message': {name: 'Time Stamp of the Last Message Received', type: 'number', unit: 'ms'}
 		}
 
 		// Define flags for given parameter to determine the parameters of interest.
@@ -196,7 +195,7 @@ class SmaEm extends utils.Adapter {
 			if(ser_nums_active.includes(ser) === false)
 			{
 				// Create the states tree for the device depending on its serial number
-				this.createPoints(message, ser_str, obis_points, protocol_points);
+				this.createPoints(message, ser_str, obis_points, protocol_points, derived_points);
 
 				// Add the serial number to the list of active SMA EMs
 				ser_nums_active.push(ser);
@@ -207,15 +206,31 @@ class SmaEm extends utils.Adapter {
 					this.setState(ser_str + '.' + p, val, true);
 				}
 			}
-				
-			/*id_path = ser_num.to_string();
-			if(id_path === undefined)
-				id_path = this.createPoints(message, obis_points, protocol_points);*/
 
 			// Update vales by evaluate UDP packet content.
 			this.updatePoints(ser_str, message, obis_points, protocol_points);
 
-			// Update derived states
+			// Update software version as human readable
+			this.getState(ser_str + '.sw_version_raw',  (err, state) => {
+				let sw = ((state.val >> 24) & 0xFF).toString();
+				sw += '.' + ((state.val >> 16) & 0xFF).toString();
+				sw += '.' + ((state.val >> 8) & 0xFF).toString();
+				sw += '.' + (state.val & 0xFF).toString();
+
+				this.setState(ser_str + '.sw_version', sw);
+			});
+
+			// Write current time stamp
+			this.setState(ser_str + '.last_message', Date.now());
+
+			// Update fixed protocol data
+			for(const p in protocol_points) {
+				if(protocol_points[p].update === true)
+				{
+					let val = message.readUIntBE(protocol_points[p].addr, protocol_points[p].length);
+					this.setState(ser_str + '.' + p, val, true);			
+				}
+			}
 
     	});
 

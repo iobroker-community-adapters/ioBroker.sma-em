@@ -51,9 +51,8 @@ Example:
   * Power grid frequency
   * Time tick couter
   * SMA SUSy ID
-* Improved connection state values
-  * Detects connection lost, a sucessful connection needs at least one detected energy meter
-  * Individual connection state for each energy meter
+  * Software Version
+* Add timestamp for each received status information
 
 ### 0.5.7
 * (DutchmanNL) Solved incorrect stated ID type for JS-controller 3.x
