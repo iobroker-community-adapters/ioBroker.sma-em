@@ -8,9 +8,7 @@
 // you need to create an adapter
 const utils = require('@iobroker/adapter-core');
 const dgram = require('dgram');
-let connected = false;
-// Load your modules here, e.g.:
-// const fs = require("fs");
+
 
 class SmaEm extends utils.Adapter {
 
@@ -34,11 +32,10 @@ class SmaEm extends utils.Adapter {
 
 		// Reset the connection indicator during startup
 		await this.setStateAsync('info.connection', false, true);
-		connected = false;
 
 		let protocol_points = {
-			'SMASusyID': {name: 'SMA Energy Meter SUSy-ID'               , update: false, addr: 18, length: 2, type: 'number', unit: ''},
-			'SMASerial': {name: 'SMA Energy Meter Serial Number'         , update: false, addr: 20, length: 4, type: 'number', unit: ''},
+			'SMASusyID': {name: 'SMA Device SUSy-ID'                     , update: false, addr: 18, length: 2, type: 'number', unit: ''},
+			'SMASerial': {name: 'SMA Device Serial Number'               , update: false, addr: 20, length: 4, type: 'number', unit: ''},
 			'TimeTick':  {name: 'SMA Time Tick Counter (32-bit overflow)', update: true , addr: 24, length: 4, type: 'number', units: 'ms'}
 		}
 
@@ -46,7 +43,7 @@ class SmaEm extends utils.Adapter {
 		// - Active flag
 		// - Time stamp of last message received
 		let derived_points = {
-			'sw_version': {name: 'Software Version Number', type: 'string', unit: ''},
+			'sw_version': {name: 'Software Version', type: 'string', unit: ''},
 			'last_message': {name: 'Time Stamp of the Last Message Received', type: 'number', unit: 'ms'}
 		}
 
@@ -93,9 +90,9 @@ class SmaEm extends utils.Adapter {
 
 		// Same points are active by default, other depending on the parameter of the adapter.
 		let obis_points = {
-			0x00010400: {id: 'pregard',         name: 'P-active power / Wirkleistung +',                active: true, length: 4, factor: 1 / 10, type: 'number', unit: 'Watt'},
+			0x00010400: {id: 'pregard',         name: 'P-active power / Wirkleistung +',                active: true, length: 4, factor: 1 / 10, type: 'number', unit: 'W'},
 			0x00010800: {id: 'pregardcounter',  name: 'counter P-active power / Zähler Wirkleistung +', active: true, length: 8, factor: 1 / 3600000, type: 'number', unit: 'kWh'},
-			0x00020400: {id: 'psurplus',        name: 'P-active power / Wirkleistung -',                active: true, length: 4, factor: 1 / 10, type: 'number', unit: 'Watt'},
+			0x00020400: {id: 'psurplus',        name: 'P-active power / Wirkleistung -',                active: true, length: 4, factor: 1 / 10, type: 'number', unit: 'W'},
 			0x00020800: {id: 'psurpluscounter', name: 'counter P-active power / Zähler Wirkleistung -', active: true, length: 8, factor: 1 / 3600000, type: 'number', unit: 'kWh'},
 
 			0x00030400: {id: 'qregard',         name: 'Q-reactive power / Blindleistung +',                  active: cfg_ext_active, length: 4, factor: 1 / 10,      type: 'number', unit: 'var'},
@@ -109,9 +106,9 @@ class SmaEm extends utils.Adapter {
 			0x000D0400: {id: 'cosphi',          name: 'power factor / Leistungsfaktor',                      active: cfg_ext_active, length: 4, factor: 1 / 1000,    type: 'number', unit: 'Φ'},
 			0x000E0400: {id: 'frequency',       name: 'frequency / Netzfrequenz',                            active: cfg_ext_active, length: 4, factor: 1 / 1000,    type: 'number', unit: 'Hz'},
 
-			0x00150400: {id: 'L1.pregard',         name: 'L1 P-active power / Wirkleistung +',                active: cfg_L1_active, length: 4, factor: 1 / 10, type: 'number', unit: 'Watt'},
+			0x00150400: {id: 'L1.pregard',         name: 'L1 P-active power / Wirkleistung +',                active: cfg_L1_active, length: 4, factor: 1 / 10, type: 'number', unit: 'W'},
 			0x00150800: {id: 'L1.pregardcounter',  name: 'L1 counter P-active power / Zähler Wirkleistung +', active: cfg_L1_active, length: 8, factor: 1 / 3600000, type: 'number', unit: 'kWh'},
-			0x00160400: {id: 'L1.psurplus',        name: 'L1 P-active power / Wirkleistung -',                active: cfg_L1_active, length: 4, factor: 1 / 10, type: 'number', unit: 'Watt'},
+			0x00160400: {id: 'L1.psurplus',        name: 'L1 P-active power / Wirkleistung -',                active: cfg_L1_active, length: 4, factor: 1 / 10, type: 'number', unit: 'W'},
 			0x00160800: {id: 'L1.psurpluscounter', name: 'L1 counter P-active power / Zähler Wirkleistung -', active: cfg_L1_active, length: 8, factor: 1 / 3600000, type: 'number', unit: 'kWh'},
 
 			0x00170400: {id: 'L1.qregard',         name: 'L1 Q-reactive power / Blindleistung +',                  active: cfg_L1_ext_active, length: 4, factor: 1 / 10,      type: 'number', unit: 'var'},
@@ -126,9 +123,9 @@ class SmaEm extends utils.Adapter {
 			0x00200400: {id: 'L1.voltage',         name: 'L1 voltage / Spannung',                                  active: cfg_L1_ext_active, length: 4, factor: 1 / 1000,    type: 'number', unit: 'V'},
 			0x00210400: {id: 'L1.cosphi',          name: 'L1 power factor / Leistungsfaktor',                      active: cfg_L1_ext_active, length: 4, factor: 1 / 1000,    type: 'number', unit: 'Φ'},
 
-			0x00290400: {id: 'L2.pregard',         name: 'L2 P-active power / Wirkleistung +',                active: cfg_L2_active, length: 4, factor: 1 / 10, type: 'number', unit: 'Watt'},
+			0x00290400: {id: 'L2.pregard',         name: 'L2 P-active power / Wirkleistung +',                active: cfg_L2_active, length: 4, factor: 1 / 10, type: 'number', unit: 'W'},
 			0x00290800: {id: 'L2.pregardcounter',  name: 'L2 counter P-active power / Zähler Wirkleistung +', active: cfg_L2_active, length: 8, factor: 1 / 3600000, type: 'number', unit: 'kWh'},
-			0x002a0400: {id: 'L2.psurplus',        name: 'L2 P-active power / Wirkleistung -',                active: cfg_L2_active, length: 4, factor: 1 / 10, type: 'number', unit: 'Watt'},
+			0x002a0400: {id: 'L2.psurplus',        name: 'L2 P-active power / Wirkleistung -',                active: cfg_L2_active, length: 4, factor: 1 / 10, type: 'number', unit: 'W'},
 			0x002a0800: {id: 'L2.psurpluscounter', name: 'L2 counter P-active power / Zähler Wirkleistung -', active: cfg_L2_active, length: 8, factor: 1 / 3600000, type: 'number', unit: 'kWh'},
 
 			0x002b0400: {id: 'L2.qregard',         name: 'L2 Q-reactive power / Blindleistung +',                  active: cfg_L2_ext_active, length: 4, factor: 1 / 10,      type: 'number', unit: 'var'},
@@ -143,9 +140,9 @@ class SmaEm extends utils.Adapter {
 			0x00340400: {id: 'L2.voltage',         name: 'L2 voltage / Spannung',                                  active: cfg_L2_ext_active, length: 4, factor: 1 / 1000,    type: 'number', unit: 'V'},
 			0x00350400: {id: 'L2.cosphi',          name: 'L2 power factor / Leistungsfaktor',                      active: cfg_L2_ext_active, length: 4, factor: 1 / 1000,    type: 'number', unit: 'Φ'},
 
-			0x003D0400: {id: 'L3.pregard',         name: 'L3 P-active power / Wirkleistung +',                active: cfg_L3_active, length: 4, factor: 1 / 10, type: 'number', unit: 'Watt'},
+			0x003D0400: {id: 'L3.pregard',         name: 'L3 P-active power / Wirkleistung +',                active: cfg_L3_active, length: 4, factor: 1 / 10, type: 'number', unit: 'W'},
 			0x003D0800: {id: 'L3.pregardcounter',  name: 'L3 counter P-active power / Zähler Wirkleistung +', active: cfg_L3_active, length: 8, factor: 1 / 3600000, type: 'number', unit: 'kWh'},
-			0x003E0400: {id: 'L3.psurplus',        name: 'L3 P-active power / Wirkleistung -',                active: cfg_L3_active, length: 4, factor: 1 / 10, type: 'number', unit: 'Watt'},
+			0x003E0400: {id: 'L3.psurplus',        name: 'L3 P-active power / Wirkleistung -',                active: cfg_L3_active, length: 4, factor: 1 / 10, type: 'number', unit: 'W'},
 			0x003E0800: {id: 'L3.psurpluscounter', name: 'L3 counter P-active power / Zähler Wirkleistung -', active: cfg_L3_active, length: 8, factor: 1 / 3600000, type: 'number', unit: 'kWh'},
 
 			0x003F0400: {id: 'L3.qregard',         name: 'L3 Q-reactive power / Blindleistung +',                  active: cfg_L3_ext_active, length: 4, factor: 1 / 10,      type: 'number', unit: 'var'},
@@ -179,13 +176,6 @@ class SmaEm extends utils.Adapter {
 
 		// Event handler in case of UDP packet was received.
 		client.on('message', (message, rinfo) => { 
-			if (!connected) {
-				connected = true;
-				this.setState('info.connection', true, true);
-			}
-
-			// Can be deleted if connection state is internal track by connected
-			this.setState('info.connection', true, true);
 
 			// Extract serial number as integer of the device in the received messag
 			const ser = message.readUIntBE(protocol_points['SMASerial'].addr, protocol_points['SMASerial'].length);
@@ -194,8 +184,16 @@ class SmaEm extends utils.Adapter {
 			// Check if points must be created and extract id path
 			if(ser_nums_active.includes(ser) === false)
 			{
+				let susy = message.readUIntBE(protocol_points['SMASusyID'].addr, protocol_points['SMASusyID'].length);
+				let dev_descr = 'Unkown SMA device S/N: ' + ser_str;
+				
+				if(susy == 372)
+					dev_descr = 'Sunny Home Manager 2.0 S/N: ' + ser_str;
+				else if(susy == 349)
+					dev_descr = 'SMA Energy Meter S/N: ' + ser_str;
+
 				// Create the states tree for the device depending on its serial number
-				this.createPoints(message, ser_str, obis_points, protocol_points, derived_points);
+				this.createPoints(message, ser_str, dev_descr, obis_points, protocol_points, derived_points);
 
 				// Add the serial number to the list of active SMA EMs
 				ser_nums_active.push(ser);
@@ -205,19 +203,26 @@ class SmaEm extends utils.Adapter {
 					let val = message.readUIntBE(protocol_points[p].addr, protocol_points[p].length);
 					this.setState(ser_str + '.' + p, val, true);
 				}
+
+				// Update connection state.
+				this.setState('info.connection', true, true);
 			}
 
 			// Update vales by evaluate UDP packet content.
 			this.updatePoints(ser_str, message, obis_points, protocol_points);
 
 			// Update software version as human readable
+			// Major.Minor.Build.Revision(as character)
 			this.getState(ser_str + '.sw_version_raw',  (err, state) => {
-				let sw = ((state.val >> 24) & 0xFF).toString();
-				sw += '.' + ((state.val >> 16) & 0xFF).toString();
-				sw += '.' + ((state.val >> 8) & 0xFF).toString();
-				sw += '.' + (state.val & 0xFF).toString();
+				if(!err && state != null)
+				{
+					let sw = ((state.val >> 24) & 0xFF).toString();
+					sw += '.' + ((state.val >> 16) & 0xFF).toString();
+					sw += '.' + ((state.val >> 8) & 0xFF).toString();
+					sw += '.' + String.fromCharCode(state.val & 0xFF);
 
-				this.setState(ser_str + '.sw_version', sw);
+					this.setState(ser_str + '.sw_version', sw);
+				}
 			});
 
 			// Write current time stamp
@@ -289,13 +294,13 @@ class SmaEm extends utils.Adapter {
 	}
 
 	// Create or delete iobroker data points and set the fixed data points
-	createPoints(message, ser_str, points, proto, derived) {
+	createPoints(message, ser_str, dev_str, points, proto, derived) {
 		
 		// Create id tree structure ("adapterid.serialnumber.points")
 		this.setObjectNotExistsAsync(ser_str, {
 			type: 'device',
 			common: {
-				name: 'SMA Energy Meter with serial number: ' + ser_str			},
+				name: dev_str},
 			native: {}
 		});
 		

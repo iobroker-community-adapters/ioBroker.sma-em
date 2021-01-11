@@ -43,6 +43,15 @@ Example:
           ssurplus S-apparent power /surplus
         
 ## Changelog
+
+### 0.6.1
+* (TGuybrush) Bug fixes
+  * Software Version string, last part is the revision as character (e.g. R = release)
+  * Potential Warning during the first start
+  * Revised units to follow the SI standardization (DIN 1301)
+
+* (TGuybrush) Top level hierachy object description indicates if the device is a SMA Energy Meter or a SMA Home Manger 2.
+
 ### 0.6.0
 * (TGuybrush) Fixed wrong status information 
   * Complete adapter core rewritten to extract the status values by their OBIS value instead of the absolute position in the received UDP message according to the SMA documentation.
