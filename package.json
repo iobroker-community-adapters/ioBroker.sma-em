@@ -1,7 +1,7 @@
 {
   "name": "iobroker.sma-em",
-  "version": "0.6.0",
-  "description": "ioBroker SMA-Energy Meter Adapter",
+  "version": "0.6.1",
+  "description": "ioBroker SMA-Energy Meter / Sunny Home Manager Adapter",
   "author": {
     "name": "Marcolotti",
     "email": "info@ct-j.de"
