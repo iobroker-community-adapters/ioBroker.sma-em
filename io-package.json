@@ -1,8 +1,12 @@
 {
     "common": {
         "name": "sma-em",
-        "version": "0.5.7",
+        "version": "0.6.1",
         "news": {
+            "0.6.1": {
+                "en": "Complete rewritten adapter core. Add additional status information.",
+                "de": "Kernkomponenten komplett überarbeitet. Zusätzliche Statusinformationen hinzugefügt."
+            },
             "0.5.7": {
                 "en": "Solved incorrect stated ID type for JS-controller 3.x",
                 "de": "Der falsch angegebene ID-Typ für JS-Controller 3.x wurde behoben",
