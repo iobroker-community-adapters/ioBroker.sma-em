@@ -41,16 +41,21 @@ Example:
           psurplus P-active power / surplus
           qsurplus Q-reaktive power /surplus
           ssurplus S-apparent power /surplus
+
+<!--
+    Placeholder for the next version (at the beginning of the line):
+    ### __WORK IN PROGRESS__
+-->
         
 ## Changelog
 
-### 0.6.1
+### 0.6.1-beta.0 (2021-01-18)
 * (TGuybrush) Bug fixes
   * Software Version string, last part is the revision as character (e.g. R = release)
   * Potential Warning during the first start
   * Revised units to follow the SI standardization (DIN 1301)
-
-* (TGuybrush) Top level hierachy object description indicates if the device is a SMA Energy Meter or a SMA Home Manger 2.
+* (TGuybrush) Top level hierarchy object description indicates if the device is a SMA Energy Meter or a SMA Home Manger 2.
+* (DutchmanNL) Released to the latest repo, fixed some typo's + news and translations
 
 ### 0.6.0
 * (TGuybrush) Fixed wrong status information 
@@ -58,10 +63,10 @@ Example:
   *  Improved compatibility to future new OBIS values
 * (TGuybrush) Add additional status information
   * Power grid frequency
-  * Time tick couter
+  * Time tick counter
   * SMA SUSy ID
   * Software Version
-* Add timestamp for each received status information
+* Add a timestamp for each received status information
 
 ### 0.5.7
 * (DutchmanNL) Solved incorrect stated ID type for JS-controller 3.x

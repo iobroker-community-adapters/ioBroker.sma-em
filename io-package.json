@@ -1,11 +1,43 @@
 {
     "common": {
         "name": "sma-em",
-        "version": "0.6.1",
+        "version": "0.6.1-beta.0",
         "news": {
+            "0.6.1-beta.0": {
+                "en": "Bug fixes\nSoftware Version string, last part is the revision as character (e.g. R = release)\nPotential Warning during the first start\nRevised units to follow the SI standardization (DIN 1301)\nTop level hierarchy object description indicates if the device is a SMA Energy Meter or a SMA Home Manger 2.\nReleased to the latest repo, fixed some typo's + news and translations",
+                "de": "Fehlerbehebung\nSoftwareversionszeichenfolge, letzter Teil ist die Revision als Zeichen (z. B. R = Release)\nMögliche Warnung beim ersten Start\nÜberarbeitete Einheiten gemäß SI-Normung (DIN 1301)\nDie Beschreibung des Hierarchieobjekts der obersten Ebene gibt an, ob das Gerät ein SMA-Energiezähler oder ein SMA-Home-Manager 2 ist.\nIm neuesten Repo veröffentlicht, einige Tippfehler + Neuigkeiten und Übersetzungen behoben",
+                "ru": "Исправление ошибок\nСтрока версии программного обеспечения, последняя часть - это версия в виде символа (например, R = выпуск)\nВозможное предупреждение при первом запуске\nПересмотренные единицы измерения в соответствии со стандартизацией SI (DIN 1301)\nОписание объекта иерархии верхнего уровня указывает, является ли устройство измерителем энергии SMA или SMA Home Manger 2.\nВыпущено в последний репо, исправлены некоторые опечатки + новости и переводы",
+                "pt": "Correções de bugs\nString da versão do software, a última parte é a revisão como caractere (por exemplo, R = versão)\nAviso potencial durante a primeira partida\nUnidades revisadas para seguir a padronização SI (DIN 1301)\nA descrição do objeto de hierarquia de nível superior indica se o dispositivo é um SMA Energy Meter ou um SMA Home Manger 2.\nLiberado para o repo mais recente, corrigiu alguns erros de digitação + notícias e traduções",
+                "nl": "Bugfixes\nSoftwareversie string, laatste deel is de revisie als teken (bijv.R = release)\nMogelijke waarschuwing tijdens de eerste start\nHerziene eenheden om de SI-normering te volgen (DIN 1301)\nDe objectbeschrijving van de hoogste hiërarchie geeft aan of het apparaat een SMA Energy Meter of een SMA Home Manger 2 is.\nUitgebracht naar de nieuwste repo, enkele typefouten, nieuws en vertalingen gerepareerd",
+                "fr": "Corrections de bogues\nChaîne de version du logiciel, la dernière partie est la révision sous forme de caractère (par exemple, R = version)\nAvertissement potentiel lors du premier démarrage\nUnités révisées pour suivre la normalisation SI (DIN 1301)\nLa description de l'objet de la hiérarchie de niveau supérieur indique si l'appareil est un SMA Energy Meter ou un SMA Home Manger 2.\nPublié dans le dernier référentiel, correction de quelques fautes de frappe + nouvelles et traductions",
+                "it": "Correzioni di bug\nStringa della versione del software, l'ultima parte è la revisione come carattere (ad esempio R = versione)\nPotenziale avvertenza durante il primo avvio\nUnità riviste per seguire la standardizzazione SI (DIN 1301)\nLa descrizione dell'oggetto gerarchia di primo livello indica se il dispositivo è uno SMA Energy Meter o uno SMA Home Manger 2.\nRilasciato nell'ultimo repository, corretti + notizie e traduzioni di errori di battitura",
+                "es": "Corrección de errores\nCadena de versión de software, la última parte es la revisión como carácter (por ejemplo, R = lanzamiento)\nAdvertencia potencial durante el primer arranque\nUnidades revisadas para seguir la estandarización SI (DIN 1301)\nLa descripción del objeto de la jerarquía de nivel superior indica si el dispositivo es un SMA Energy Meter o un SMA Home Manger 2.\nLanzado al último repositorio, se corrigieron algunos errores tipográficos + noticias y traducciones",
+                "pl": "Poprawki błędów\nCiąg wersji oprogramowania, ostatnia część to wersja jako znak (np. R = wydanie)\nPotencjalne ostrzeżenie podczas pierwszego uruchomienia\nZmienione jednostki zgodne ze standardem SI (DIN 1301)\nOpis obiektu w hierarchii najwyższego poziomu wskazuje, czy urządzenie jest licznikiem energii SMA czy SMA Home Manger 2.\nWydany do najnowszego repozytorium, naprawiono niektóre literówki + wiadomości i tłumaczenia",
+                "zh-cn": "Bug修复\n软件版本字符串，最后一部分是作为字符的修订版（例如R =版本）\n首次启动时的潜在警告\n经修订的单位遵循SI标准化（DIN 1301）\n顶层层次结构对象说明指示该设备是SMA电能表还是SMA Home Manger 2。\n发布到最新的仓库中，修复了一些错字+新闻和翻译"
+            },
             "0.6.1": {
-                "en": "Complete rewritten adapter core. Add additional status information.",
-                "de": "Kernkomponenten komplett überarbeitet. Zusätzliche Statusinformationen hinzugefügt."
+                "en": "Bug fixes\nTop level hierarchy object description indicates if the device is a SMA Energy Meter or a SMA Home Manger 2",
+                "de": "Fehlerbehebungen\nDie Objektbeschreibung der Hierarchie auf oberster Ebene gibt an, ob das Gerät ein SMA-Energiezähler oder ein SMA-Home-Manager 2 ist",
+                "ru": "Исправления ошибок\n Описание объекта иерархии верхнего уровня указывает, является ли устройство измерителем энергии SMA или SMA Home Manger 2.",
+                "pt": "Correções de bug\nA descrição do objeto de hierarquia de nível superior indica se o dispositivo é um medidor de energia SMA ou um gerenciador doméstico SMA 2",
+                "nl": "Bugfixes\nHiërarchieobject op het hoogste niveau geeft aan of het apparaat een SMA Energy Meter of een SMA Home Manager 2 is",
+                "fr": "Corrections de bogues\nLa description de l'objet de la hiérarchie de niveau supérieur indique si l'appareil est un SMA Energy Meter ou un SMA Home Manger 2",
+                "it": "Correzioni di bug\nLa descrizione dell'oggetto gerarchia di livello superiore indica se il dispositivo è uno SMA Energy Meter o uno SMA Home Manger 2",
+                "es": "Corrección de errores\nLa descripción del objeto de la jerarquía de nivel superior indica si el dispositivo es un SMA Energy Meter o un SMA Home Manger 2",
+                "pl": "Poprawki błędów\nOpis obiektu w hierarchii najwyższego poziomu wskazuje, czy urządzenie jest miernikiem energii SMA, czy SMA Home Manger 2",
+                "zh-cn": "错误修复__顶级层次结构对象描述指示该设备是SMA电能表还是SMA Home Manger 2"
+            },
+            "0.6.0": {
+                "en": "Improved compatibility to future new OBIS values\nAdd additional status information\nAdd a timestamp for each received status information",
+                "de": "Verbesserte Kompatibilität mit zukünftigen neuen OBIS-Werten\n Zusätzliche Statusinformationen hinzufügen\n Zeitstempel für jede empfangene Statusinformation hinzufügen",
+                "ru": "Улучшена совместимость с будущими новыми значениями OBIS\nДобавить дополнительную информацию о статусе\nДобавить метку времени для каждой полученной информации о статусе",
+                "pt": "Compatibilidade aprimorada para novos valores OBIS futuros\nAdicione informações de status adicionais\nAdicione um carimbo de data / hora para cada informação de status recebida",
+                "nl": "Verbeterde compatibiliteit met toekomstige nieuwe OBIS-waarden\nVoeg extra statusinformatie toe\nVoeg een tijdstempel toe voor elke ontvangen statusinformatie",
+                "fr": "Amélioration de la compatibilité avec les futures nouvelles valeurs OBIS\nAjoutez des informations d'état supplémentaires\nAjoutez un horodatage pour chaque information d'état reçue",
+                "it": "Compatibilità migliorata con i nuovi valori OBIS futuri\n Aggiungere ulteriori informazioni sullo stato\n Aggiungere un timestamp per ciascuna informazione sullo stato ricevuto",
+                "es": "Compatibilidad mejorada con valores futuros de OBIS nuevos\nAñadir información de estado adicional\nAñadir una marca de tiempo para cada información de estado recibida",
+                "pl": "Poprawiona zgodność z przyszłymi nowymi wartościami OBIS\nDodaj dodatkowe informacje o statusie\nDodaj sygnaturę czasową dla każdej otrzymanej informacji o stanie",
+                "zh-cn": "改进了与未来新OBIS值的兼容性__添加其他状态信息__为每个接收到的状态信息添加时间戳"
             },
             "0.5.7": {
                 "en": "Solved incorrect stated ID type for JS-controller 3.x",
@@ -62,15 +94,15 @@
         "icon": "sma-em.png",
         "enabled": true,
         "extIcon": "https://raw.githubusercontent.com/iobroker-community-adapters/ioBroker.sma-em/master/admin/sma-em.png",
-	"keywords": [
+        "keywords": [
             "SMA Energy Meter"
         ],
         "readme": "https://github.com/iobroker-community-adapters/ioBroker.sma-em/blob/master/README.md",
         "loglevel": "info",
         "type": "energy",
         "license": "MIT",
-		"compact": true,
-		"materialize": true,
+        "compact": true,
+        "materialize": true,
         "restartAdapters": [],
         "authors": [
             {
@@ -82,10 +114,10 @@
     "native": {
         "BIP": "239.12.255.254",
         "BPO": 9522,
-	"L1": false,
-	"L2": false,
-	"L3": false,
-	"ext": false
+        "L1": false,
+        "L2": false,
+        "L3": false,
+        "ext": false
     },
     "objects": [],
     "instanceObjects": [
