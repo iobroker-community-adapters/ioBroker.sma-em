@@ -13,11 +13,11 @@ This adapter reads information from SMA Energy Meter and SMA Home Manager 2.
 
 ### States
 - Total and Counter of active power, reactive power, apparent power
-- cosphi, Total Harmonic Distortion, Voltage
+- cosphi, Total Harmonic Distortion, Voltage, Frequency
 - Detailed Each of the 3 phases with regard of active power, reactive power, apparent power, cosphi, Amperage, Voltage
 - Detailed Each of the 3 phases with surplus of active power, reactive power, apparent power, cosphi, Amperage, Voltage
 - Detailed Each of the 3 phases counter
-- Serial Number of SMA Energy Meter
+- Serial Number, Software Version, SUSyID of SMA Energy Meter
 
 ### Options
 - Selection options over each individual phase L1 / L2 / L3
@@ -43,6 +43,26 @@ Example:
           ssurplus S-apparent power /surplus
         
 ## Changelog
+
+### 0.6.1
+* (TGuybrush) Bug fixes
+  * Software Version string, last part is the revision as character (e.g. R = release)
+  * Potential Warning during the first start
+  * Revised units to follow the SI standardization (DIN 1301)
+
+* (TGuybrush) Top level hierachy object description indicates if the device is a SMA Energy Meter or a SMA Home Manger 2.
+
+### 0.6.0
+* (TGuybrush) Fixed wrong status information 
+  * Complete adapter core rewritten to extract the status values by their OBIS value instead of the absolute position in the received UDP message according to the SMA documentation.
+  *  Improved compatibility to future new OBIS values
+* (TGuybrush) Add additional status information
+  * Power grid frequency
+  * Time tick couter
+  * SMA SUSy ID
+  * Software Version
+* Add timestamp for each received status information
+
 ### 0.5.7
 * (DutchmanNL) Solved incorrect stated ID type for JS-controller 3.x
 
