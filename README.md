@@ -54,7 +54,7 @@ Example:
   * Software Version string, last part is the revision as character (e.g. R = release)
   * Potential Warning during the first start
   * Revised units to follow the SI standardization (DIN 1301)
-* (TGuybrush) Top level hierarchy object description indicates if the device is a SMA Energy Meter or a SMA Home Manger 2.
+* (TGuybrush) Top level hierarchy object description indicates if the device is a SMA Energy Meter or a SMA Home Manager 2.
 * (DutchmanNL) Released to the latest repo, fixed some typo's + news and translations
 
 ### 0.6.0
@@ -100,7 +100,7 @@ Example:
 ## License
 The MIT License (MIT)
 
-Copyright (c) 2017 Marcolotti <info@ct-j.de>
+Copyright (c) 2021 IoBroker-Community
 
 Permission is hereby granted, free of charge, to any person obtaining a copy
 of this software and associated documentation files (the "Software"), to deal

@@ -102,6 +102,8 @@
         "type": "energy",
         "license": "MIT",
         "compact": true,
+        "connectionType": "local",
+        "dataSource": "push",
         "materialize": true,
         "restartAdapters": [],
         "authors": [

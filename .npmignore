@@ -6,7 +6,13 @@ nbproject/
 *.code-workspace
 Thumbs.db
 gulpfile.js
+.github
+.gitignore
+.npmignore
+iob_npm.done
+main.test.js
 
+# CI test files
 test/
 travis/
 .travis.yml
@@ -14,6 +20,12 @@ appveyor.yml
 .travis.yaml
 appveyor.yaml
 
+# Type checking configuration
+tsconfig.json
+tsconfig.*.json
+launch.json
+
+# ESLint configuration
 .eslintrc.json
 .eslintrc.js
 
