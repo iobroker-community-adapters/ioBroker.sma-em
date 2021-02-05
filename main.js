@@ -8,7 +8,7 @@
 // you need to create an adapter
 const utils = require('@iobroker/adapter-core');
 const dgram = require('dgram');
-
+const os = require('os');
 
 class SmaEm extends utils.Adapter {
 
@@ -167,11 +167,15 @@ class SmaEm extends utils.Adapter {
 		// Open UDPv4 socket to receive SMA multicast packets.
 		let client = dgram.createSocket('udp4');
 	
-		// Bind socket to the multicast address-
+		// Bind socket to the multicast address on all devices except localhost
 		client.bind(this.config.BPO, () => {
-			this.log.info('Listen via UDP on Port ' + this.config.BPO + ' for Multicast IP ' + this.config.BIP);
 			this.log.info('Details L1 ' + this.config.L1 + ' Details L2 ' + this.config.L2 + ' Details L3 ' + this.config.L3 + ' Extended info ' + this.config.ext);
-			client.addMembership(this.config.BIP);
+
+			for(const dev of this.findIPv4IPs())
+			{
+				this.log.info(`Listen via UDP on Device ${dev.name} with IP ${dev.ipaddr} on Port ${this.config.BPO} for Multicast IP ${this.config.BIP}`);
+				client.addMembership(this.config.BIP, dev.ipaddr);
+			}
 		});
 
 		// Event handler in case of UDP packet was received.
@@ -440,6 +444,23 @@ class SmaEm extends utils.Adapter {
 		}
 	}
 
+	findIPv4IPs() {
+		// Get all network devices
+		let ifaces = require('os').networkInterfaces();
+		var net_devs = [];
+
+		for (var dev in ifaces) {
+			if (ifaces.hasOwnProperty(dev)) {
+				
+				// Read IPv4 address properties of each device by filtering for the IPv4 external interfaces
+				ifaces[dev].forEach(function (details) {
+					if (!details.internal && details.family === "IPv4") 
+						net_devs.push({name: dev, ipaddr: details.address});
+				});
+			}
+		}
+		return net_devs;
+	}
 }
 // @ts-ignore parent is a valid property on module
 if (module.parent) {
@@ -452,3 +473,5 @@ if (module.parent) {
 	// otherwise start the instance directly
 	new SmaEm();
 }
+
+
