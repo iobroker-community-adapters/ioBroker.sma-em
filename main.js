@@ -8,7 +8,7 @@
 // you need to create an adapter
 const utils = require('@iobroker/adapter-core');
 const dgram = require('dgram');
-
+const os = require('os');
 
 class SmaEm extends utils.Adapter {
 
@@ -161,17 +161,20 @@ class SmaEm extends utils.Adapter {
 		};
 
 		// Member variable to store the path to write the value of the current instance.
-		var id_path;
-		var ser_nums_active = [];
+		let id_path;
+		let ser_nums_active = [];
 
 		// Open UDPv4 socket to receive SMA multicast packets.
 		let client = dgram.createSocket('udp4');
 	
-		// Bind socket to the multicast address-
+		// Bind socket to the multicast address on all devices except localhost
 		client.bind(this.config.BPO, () => {
-			this.log.info('Listen via UDP on Port ' + this.config.BPO + ' for Multicast IP ' + this.config.BIP);
 			this.log.info('Details L1 ' + this.config.L1 + ' Details L2 ' + this.config.L2 + ' Details L3 ' + this.config.L3 + ' Extended info ' + this.config.ext);
-			client.addMembership(this.config.BIP);
+
+			for (const dev of this.findIPv4IPs()) {
+				this.log.info(`Listen via UDP on Device ${dev.name} with IP ${dev.ipaddr} on Port ${this.config.BPO} for Multicast IP ${this.config.BIP}`);
+				client.addMembership(this.config.BIP, dev.ipaddr);
+			}
 		});
 
 		// Event handler in case of UDP packet was received.
@@ -182,15 +185,15 @@ class SmaEm extends utils.Adapter {
 			const ser_str = ser.toString();
 			
 			// Check if points must be created and extract id path
-			if(ser_nums_active.includes(ser) === false)
-			{
+			if (ser_nums_active.includes(ser) === false) {
 				let susy = message.readUIntBE(protocol_points['SMASusyID'].addr, protocol_points['SMASusyID'].length);
 				let dev_descr = 'Unkown SMA device S/N: ' + ser_str;
 				
-				if(susy == 372)
+				if (susy == 372) {
 					dev_descr = 'Sunny Home Manager 2.0 S/N: ' + ser_str;
-				else if(susy == 349)
+				} else if (susy == 349) {
 					dev_descr = 'SMA Energy Meter S/N: ' + ser_str;
+				}
 
 				// Create the states tree for the device depending on its serial number
 				this.createPoints(message, ser_str, dev_descr, obis_points, protocol_points, derived_points);
@@ -199,7 +202,7 @@ class SmaEm extends utils.Adapter {
 				ser_nums_active.push(ser);
 
 				// Write all protocol values once
-				for(const p in protocol_points) {
+				for (const p in protocol_points) {
 					let val = message.readUIntBE(protocol_points[p].addr, protocol_points[p].length);
 					this.setState(ser_str + '.' + p, val, true);
 				}
@@ -214,8 +217,7 @@ class SmaEm extends utils.Adapter {
 			// Update software version as human readable
 			// Major.Minor.Build.Revision(as character)
 			this.getState(ser_str + '.sw_version_raw',  (err, state) => {
-				if(!err && state != null)
-				{
+				if (!err && state != null) {
 					let sw = ((state.val >> 24) & 0xFF).toString();
 					sw += '.' + ((state.val >> 16) & 0xFF).toString();
 					sw += '.' + ((state.val >> 8) & 0xFF).toString();
@@ -229,9 +231,8 @@ class SmaEm extends utils.Adapter {
 			this.setState(ser_str + '.last_message', Date.now());
 
 			// Update fixed protocol data
-			for(const p in protocol_points) {
-				if(protocol_points[p].update === true)
-				{
+			for (const p in protocol_points) {
+				if(protocol_points[p].update === true) {
 					let val = message.readUIntBE(protocol_points[p].addr, protocol_points[p].length);
 					this.setState(ser_str + '.' + p, val, true);			
 				}
@@ -299,8 +300,7 @@ class SmaEm extends utils.Adapter {
 		// Create id tree structure ("adapterid.serialnumber.points")
 		this.setObjectNotExistsAsync(ser_str, {
 			type: 'device',
-			common: {
-				name: dev_str},
+			common: {name: dev_str},
 			native: {}
 		});
 		
@@ -325,7 +325,7 @@ class SmaEm extends utils.Adapter {
 		for(const p in points) {
 
 			// Create only points which are configured as active
-			if(points[p].active === true) {
+			if (points[p].active === true) {
 				this.setObjectNotExistsAsync (path_pre + points[p].id, {
 					type: 'state',
 					common: {
@@ -338,27 +338,25 @@ class SmaEm extends utils.Adapter {
 				});
 			}
 			// Delete point if it is not active
-			else
+			else {
 				this.delObject(path_pre + points[p].id);
+			}
 		}
 
 		this.getObject(path_pre + 'L1',  (err, obj ) => { 
-			if(!err)
-				this.extendObject(path_pre + 'L1', {type: 'channel', common: {name: 'Values of phase 1'}});	
+			!err && this.extendObject(path_pre + 'L1', {type: 'channel', common: {name: 'Values of phase 1'}});	
 		});
 
 		this.getObject(path_pre + 'L2',  (err, obj ) => { 
-			if(!err)
-				this.extendObject(path_pre + 'L2', {type: 'channel', common: {name: 'Values of phase 2'}});	
+			!err && this.extendObject(path_pre + 'L2', {type: 'channel', common: {name: 'Values of phase 2'}});	
 		});
 
 		this.getObject(path_pre + 'L3',  (err, obj ) => { 
-			if(!err)
-				this.extendObject(path_pre + 'L3', {type: 'channel', common: {name: 'Values of phase 3'}});	
+			!err && this.extendObject(path_pre + 'L3', {type: 'channel', common: {name: 'Values of phase 3'}});	
 		});
 		
 		// Create additional derived states
-		for(const p in derived) {
+		for (const p in derived) {
 			this.setObjectNotExistsAsync (path_pre + p, {
 				type: 'state',
 				common: {
@@ -379,7 +377,7 @@ class SmaEm extends utils.Adapter {
 		let pos = 28;
 
 		// Extract obis number
-		while(pos < message.length) {
+		while (pos < message.length) {
 
 			// Get obis value as 32 bit number
 			let obis_num = message.readUInt32BE(pos);
@@ -388,8 +386,9 @@ class SmaEm extends utils.Adapter {
 			if (!points.hasOwnProperty(obis_num)) {
 
 				// OBIS = 0x0 at the end of the message indicates end of message
-				if(obis_num === 0 && pos === message.length - 4)
+				if (obis_num === 0 && pos === message.length - 4) {
 					break;
+				}
 
 				this.log.warn(`Unkown OBIS value ${obis_num} found in UDP packet. Skip it and going to the next OBIS value.`);
 				
@@ -398,10 +397,9 @@ class SmaEm extends utils.Adapter {
 
 				// Only 4 or 8 is allowed for offset since all know OBIS values have the length 4 or 8
 				// Add 4 for the OBIS value itself.
-				if(offset === 4 || offset === 8) {
+				if (offset === 4 || offset === 8) {
 					pos += offset + 4;
-				}
-				else {
+				} else {
 					pos += 4 + 4;
 				}
 				continue;
@@ -412,20 +410,18 @@ class SmaEm extends utils.Adapter {
 			pos += 4;
 
 			// If point is marked as inactive skip it and go to the next point.
-			if(points[obis_num].active === false) {
+			if (points[obis_num].active === false) {
 				pos += length;
 				continue;
 			}
 
 			// Read obis message value as 32 or 64 bit unsigned int value.
 			let val = 0;
-			if(length === 4) {
+			if (length === 4) {
 				val = message.readUInt32BE(pos);
-			}
-			else if(length === 8) {
+			} else if (length === 8) {
 				val = message.readBigUInt64BE(pos);
-			}
-			else {
+			} else {
 				this.log.error(`Only obis message length of 4 or 8 is support, current length is ${length}`);
 			}
 
@@ -440,6 +436,24 @@ class SmaEm extends utils.Adapter {
 		}
 	}
 
+	findIPv4IPs() {
+		// Get all network devices
+		let ifaces = require('os').networkInterfaces();
+		var net_devs = [];
+
+		for (var dev in ifaces) {
+			if (ifaces.hasOwnProperty(dev)) {
+				
+				// Read IPv4 address properties of each device by filtering for the IPv4 external interfaces
+				ifaces[dev].forEach(details => {
+					if (!details.internal && details.family === 'IPv4') {
+						net_devs.push({name: dev, ipaddr: details.address});
+					}
+				});
+			}
+		}
+		return net_devs;
+	}
 }
 // @ts-ignore parent is a valid property on module
 if (module.parent) {
@@ -452,3 +466,5 @@ if (module.parent) {
 	// otherwise start the instance directly
 	new SmaEm();
 }
+
+
