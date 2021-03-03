@@ -1,8 +1,20 @@
 {
     "common": {
         "name": "sma-em",
-        "version": "0.6.1-beta.0",
+        "version": "0.6.3",
         "news": {
+            "0.6.3": {
+                "en": "The adapter binds now to all external IPv4 addresses.",
+                "de": "Der Adapter wird jetzt an alle externen IPv4-Adressen gebunden.",
+                "ru": "Теперь адаптер привязывается ко всем внешним IPv4-адресам.",
+                "pt": "O adaptador agora se liga a todos os endereços IPv4 externos.",
+                "nl": "De adapter bindt nu aan alle externe IPv4-adressen.",
+                "fr": "L'adaptateur se lie désormais à toutes les adresses IPv4 externes.",
+                "it": "L'adattatore si associa ora a tutti gli indirizzi IPv4 esterni.",
+                "es": "El adaptador se une ahora a todas las direcciones IPv4 externas.",
+                "pl": "Adapter łączy się teraz ze wszystkimi zewnętrznymi adresami IPv4.",
+                "zh-cn": "适配器现在绑定到所有外部IPv4地址。"
+            },
             "0.6.1-beta.0": {
                 "en": "Bug fixes\nSoftware Version string, last part is the revision as character (e.g. R = release)\nPotential Warning during the first start\nRevised units to follow the SI standardization (DIN 1301)\nTop level hierarchy object description indicates if the device is a SMA Energy Meter or a SMA Home Manger 2.\nReleased to the latest repo, fixed some typo's + news and translations",
                 "de": "Fehlerbehebung\nSoftwareversionszeichenfolge, letzter Teil ist die Revision als Zeichen (z. B. R = Release)\nMögliche Warnung beim ersten Start\nÜberarbeitete Einheiten gemäß SI-Normung (DIN 1301)\nDie Beschreibung des Hierarchieobjekts der obersten Ebene gibt an, ob das Gerät ein SMA-Energiezähler oder ein SMA-Home-Manager 2 ist.\nIm neuesten Repo veröffentlicht, einige Tippfehler + Neuigkeiten und Übersetzungen behoben",
