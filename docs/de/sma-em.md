@@ -26,14 +26,14 @@ Die Buchstaben P, Q und S stammen aus der Elektrotechnik und stehen für:
 * Q - Blindleistung
 * S - Scheinleistung
 
-Das Wort "regard" kommt aus dem englischen und bedeutet soviel wie Netzbezug. (Strom den ich vom Netzbetreiber beziehe)
-Das Wort "surplus" bedeutet Überschuss. (Strom der zum Netzbetreiber geht)
-Das Wort "counter" bedeutet Zähler.
+- Das Wort "regard" bedeutet hier soviel wie Netzbezug. (Strom, der vom Netz bezogen wird)
+- Das Wort "surplus" bedeutet Überschuss und hier soviel wie Netzeinspeisung. (Strom der ins Netz eingespeist wird)
+- Das Wort "counter" bedeutet Zähler.
 
 Daraus setzen sich die Objektnamen zusammen z.B.
 
-pregard - Wirkleistung Netzbezug
-psurplus - Wirkleistung Einspeisung (Überschuss)
-qregard - Blindleistung Netzbezug
-pregardcounter - Zähler der Wirkleistung Netzbezug
-...
+- pregard - Wirkleistung Netzbezug
+- psurplus - Wirkleistung Einspeisung
+- pregardcounter - Zähler der Wirkleistung Netzbezug
+- qregard - Blindleistung Netzbezug
+- ...
