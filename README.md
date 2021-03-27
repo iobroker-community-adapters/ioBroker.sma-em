@@ -13,7 +13,7 @@ It supports the SMA-EMETER-protocol-2.
 SMA Energy Meter and Sunny Home Manager 2 multicast datagrams with their energy measurement data to the network every second.
 The SMA Energy Meter Adapter receives these multicast messages and stores them as iobroker states.
 
-![States](docs/en/img/Screenshot 2021-03-23 152540.jpg)
+![States](docs/en/img/overview.png)
 
 ### States in non-extended mode
 - Instantaneous values of total active power consumption (pregard) and active power feed-in (psurplus)
