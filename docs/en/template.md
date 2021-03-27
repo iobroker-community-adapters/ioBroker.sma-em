@@ -27,14 +27,14 @@ The letters P, Q and S are derived from electrical engineering and represent:
 * Q - reactive power
 * S - apparent power
 
-The word "regard" here means "consumption". (power received from the grid)
-The word "surplus" here means "feed-in". (power fed into the grid)
-The word "counter" here means "energy meter".
+- The word "regard" here means "consumption". (power received from the grid)
+- The word "surplus" here means "feed-in". (power fed into the grid)
+- The word "counter" here means "energy meter".
 
 From this, the object names are put together, e.g.
 
-pregard - active power received from the grid
-psurplus - active power fed into the grid
-pregardcounter - energy meter for the active power received from the grid
-qregard - reactive power received from the grid
-...
+- pregard - active power received from the grid
+- psurplus - active power fed into the grid
+- pregardcounter - energy meter for the active power received from the grid
+- qregard - reactive power received from the grid
+- ...
