@@ -27,7 +27,7 @@ Die Buchstaben P, Q und S stammen aus der Elektrotechnik und stehen für:
 * S - Scheinleistung
 
 - Das Wort "regard" bedeutet hier soviel wie Netzbezug. (Strom, der vom Netz bezogen wird)
-- Das Wort "surplus" bedeutet Überschuss und hier soviel wie Netzeinspeisung. (Strom der ins Netz eingespeist wird)
+- Das Wort "surplus" bedeutet Überschuss und hier soviel wie Netzeinspeisung. (Strom, der ins Netz eingespeist wird)
 - Das Wort "counter" bedeutet Zähler.
 
 Daraus setzen sich die Objektnamen zusammen z.B.
