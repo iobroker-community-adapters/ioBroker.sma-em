@@ -10,7 +10,7 @@ Der SMA Energy Meter Adapter empfängt den Multicast des Energy-Meters. Dieser s
 Multicast IP: Standardmäßig eingestellt und von SMA vorgegeben ist die IP-Adresse 239.12.255.254.
 Multicast Port: Standardmäßig eingestellt und von SMA vorgegeben ist der UDP Port: 9522. 
 
-Erweiterter Modus: Bietet detailiertere Information wie Blindleistung, Scheinleistung, cosphi, Spannungen, THD (Gesamte harmonische Verzerrung) Diese Einstellung ist standardmäßig deaktiviert. 
+Erweiterter Modus: Bietet detailiertere Information wie Blindleistung, Scheinleistung, cosphi, Spannungen, usw. Diese Einstellung ist standardmäßig deaktiviert. 
 ACHTUNG: Der erweiterte Modus verlangt deutlich mehr Rechenleistung.
 
 Details L1 - L3: Über diese Auswahlpunkte können Details zu jeder einzelnen Phase angezeigt werden.
@@ -37,6 +37,3 @@ psurplus - Wirkleistung Einspeisung (Überschuss)
 qregard - Blindleistung Netzbezug
 pregardcounter - Zähler der Wirkleistung Netzbezug
 ...
-
-thd - harmonische Verzerrung
-v - Spannung
