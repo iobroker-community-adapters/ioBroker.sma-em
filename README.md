@@ -39,7 +39,7 @@ In addition to the states in non-extended mode, the following values are availab
 
 ### Configuration Options
 
-![Settings](docs/en/img/Screenshot 2021-03-23 152540.jpg)
+![Settings](docs/en/img/adminpage.png)
 
 - Multicast IP: The default setting is 239.12.255.254. 
 - Multicast Port: The default setting for the UDP port is 9522.
