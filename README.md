@@ -13,6 +13,8 @@ It supports the SMA-EMETER-protocol-2.
 SMA Energy Meter and Sunny Home Manager 2 multicast datagrams with their energy measurement data to the network every second.
 The SMA Energy Meter Adapter receives these multicast messages and stores them as iobroker states.
 
+![States](./docs/en/img/Screenshot 2021-03-23 152540.jpg)
+
 ### States in non-extended mode
 - Instantaneous values of total active power consumption (pregard) and active power feed-in (psurplus)
 - Energy meter values of total active power consumption (pregardcounter) and active power feed-in (psurpluscounter)
@@ -36,6 +38,9 @@ In addition to the states in non-extended mode, the following values are availab
   - Voltage and Amperage per phase
 
 ### Configuration Options
+
+![Settings](./docs/en/img/Screenshot 2021-03-23 152540.jpg)
+
 - Multicast IP: The default setting is 239.12.255.254. 
 - Multicast Port: The default setting for the UDP port is 9522.
   (Both should not be changed, as SMA devices always use this IP address and port)
