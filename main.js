@@ -164,6 +164,9 @@ class SmaEm extends utils.Adapter {
 		let id_path;
 		let ser_nums_active = [];
 
+		// Map to handle different devices and to track if all state have been created.
+		let ser_state_num = new Map();
+
 		// Open UDPv4 socket to receive SMA multicast packets.
 		let client = dgram.createSocket('udp4');
 	
@@ -180,6 +183,10 @@ class SmaEm extends utils.Adapter {
 		// Event handler in case of UDP packet was received.
 		client.on('message', (message, rinfo) => { 
 
+			// Check if packet is an SMA energy meter packet
+			if(this.check_message_type(message) === false)
+				return;
+
 			// Extract serial number as integer of the device in the received messag
 			const ser = message.readUIntBE(protocol_points['SMASerial'].addr, protocol_points['SMASerial'].length);
 			const ser_str = ser.toString();
@@ -195,24 +202,29 @@ class SmaEm extends utils.Adapter {
 					dev_descr = 'SMA Energy Meter S/N: ' + ser_str;
 				}
 
+				// Add object in the list with serial number and elements to store the number of elements created / requested
+				ser_state_num.set(ser_str, {states_req: 0, states_created: 0, states_diff: 0});
+
 				// Create the states tree for the device depending on its serial number
 				this.createPoints(message, ser_str, dev_descr, obis_points, protocol_points, derived_points);
 
+				// Update connection state.
+				this.setState('info.connection', true, true);
+
 				// Add the serial number to the list of active SMA EMs
 				ser_nums_active.push(ser);
+				
 
-				// Write all protocol values once
+				// Write all protocol values only once
 				for (const p in protocol_points) {
 					let val = message.readUIntBE(protocol_points[p].addr, protocol_points[p].length);
 					this.setState(ser_str + '.' + p, val, true);
 				}
 
-				// Update connection state.
-				this.setState('info.connection', true, true);
 			}
 
 			// Update vales by evaluate UDP packet content.
-			this.updatePoints(ser_str, message, obis_points, protocol_points);
+			this.updatePoints(ser_str, message, obis_points);
 
 			// Update software version as human readable
 			// Major.Minor.Build.Revision(as character)
@@ -249,6 +261,18 @@ class SmaEm extends utils.Adapter {
 			this.log.error('UDP Socket error: ' + err);
 			this.setState('info.connection', false, true);
 		});
+	}
+
+	check_message_type(message) {
+		// Check SMA ident string at the first 0 bytes
+		if(message.toString('ascii', 0, 3) !=  'SMA')
+			return false;
+
+		// Check protocol type
+		if(message.readUInt16BE(16) != 0x6069)
+			return false;
+
+		return true;
 	}
 
 	/**
@@ -370,8 +394,18 @@ class SmaEm extends utils.Adapter {
 		}
 	}
 
+	/// Track the number of requested for object creating
+	countObjCreate(ser) {
+
+	}
+
+	/// Track the number of created objects by decreasing the 
+	countObjCreated(ser) {
+
+	}
+
 	// Update the values of active points
-	updatePoints(id_path, message, points, proto) {
+	updatePoints(id_path, message, points) {
 
 		// Start with the first obis entry
 		let pos = 28;
