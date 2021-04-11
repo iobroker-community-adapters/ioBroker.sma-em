@@ -9,6 +9,7 @@
 const utils = require('@iobroker/adapter-core');
 const dgram = require('dgram');
 const os = require('os');
+const util = require('util')
 
 class SmaEm extends utils.Adapter {
 
@@ -181,7 +182,7 @@ class SmaEm extends utils.Adapter {
 		});
 
 		// Event handler in case of UDP packet was received.
-		client.on('message', (message, rinfo) => { 
+		client.on('message', async (message, rinfo) => { 
 
 			// Check if packet is an SMA energy meter packet
 			if(this.check_message_type(message) === false)
@@ -205,8 +206,8 @@ class SmaEm extends utils.Adapter {
 				// Add object in the list with serial number and elements to store the number of elements created / requested
 				ser_state_num.set(ser_str, {states_req: 0, states_created: 0, states_diff: 0});
 
-				// Create the states tree for the device depending on its serial number
-				this.createPoints(message, ser_str, dev_descr, obis_points, protocol_points, derived_points);
+				// Create the states tree for the device depending on its serial number and wait for finish
+				await this.createPoints(message, ser_str, dev_descr, obis_points, protocol_points, derived_points);
 
 				// Update connection state.
 				this.setState('info.connection', true, true);
@@ -214,7 +215,6 @@ class SmaEm extends utils.Adapter {
 				// Add the serial number to the list of active SMA EMs
 				ser_nums_active.push(ser);
 				
-
 				// Write all protocol values only once
 				for (const p in protocol_points) {
 					let val = message.readUIntBE(protocol_points[p].addr, protocol_points[p].length);
@@ -319,21 +319,25 @@ class SmaEm extends utils.Adapter {
 	}
 
 	// Create or delete iobroker data points and set the fixed data points
-	createPoints(message, ser_str, dev_str, points, proto, derived) {
+	async createPoints(message, ser_str, dev_str, points, proto, derived) {
 		
+		//const setObjectNotExitsPromise = util.promisify(this.setObjectNotExists)
+		let proms = [];
+
 		// Create id tree structure ("adapterid.serialnumber.points")
-		this.setObjectNotExistsAsync(ser_str, {
+		let prom = this.setObjectNotExistsAsync(ser_str, {
 			type: 'device',
 			common: {name: dev_str},
 			native: {}
 		});
-		
+		proms.push(prom);
+
 		// Create full path prefix
 		let path_pre = ser_str + '.';
 
 		// Create other information data points for the protocol objects.
 		for(const p in proto) {
-			this.setObjectNotExistsAsync (path_pre + p, {
+			prom = this.setObjectNotExistsAsync (path_pre + p, {
 				type: 'state',
 				common: {
 					name: proto[p].name,
@@ -343,6 +347,7 @@ class SmaEm extends utils.Adapter {
 				},
 				native: {}
 			});
+			proms.push(prom);
 		} 
 
 		// Create OBIS data points which are active
@@ -350,7 +355,7 @@ class SmaEm extends utils.Adapter {
 
 			// Create only points which are configured as active
 			if (points[p].active === true) {
-				this.setObjectNotExistsAsync (path_pre + points[p].id, {
+				prom = this.setObjectNotExistsAsync(path_pre + points[p].id, {
 					type: 'state',
 					common: {
 						name: points[p].name,
@@ -360,6 +365,7 @@ class SmaEm extends utils.Adapter {
 					},
 					native: {}
 				});
+				proms.push(prom);
 			}
 			// Delete point if it is not active
 			else {
@@ -378,10 +384,10 @@ class SmaEm extends utils.Adapter {
 		this.getObject(path_pre + 'L3',  (err, obj ) => { 
 			!err && this.extendObject(path_pre + 'L3', {type: 'channel', common: {name: 'Values of phase 3'}});	
 		});
-		
+
 		// Create additional derived states
 		for (const p in derived) {
-			this.setObjectNotExistsAsync (path_pre + p, {
+			prom = this.setObjectNotExistsAsync(path_pre + p, {
 				type: 'state',
 				common: {
 					name: derived[p].name,
@@ -391,17 +397,11 @@ class SmaEm extends utils.Adapter {
 				},
 				native: {}
 			});
+			proms.push(prom);
 		}
-	}
-
-	/// Track the number of requested for object creating
-	countObjCreate(ser) {
-
-	}
-
-	/// Track the number of created objects by decreasing the 
-	countObjCreated(ser) {
-
+		
+		// Wait for all object creation processes.
+		await Promise.all(proms);
 	}
 
 	// Update the values of active points
@@ -456,7 +456,7 @@ class SmaEm extends utils.Adapter {
 			} else if (length === 8) {
 				val = message.readBigUInt64BE(pos);
 			} else {
-				this.log.error(`Only obis message length of 4 or 8 is support, current length is ${length}`);
+				this.log.error(`Only OBIS message length of 4 or 8 is support, current length is ${length}`);
 			}
 
 			// Convert raw value to final value
