@@ -9,6 +9,7 @@
 const utils = require('@iobroker/adapter-core');
 const dgram = require('dgram');
 const os = require('os');
+const util = require('util')
 
 class SmaEm extends utils.Adapter {
 
@@ -164,6 +165,9 @@ class SmaEm extends utils.Adapter {
 		let id_path;
 		let ser_nums_active = [];
 
+		// Map to handle different devices and to track if all state have been created.
+		let ser_state_num = new Map();
+
 		// Open UDPv4 socket to receive SMA multicast packets.
 		let client = dgram.createSocket('udp4');
 	
@@ -178,7 +182,11 @@ class SmaEm extends utils.Adapter {
 		});
 
 		// Event handler in case of UDP packet was received.
-		client.on('message', (message, rinfo) => { 
+		client.on('message', async (message, rinfo) => { 
+
+			// Check if packet is an SMA energy meter packet
+			if(this.check_message_type(message) === false)
+				return;
 
 			// Extract serial number as integer of the device in the received messag
 			const ser = message.readUIntBE(protocol_points['SMASerial'].addr, protocol_points['SMASerial'].length);
@@ -195,24 +203,28 @@ class SmaEm extends utils.Adapter {
 					dev_descr = 'SMA Energy Meter S/N: ' + ser_str;
 				}
 
-				// Create the states tree for the device depending on its serial number
-				this.createPoints(message, ser_str, dev_descr, obis_points, protocol_points, derived_points);
+				// Add object in the list with serial number and elements to store the number of elements created / requested
+				ser_state_num.set(ser_str, {states_req: 0, states_created: 0, states_diff: 0});
+
+				// Create the states tree for the device depending on its serial number and wait for finish
+				await this.createPoints(message, ser_str, dev_descr, obis_points, protocol_points, derived_points);
+
+				// Update connection state.
+				this.setState('info.connection', true, true);
 
 				// Add the serial number to the list of active SMA EMs
 				ser_nums_active.push(ser);
-
-				// Write all protocol values once
+				
+				// Write all protocol values only once
 				for (const p in protocol_points) {
 					let val = message.readUIntBE(protocol_points[p].addr, protocol_points[p].length);
 					this.setState(ser_str + '.' + p, val, true);
 				}
 
-				// Update connection state.
-				this.setState('info.connection', true, true);
 			}
 
 			// Update vales by evaluate UDP packet content.
-			this.updatePoints(ser_str, message, obis_points, protocol_points);
+			this.updatePoints(ser_str, message, obis_points);
 
 			// Update software version as human readable
 			// Major.Minor.Build.Revision(as character)
@@ -249,6 +261,18 @@ class SmaEm extends utils.Adapter {
 			this.log.error('UDP Socket error: ' + err);
 			this.setState('info.connection', false, true);
 		});
+	}
+
+	check_message_type(message) {
+		// Check SMA ident string at the first 0 bytes
+		if(message.toString('ascii', 0, 3) !=  'SMA')
+			return false;
+
+		// Check protocol type
+		if(message.readUInt16BE(16) != 0x6069)
+			return false;
+
+		return true;
 	}
 
 	/**
@@ -295,21 +319,25 @@ class SmaEm extends utils.Adapter {
 	}
 
 	// Create or delete iobroker data points and set the fixed data points
-	createPoints(message, ser_str, dev_str, points, proto, derived) {
+	async createPoints(message, ser_str, dev_str, points, proto, derived) {
 		
+		//const setObjectNotExitsPromise = util.promisify(this.setObjectNotExists)
+		let proms = [];
+
 		// Create id tree structure ("adapterid.serialnumber.points")
-		this.setObjectNotExistsAsync(ser_str, {
+		let prom = this.setObjectNotExistsAsync(ser_str, {
 			type: 'device',
 			common: {name: dev_str},
 			native: {}
 		});
-		
+		proms.push(prom);
+
 		// Create full path prefix
 		let path_pre = ser_str + '.';
 
 		// Create other information data points for the protocol objects.
 		for(const p in proto) {
-			this.setObjectNotExistsAsync (path_pre + p, {
+			prom = this.setObjectNotExistsAsync (path_pre + p, {
 				type: 'state',
 				common: {
 					name: proto[p].name,
@@ -319,6 +347,7 @@ class SmaEm extends utils.Adapter {
 				},
 				native: {}
 			});
+			proms.push(prom);
 		} 
 
 		// Create OBIS data points which are active
@@ -326,7 +355,7 @@ class SmaEm extends utils.Adapter {
 
 			// Create only points which are configured as active
 			if (points[p].active === true) {
-				this.setObjectNotExistsAsync (path_pre + points[p].id, {
+				prom = this.setObjectNotExistsAsync(path_pre + points[p].id, {
 					type: 'state',
 					common: {
 						name: points[p].name,
@@ -336,6 +365,7 @@ class SmaEm extends utils.Adapter {
 					},
 					native: {}
 				});
+				proms.push(prom);
 			}
 			// Delete point if it is not active
 			else {
@@ -354,10 +384,10 @@ class SmaEm extends utils.Adapter {
 		this.getObject(path_pre + 'L3',  (err, obj ) => { 
 			!err && this.extendObject(path_pre + 'L3', {type: 'channel', common: {name: 'Values of phase 3'}});	
 		});
-		
+
 		// Create additional derived states
 		for (const p in derived) {
-			this.setObjectNotExistsAsync (path_pre + p, {
+			prom = this.setObjectNotExistsAsync(path_pre + p, {
 				type: 'state',
 				common: {
 					name: derived[p].name,
@@ -367,11 +397,15 @@ class SmaEm extends utils.Adapter {
 				},
 				native: {}
 			});
+			proms.push(prom);
 		}
+		
+		// Wait for all object creation processes.
+		await Promise.all(proms);
 	}
 
 	// Update the values of active points
-	updatePoints(id_path, message, points, proto) {
+	updatePoints(id_path, message, points) {
 
 		// Start with the first obis entry
 		let pos = 28;
@@ -422,7 +456,7 @@ class SmaEm extends utils.Adapter {
 			} else if (length === 8) {
 				val = message.readBigUInt64BE(pos);
 			} else {
-				this.log.error(`Only obis message length of 4 or 8 is support, current length is ${length}`);
+				this.log.error(`Only OBIS message length of 4 or 8 is support, current length is ${length}`);
 			}
 
 			// Convert raw value to final value
