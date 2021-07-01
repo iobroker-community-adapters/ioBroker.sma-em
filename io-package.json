@@ -93,6 +93,18 @@
             }
         },
         "title": "SMA Energy Meter",
+        "titleLang": {
+                 "en": "SMA Energy Meter",
+                 "de": "SMA Energiezähler",
+                 "ru": "Счетчик энергии SMA",
+                 "pt": "Medidor de energia SMA",
+                 "nl": "SMA Energiemeter",
+                 "fr": "Compteur d'énergie SMA",
+                 "it": "Contatore di energia SMA",
+                 "es": "Medidor de energía SMA",
+                 "pl": "Licznik energii SMA",
+                 "zh-cn": "SMA能量计"
+        },
         "desc": {
             "en": "ioBroker sma-em Adapter",
             "de": "ioBroker Sma-em Adapter",
