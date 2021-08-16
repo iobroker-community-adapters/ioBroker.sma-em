@@ -235,12 +235,12 @@ class SmaEm extends utils.Adapter {
 					sw += '.' + ((state.val >> 8) & 0xFF).toString();
 					sw += '.' + String.fromCharCode(state.val & 0xFF);
 
-					this.setState(ser_str + '.sw_version', sw);
+					this.setState(ser_str + '.sw_version', sw, true);
 				}
 			});
 
 			// Write current time stamp
-			this.setState(ser_str + '.last_message', Date.now());
+			this.setState(ser_str + '.last_message', Date.now(), true);
 
 			// Update fixed protocol data
 			for (const p in protocol_points) {
