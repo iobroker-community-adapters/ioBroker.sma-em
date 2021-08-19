@@ -1,8 +1,20 @@
 {
     "common": {
         "name": "sma-em",
-        "version": "0.6.3",
+        "version": "0.6.4",
         "news": {
+            "0.6.4": {
+                "en": "Bug fixes\nPrevent warnings regarding non-existent objects upon adapter instance creation and start-up under js-controller 3.2.x\nImproved check of SMA Energy Meter multicast messages to prevent ghost devices and warnings regarding unknown OBIS values.",
+                "de": "Fehlerbehebung\nVerhindern Sie Warnungen bezüglich nicht vorhandener Objekte beim Erstellen und Starten der Adapterinstanz unter js-controller 3.2.x\nVerbesserte Prüfung von SMA Energy Meter Multicast-Meldungen, um Geistergeräte und Warnungen bei unbekannten OBIS-Werten zu verhindern.",
+                "ru": "Исправление ошибок\nПредотвращение предупреждений о несуществующих объектах при создании и запуске экземпляра адаптера под js-controller 3.2.x\nУлучшена проверка многоадресных сообщений SMA Energy Meter для предотвращения появления фантомных устройств и предупреждений о неизвестных значениях OBIS.",
+                "pt": "Correções de bugs\nEvita avisos relativos a objetos inexistentes na criação da instância do adaptador e inicialização sob js-controller 3.2.x\nMelhoria na verificação das mensagens multicast do SMA Energy Meter para evitar dispositivos fantasmas e avisos sobre valores desconhecidos do OBIS.",
+                "nl": "Bugfixes\nVoorkom waarschuwingen met betrekking tot niet-bestaande objecten bij het maken en opstarten van de adapterinstantie onder js-controller 3.2.x\nVerbeterde controle van SMA Energy Meter multicast-berichten om spookapparaten en waarschuwingen met betrekking tot onbekende OBIS-waarden te voorkomen.",
+                "fr": "Corrections de bugs\nEmpêcher les avertissements concernant les objets inexistants lors de la création et du démarrage de l'instance d'adaptateur sous js-controller 3.2.x\nVérification améliorée des messages de multidiffusion SMA Energy Meter pour empêcher les appareils fantômes et les avertissements concernant les valeurs OBIS inconnues.",
+                "it": "Correzioni di bug\nImpedisci avvisi relativi a oggetti inesistenti alla creazione e all'avvio dell'istanza dell'adattatore in js-controller 3.2.x\nControllo migliorato dei messaggi multicast di SMA Energy Meter per evitare dispositivi fantasma e avvisi relativi a valori OBIS sconosciuti.",
+                "es": "Corrección de errores\nEvitar advertencias sobre objetos inexistentes durante la creación y el inicio de la instancia del adaptador bajo js-controller 3.2.x\nComprobación mejorada de los mensajes de multidifusión de SMA Energy Meter para evitar dispositivos fantasmas y advertencias sobre valores OBIS desconocidos.",
+                "pl": "Poprawki błędów\nZapobiegaj ostrzeżeniom dotyczącym nieistniejących obiektów podczas tworzenia instancji adaptera i uruchamiania w js-controller 3.2.x\nUdoskonalone sprawdzanie wiadomości multicastowych SMA Energy Meter w celu zapobiegania urządzeniom-widmo i ostrzeżeniom dotyczącym nieznanych wartości OBIS.",
+                "zh-cn": "Bug修复\n防止在 js-controller 3.2.x 下创建和启动适配器实例时出现关于不存在对象的警告\n改进了对 SMA Energy Meter 多播消息的检查，以防止出现关于未知 OBIS 值的幽灵设备和警告。"
+            },
             "0.6.3": {
                 "en": "The adapter binds now to all external IPv4 addresses.",
                 "de": "Der Adapter wird jetzt an alle externen IPv4-Adressen gebunden.",
@@ -94,16 +106,16 @@
         },
         "title": "SMA Energy Meter",
         "titleLang": {
-                 "en": "SMA Energy Meter",
-                 "de": "SMA Energiezähler",
-                 "ru": "Счетчик энергии SMA",
-                 "pt": "Medidor de energia SMA",
-                 "nl": "SMA Energiemeter",
-                 "fr": "Compteur d'énergie SMA",
-                 "it": "Contatore di energia SMA",
-                 "es": "Medidor de energía SMA",
-                 "pl": "Licznik energii SMA",
-                 "zh-cn": "SMA能量计"
+            "en": "SMA Energy Meter",
+            "de": "SMA Energiezähler",
+            "ru": "Счетчик энергии SMA",
+            "pt": "Medidor de energia SMA",
+            "nl": "SMA Energiemeter",
+            "fr": "Compteur d'énergie SMA",
+            "it": "Contatore di energia SMA",
+            "es": "Medidor de energía SMA",
+            "pl": "Licznik energii SMA",
+            "zh-cn": "SMA能量计"
         },
         "desc": {
             "en": "ioBroker sma-em Adapter",
