@@ -131,7 +131,8 @@
         "enabled": true,
         "extIcon": "https://raw.githubusercontent.com/iobroker-community-adapters/ioBroker.sma-em/master/admin/sma-em.png",
         "keywords": [
-            "SMA Energy Meter"
+            "SMA Energy Meter",
+            "Sunny Home Manager"
         ],
         "readme": "https://github.com/iobroker-community-adapters/ioBroker.sma-em/blob/master/README.md",
         "loglevel": "info",
@@ -146,6 +147,11 @@
             {
                 "name": "Marcolotti",
                 "email": "info@ct-j.de"
+            }
+        ],
+        "dependencies": [
+            {
+                "js-controller": ">=2.0.0"
             }
         ]
     },
