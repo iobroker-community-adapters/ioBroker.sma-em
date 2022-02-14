@@ -281,7 +281,7 @@ class SmaEm extends utils.Adapter {
 	 */
 	onUnload(callback) {
 		try {
-			client.close();
+			//client.close(); -- not effective
 			this.log.info('cleaned everything up...');
 			callback();
 		} catch (e) {
