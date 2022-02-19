@@ -142,8 +142,6 @@
         "connectionType": "local",
         "dataSource": "push",
         "materialize": true,        
-        "messagebox": true,
-        "supportStopInstance": true,
         "authors": [
             {
                 "name": "Marcolotti",

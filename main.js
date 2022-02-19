@@ -27,7 +27,6 @@ class SmaEm extends utils.Adapter {
 		});
 		this.on('ready', this.onReady.bind(this));
 		this.on('unload', this.onUnload.bind(this));
-		this.on('message', this.onMessage.bind(this));
 	}
 
 	/**
@@ -189,7 +188,7 @@ class SmaEm extends utils.Adapter {
 		// Event handler in case of UDP packet was received.
 		client.on('message', async (message, rinfo) => { 
 
-			// Check if packet is an SMA energy meter packet
+			// Check if packet is an SMA energy meter packet or adapter stopped
 			if(this.check_message_type(message) === false || stopped)
 				return;
 
@@ -280,22 +279,6 @@ class SmaEm extends utils.Adapter {
 
 		return true;
 	}
-
-	/**
-	 * Some message was sent to this instance over message box. Used by email, pushover, text2speech, ...
-	 * Using this method requires "common.message" property to be set to true in io-package.json
-	 * @param {ioBroker.Message} obj
-	 */
-	onMessage(obj) {
-	
-			if (obj.command == 'stopInstance') {
-				// Stop Instance received from js-controller
-				// disable udp message reception
-				stopped = true;
-				this.log.debug('stopInstance received: ' + JSON.stringify(obj));
-				client.close();
-		}
-	}
 	
 	/**
 	 * Is called when adapter shuts down - callback has to be called under any circumstances!
@@ -304,6 +287,9 @@ class SmaEm extends utils.Adapter {
 	onUnload(callback) {
 		try {
 			this.log.info('cleaned everything up...');
+			// disable udp message reception
+			stopped = true;
+			client.close();
 			callback();
 		} catch (e) {
 			callback();
