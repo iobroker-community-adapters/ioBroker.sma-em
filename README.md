@@ -4,8 +4,10 @@
 
 ## ioBroker Adapter for SMA Energy Meter
 
-![Number of Installations](http://iobroker.live/badges/sma-em-installed.svg) ![Number of Installations](http://iobroker.live/badges/sma-em-stable.svg) [![NPM version](http://img.shields.io/npm/v/iobroker.sma-em.svg)](https://www.npmjs.com/package/iobroker.sma-em)
-[![Downloads](https://img.shields.io/npm/dm/iobroker.sma-em.svg)](https://www.npmjs.com/package/iobroker.sma-em)
+![Number of Installations](http://iobroker.live/badges/sma-em-installed.svg)
+![![Downloads](https://img.shields.io/npm/dm/iobroker.sma-em.svg)](https://www.npmjs.com/package/iobroker.sma-em)
+![Stable version](http://iobroker.live/badges/sma-em-stable.svg)
+[![NPM version](http://img.shields.io/npm/v/iobroker.sma-em.svg)](https://www.npmjs.com/package/iobroker.sma-em)
 **Tests:** ![Test and Release](https://github.com/iobroker-community-adapters/iobroker.sma-em/workflows/Test%20and%20Release/badge.svg)  
 
 [![NPM](https://nodei.co/npm/iobroker.sma-em.png?downloads=true)](https://nodei.co/npm/iobroker.sma-em/)
