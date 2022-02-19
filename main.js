@@ -9,7 +9,10 @@
 const utils = require('@iobroker/adapter-core');
 const dgram = require('dgram');
 const os = require('os');
-const util = require('util')
+const util = require('util');
+// global variables
+let stopped = true;
+const client = dgram.createSocket('udp4');
 
 class SmaEm extends utils.Adapter {
 
@@ -17,6 +20,7 @@ class SmaEm extends utils.Adapter {
 	 * @param {Partial<ioBroker.AdapterOptions>} [options={}]
 	 */
 	constructor(options) {
+		// @ts-ignore
 		super({
 			...options,
 			name: 'sma-em',
@@ -90,7 +94,7 @@ class SmaEm extends utils.Adapter {
 		// Example: 1:1.4.0 => 00 01 04 00
 
 		// Same points are active by default, other depending on the parameter of the adapter.
-		let obis_points = {
+		const obis_points = {
 			0x00010400: {id: 'pregard',         name: 'P-active power / Wirkleistung +',                active: true, length: 4, factor: 1 / 10, type: 'number', unit: 'W'},
 			0x00010800: {id: 'pregardcounter',  name: 'counter P-active power / Zähler Wirkleistung +', active: true, length: 8, factor: 1 / 3600000, type: 'number', unit: 'kWh'},
 			0x00020400: {id: 'psurplus',        name: 'P-active power / Wirkleistung -',                active: true, length: 4, factor: 1 / 10, type: 'number', unit: 'W'},
@@ -167,9 +171,9 @@ class SmaEm extends utils.Adapter {
 
 		// Map to handle different devices and to track if all state have been created.
 		let ser_state_num = new Map();
-
+		stopped = false;
 		// Open UDPv4 socket to receive SMA multicast packets.
-		let client = dgram.createSocket('udp4');
+		//const client = dgram.createSocket('udp4');
 	
 		// Bind socket to the multicast address on all devices except localhost
 		client.bind(this.config.BPO, () => {
@@ -184,8 +188,8 @@ class SmaEm extends utils.Adapter {
 		// Event handler in case of UDP packet was received.
 		client.on('message', async (message, rinfo) => { 
 
-			// Check if packet is an SMA energy meter packet
-			if(this.check_message_type(message) === false)
+			// Check if packet is an SMA energy meter packet or adapter stopped
+			if(this.check_message_type(message) === false || stopped)
 				return;
 
 			// Extract serial number as integer of the device in the received messag
@@ -223,7 +227,7 @@ class SmaEm extends utils.Adapter {
 
 			}
 
-			// Update vales by evaluate UDP packet content.
+			// Update values by evaluating UDP packet content.
 			this.updatePoints(ser_str, message, obis_points);
 
 			// Update software version as human readable
@@ -260,6 +264,7 @@ class SmaEm extends utils.Adapter {
 		client.on('error', (err) => {
 			this.log.error('UDP Socket error: ' + err);
 			this.setState('info.connection', false, true);
+			client.close();
 		});
 	}
 
@@ -274,7 +279,7 @@ class SmaEm extends utils.Adapter {
 
 		return true;
 	}
-
+	
 	/**
 	 * Is called when adapter shuts down - callback has to be called under any circumstances!
 	 * @param {() => void} callback
@@ -282,6 +287,8 @@ class SmaEm extends utils.Adapter {
 	onUnload(callback) {
 		try {
 			this.log.info('cleaned everything up...');
+			// disable udp message reception
+			stopped = true;
 			client.close();
 			callback();
 		} catch (e) {
@@ -344,7 +351,9 @@ class SmaEm extends utils.Adapter {
 					name: proto[p].name,
 					type: proto[p].type,
 					role: 'value',
-					unit: proto[p].unit
+					unit: proto[p].unit,
+					read: true,
+					write: true
 				},
 				native: {}
 			});
@@ -362,7 +371,9 @@ class SmaEm extends utils.Adapter {
 						name: points[p].name,
 						type: points[p].type,
 						role: 'value',
-						unit: points[p].unit
+						unit: points[p].unit,
+						read: true,
+						write: true
 					},
 					native: {}
 				});
@@ -394,7 +405,9 @@ class SmaEm extends utils.Adapter {
 					name: derived[p].name,
 					type: derived[p].type,
 					role: 'value',
-					unit: derived[p].unit
+					unit: derived[p].unit,
+					read: true,
+					write: true
 				},
 				native: {}
 			});
@@ -473,7 +486,7 @@ class SmaEm extends utils.Adapter {
 
 	findIPv4IPs() {
 		// Get all network devices
-		let ifaces = require('os').networkInterfaces();
+		const ifaces = require('os').networkInterfaces();
 		var net_devs = [];
 
 		for (var dev in ifaces) {

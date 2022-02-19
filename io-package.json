@@ -141,8 +141,7 @@
         "compact": true,
         "connectionType": "local",
         "dataSource": "push",
-        "materialize": true,
-        "restartAdapters": [],
+        "materialize": true,        
         "authors": [
             {
                 "name": "Marcolotti",
