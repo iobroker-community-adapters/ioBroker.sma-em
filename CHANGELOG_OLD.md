@@ -1,4 +1,17 @@
 # Older changes
+## 0.6.0
+
+- (TGuybrush) Fixed wrong status information
+  - Complete adapter core rewritten to extract the status values by their OBIS value instead of the absolute position in the received UDP message according to the SMA documentation.
+  - Improved compatibility to future new OBIS values
+- (TGuybrush) Add additional status information
+  - Power grid frequency
+  - Time tick counter
+  - SMA SUSy ID
+  - Software Version
+
+- Add a timestamp for each received status information
+
 ## 0.5.7
 
 - (DutchmanNL) Solved incorrect stated ID type for JS-controller 3.x
