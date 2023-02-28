@@ -1,173 +1,185 @@
 {
-  "common": {
-    "name": "sma-em",
-    "version": "0.6.5",
-    "news": {
-      "0.6.5": {
-        "en": "Updated dependencies\nCompatibility check for js-controller 4.0\nPrevent onUnload warnings",
-        "de": "Aktualisierte Abhängigkeiten\nKompatibilitätsprüfung für js-controller 4.0\nOnUnload-Warnungen verhindern",
-        "ru": "Обновленные зависимости\nПроверка совместимости для js-контроллера 4.0\nПредотвратить предупреждения при выгрузке",
-        "pt": "Dependências atualizadas\nVerificação de compatibilidade para js-controller 4.0\nPrevenir avisos onUnload",
-        "nl": "Bijgewerkte afhankelijkheden\nCompatibiliteitscontrole voor js-controller 4.0\nVoorkom onUnload-waarschuwingen",
-        "fr": "Dépendances mises à jour\nVérification de compatibilité pour js-controller 4.0\nEmpêcher les avertissements onUnload",
-        "it": "Dipendenze aggiornate\nVerifica di compatibilità per js-controller 4.0\nPrevieni avvisi di scaricamento",
-        "es": "Dependencias actualizadas\nVerificación de compatibilidad para js-controller 4.0\nEvitar advertencias de descarga",
-        "pl": "Zaktualizowane zależności\nSprawdzenie zgodności dla js-controller 4.0\nZapobiegaj ostrzeżeniom onUnload",
-        "zh-cn": "更新的依赖项\njs-controller 4.0 的兼容性检查\n防止 onUnload 警告"
-      },
-      "0.6.4": {
-        "en": "Bug fixes\nPrevent warnings regarding non-existent objects upon adapter instance creation and start-up under js-controller 3.2.x\nImproved check of SMA Energy Meter multicast messages to prevent ghost devices and warnings regarding unknown OBIS values.",
-        "de": "Fehlerbehebung\nVerhindern Sie Warnungen bezüglich nicht vorhandener Objekte beim Erstellen und Starten der Adapterinstanz unter js-controller 3.2.x\nVerbesserte Prüfung von SMA Energy Meter Multicast-Meldungen, um Geistergeräte und Warnungen bei unbekannten OBIS-Werten zu verhindern.",
-        "ru": "Исправление ошибок\nПредотвращение предупреждений о несуществующих объектах при создании и запуске экземпляра адаптера под js-controller 3.2.x\nУлучшена проверка многоадресных сообщений SMA Energy Meter для предотвращения появления фантомных устройств и предупреждений о неизвестных значениях OBIS.",
-        "pt": "Correções de bugs\nEvita avisos relativos a objetos inexistentes na criação da instância do adaptador e inicialização sob js-controller 3.2.x\nMelhoria na verificação das mensagens multicast do SMA Energy Meter para evitar dispositivos fantasmas e avisos sobre valores desconhecidos do OBIS.",
-        "nl": "Bugfixes\nVoorkom waarschuwingen met betrekking tot niet-bestaande objecten bij het maken en opstarten van de adapterinstantie onder js-controller 3.2.x\nVerbeterde controle van SMA Energy Meter multicast-berichten om spookapparaten en waarschuwingen met betrekking tot onbekende OBIS-waarden te voorkomen.",
-        "fr": "Corrections de bugs\nEmpêcher les avertissements concernant les objets inexistants lors de la création et du démarrage de l'instance d'adaptateur sous js-controller 3.2.x\nVérification améliorée des messages de multidiffusion SMA Energy Meter pour empêcher les appareils fantômes et les avertissements concernant les valeurs OBIS inconnues.",
-        "it": "Correzioni di bug\nImpedisci avvisi relativi a oggetti inesistenti alla creazione e all'avvio dell'istanza dell'adattatore in js-controller 3.2.x\nControllo migliorato dei messaggi multicast di SMA Energy Meter per evitare dispositivi fantasma e avvisi relativi a valori OBIS sconosciuti.",
-        "es": "Corrección de errores\nEvitar advertencias sobre objetos inexistentes durante la creación y el inicio de la instancia del adaptador bajo js-controller 3.2.x\nComprobación mejorada de los mensajes de multidifusión de SMA Energy Meter para evitar dispositivos fantasmas y advertencias sobre valores OBIS desconocidos.",
-        "pl": "Poprawki błędów\nZapobiegaj ostrzeżeniom dotyczącym nieistniejących obiektów podczas tworzenia instancji adaptera i uruchamiania w js-controller 3.2.x\nUdoskonalone sprawdzanie wiadomości multicastowych SMA Energy Meter w celu zapobiegania urządzeniom-widmo i ostrzeżeniom dotyczącym nieznanych wartości OBIS.",
-        "zh-cn": "Bug修复\n防止在 js-controller 3.2.x 下创建和启动适配器实例时出现关于不存在对象的警告\n改进了对 SMA Energy Meter 多播消息的检查，以防止出现关于未知 OBIS 值的幽灵设备和警告。"
-      },
-      "0.6.3": {
-        "en": "The adapter binds now to all external IPv4 addresses.",
-        "de": "Der Adapter wird jetzt an alle externen IPv4-Adressen gebunden.",
-        "ru": "Теперь адаптер привязывается ко всем внешним IPv4-адресам.",
-        "pt": "O adaptador agora se liga a todos os endereços IPv4 externos.",
-        "nl": "De adapter bindt nu aan alle externe IPv4-adressen.",
-        "fr": "L'adaptateur se lie désormais à toutes les adresses IPv4 externes.",
-        "it": "L'adattatore si associa ora a tutti gli indirizzi IPv4 esterni.",
-        "es": "El adaptador se une ahora a todas las direcciones IPv4 externas.",
-        "pl": "Adapter łączy się teraz ze wszystkimi zewnętrznymi adresami IPv4.",
-        "zh-cn": "适配器现在绑定到所有外部IPv4地址。"
-      },
-      "0.6.1-beta.0": {
-        "en": "Bug fixes\nSoftware Version string, last part is the revision as character (e.g. R = release)\nPotential Warning during the first start\nRevised units to follow the SI standardization (DIN 1301)\nTop level hierarchy object description indicates if the device is a SMA Energy Meter or a SMA Home Manger 2.\nReleased to the latest repo, fixed some typo's + news and translations",
-        "de": "Fehlerbehebung\nSoftwareversionszeichenfolge, letzter Teil ist die Revision als Zeichen (z. B. R = Release)\nMögliche Warnung beim ersten Start\nÜberarbeitete Einheiten gemäß SI-Normung (DIN 1301)\nDie Beschreibung des Hierarchieobjekts der obersten Ebene gibt an, ob das Gerät ein SMA-Energiezähler oder ein SMA-Home-Manager 2 ist.\nIm neuesten Repo veröffentlicht, einige Tippfehler + Neuigkeiten und Übersetzungen behoben",
-        "ru": "Исправление ошибок\nСтрока версии программного обеспечения, последняя часть - это версия в виде символа (например, R = выпуск)\nВозможное предупреждение при первом запуске\nПересмотренные единицы измерения в соответствии со стандартизацией SI (DIN 1301)\nОписание объекта иерархии верхнего уровня указывает, является ли устройство измерителем энергии SMA или SMA Home Manger 2.\nВыпущено в последний репо, исправлены некоторые опечатки + новости и переводы",
-        "pt": "Correções de bugs\nString da versão do software, a última parte é a revisão como caractere (por exemplo, R = versão)\nAviso potencial durante a primeira partida\nUnidades revisadas para seguir a padronização SI (DIN 1301)\nA descrição do objeto de hierarquia de nível superior indica se o dispositivo é um SMA Energy Meter ou um SMA Home Manger 2.\nLiberado para o repo mais recente, corrigiu alguns erros de digitação + notícias e traduções",
-        "nl": "Bugfixes\nSoftwareversie string, laatste deel is de revisie als teken (bijv.R = release)\nMogelijke waarschuwing tijdens de eerste start\nHerziene eenheden om de SI-normering te volgen (DIN 1301)\nDe objectbeschrijving van de hoogste hiërarchie geeft aan of het apparaat een SMA Energy Meter of een SMA Home Manger 2 is.\nUitgebracht naar de nieuwste repo, enkele typefouten, nieuws en vertalingen gerepareerd",
-        "fr": "Corrections de bogues\nChaîne de version du logiciel, la dernière partie est la révision sous forme de caractère (par exemple, R = version)\nAvertissement potentiel lors du premier démarrage\nUnités révisées pour suivre la normalisation SI (DIN 1301)\nLa description de l'objet de la hiérarchie de niveau supérieur indique si l'appareil est un SMA Energy Meter ou un SMA Home Manger 2.\nPublié dans le dernier référentiel, correction de quelques fautes de frappe + nouvelles et traductions",
-        "it": "Correzioni di bug\nStringa della versione del software, l'ultima parte è la revisione come carattere (ad esempio R = versione)\nPotenziale avvertenza durante il primo avvio\nUnità riviste per seguire la standardizzazione SI (DIN 1301)\nLa descrizione dell'oggetto gerarchia di primo livello indica se il dispositivo è uno SMA Energy Meter o uno SMA Home Manger 2.\nRilasciato nell'ultimo repository, corretti + notizie e traduzioni di errori di battitura",
-        "es": "Corrección de errores\nCadena de versión de software, la última parte es la revisión como carácter (por ejemplo, R = lanzamiento)\nAdvertencia potencial durante el primer arranque\nUnidades revisadas para seguir la estandarización SI (DIN 1301)\nLa descripción del objeto de la jerarquía de nivel superior indica si el dispositivo es un SMA Energy Meter o un SMA Home Manger 2.\nLanzado al último repositorio, se corrigieron algunos errores tipográficos + noticias y traducciones",
-        "pl": "Poprawki błędów\nCiąg wersji oprogramowania, ostatnia część to wersja jako znak (np. R = wydanie)\nPotencjalne ostrzeżenie podczas pierwszego uruchomienia\nZmienione jednostki zgodne ze standardem SI (DIN 1301)\nOpis obiektu w hierarchii najwyższego poziomu wskazuje, czy urządzenie jest licznikiem energii SMA czy SMA Home Manger 2.\nWydany do najnowszego repozytorium, naprawiono niektóre literówki + wiadomości i tłumaczenia",
-        "zh-cn": "Bug修复\n软件版本字符串，最后一部分是作为字符的修订版（例如R =版本）\n首次启动时的潜在警告\n经修订的单位遵循SI标准化（DIN 1301）\n顶层层次结构对象说明指示该设备是SMA电能表还是SMA Home Manger 2。\n发布到最新的仓库中，修复了一些错字+新闻和翻译"
-      },
-      "0.6.1": {
-        "en": "Bug fixes\nTop level hierarchy object description indicates if the device is a SMA Energy Meter or a SMA Home Manger 2",
-        "de": "Fehlerbehebungen\nDie Objektbeschreibung der Hierarchie auf oberster Ebene gibt an, ob das Gerät ein SMA-Energiezähler oder ein SMA-Home-Manager 2 ist",
-        "ru": "Исправления ошибок\n Описание объекта иерархии верхнего уровня указывает, является ли устройство измерителем энергии SMA или SMA Home Manger 2.",
-        "pt": "Correções de bug\nA descrição do objeto de hierarquia de nível superior indica se o dispositivo é um medidor de energia SMA ou um gerenciador doméstico SMA 2",
-        "nl": "Bugfixes\nHiërarchieobject op het hoogste niveau geeft aan of het apparaat een SMA Energy Meter of een SMA Home Manager 2 is",
-        "fr": "Corrections de bogues\nLa description de l'objet de la hiérarchie de niveau supérieur indique si l'appareil est un SMA Energy Meter ou un SMA Home Manger 2",
-        "it": "Correzioni di bug\nLa descrizione dell'oggetto gerarchia di livello superiore indica se il dispositivo è uno SMA Energy Meter o uno SMA Home Manger 2",
-        "es": "Corrección de errores\nLa descripción del objeto de la jerarquía de nivel superior indica si el dispositivo es un SMA Energy Meter o un SMA Home Manger 2",
-        "pl": "Poprawki błędów\nOpis obiektu w hierarchii najwyższego poziomu wskazuje, czy urządzenie jest miernikiem energii SMA, czy SMA Home Manger 2",
-        "zh-cn": "错误修复__顶级层次结构对象描述指示该设备是SMA电能表还是SMA Home Manger 2"
-      },
-      "0.6.0": {
-        "en": "Improved compatibility to future new OBIS values\nAdd additional status information\nAdd a timestamp for each received status information",
-        "de": "Verbesserte Kompatibilität mit zukünftigen neuen OBIS-Werten\n Zusätzliche Statusinformationen hinzufügen\n Zeitstempel für jede empfangene Statusinformation hinzufügen",
-        "ru": "Улучшена совместимость с будущими новыми значениями OBIS\nДобавить дополнительную информацию о статусе\nДобавить метку времени для каждой полученной информации о статусе",
-        "pt": "Compatibilidade aprimorada para novos valores OBIS futuros\nAdicione informações de status adicionais\nAdicione um carimbo de data / hora para cada informação de status recebida",
-        "nl": "Verbeterde compatibiliteit met toekomstige nieuwe OBIS-waarden\nVoeg extra statusinformatie toe\nVoeg een tijdstempel toe voor elke ontvangen statusinformatie",
-        "fr": "Amélioration de la compatibilité avec les futures nouvelles valeurs OBIS\nAjoutez des informations d'état supplémentaires\nAjoutez un horodatage pour chaque information d'état reçue",
-        "it": "Compatibilità migliorata con i nuovi valori OBIS futuri\n Aggiungere ulteriori informazioni sullo stato\n Aggiungere un timestamp per ciascuna informazione sullo stato ricevuto",
-        "es": "Compatibilidad mejorada con valores futuros de OBIS nuevos\nAñadir información de estado adicional\nAñadir una marca de tiempo para cada información de estado recibida",
-        "pl": "Poprawiona zgodność z przyszłymi nowymi wartościami OBIS\nDodaj dodatkowe informacje o statusie\nDodaj sygnaturę czasową dla każdej otrzymanej informacji o stanie",
-        "zh-cn": "改进了与未来新OBIS值的兼容性__添加其他状态信息__为每个接收到的状态信息添加时间戳"
-      },
-      "0.5.7": {
-        "en": "Solved incorrect stated ID type for JS-controller 3.x",
-        "de": "Der falsch angegebene ID-Typ für JS-Controller 3.x wurde behoben",
-        "ru": "Исправлено неверное указание типа ID для JS-контроллера 3.x",
-        "pt": "Tipo de ID declarado incorreto resolvido para o controlador JS 3.x",
-        "nl": "Opgelost onjuist vermeld ID-type voor JS-controller 3.x",
-        "fr": "Type d'ID déclaré incorrect résolu pour le contrôleur JS 3.x",
-        "it": "Risolto il tipo di ID dichiarato errato per JS-controller 3.x",
-        "es": "Se resolvió un tipo de ID declarado incorrecto para el controlador JS 3.x",
-        "pl": "Rozwiązany niepoprawny podany typ identyfikatora kontrolera JS 3.x",
-        "zh-cn": "解决了JS-controller 3.x的错误声明ID类型"
-      }
+    "common": {
+        "name": "sma-em",
+        "version": "0.6.5",
+        "news": {
+            "0.6.5": {
+                "en": "Updated dependencies\nCompatibility check for js-controller 4.0\nPrevent onUnload warnings",
+                "de": "Aktualisierte Abhängigkeiten\nKompatibilitätsprüfung für js-controller 4.0\nOnUnload-Warnungen verhindern",
+                "ru": "Обновленные зависимости\nПроверка совместимости для js-контроллера 4.0\nПредотвратить предупреждения при выгрузке",
+                "pt": "Dependências atualizadas\nVerificação de compatibilidade para js-controller 4.0\nPrevenir avisos onUnload",
+                "nl": "Bijgewerkte afhankelijkheden\nCompatibiliteitscontrole voor js-controller 4.0\nVoorkom onUnload-waarschuwingen",
+                "fr": "Dépendances mises à jour\nVérification de compatibilité pour js-controller 4.0\nEmpêcher les avertissements onUnload",
+                "it": "Dipendenze aggiornate\nVerifica di compatibilità per js-controller 4.0\nPrevieni avvisi di scaricamento",
+                "es": "Dependencias actualizadas\nVerificación de compatibilidad para js-controller 4.0\nEvitar advertencias de descarga",
+                "pl": "Zaktualizowane zależności\nSprawdzenie zgodności dla js-controller 4.0\nZapobiegaj ostrzeżeniom onUnload",
+                "zh-cn": "更新的依赖项\njs-controller 4.0 的兼容性检查\n防止 onUnload 警告",
+                "uk": "Оновлені залежності\nПеревірка сумісності для js-контролера 4.0\nЗапобігання попереджень onUnload"
+            },
+            "0.6.4": {
+                "en": "Bug fixes\nPrevent warnings regarding non-existent objects upon adapter instance creation and start-up under js-controller 3.2.x\nImproved check of SMA Energy Meter multicast messages to prevent ghost devices and warnings regarding unknown OBIS values.",
+                "de": "Fehlerbehebung\nVerhindern Sie Warnungen bezüglich nicht vorhandener Objekte beim Erstellen und Starten der Adapterinstanz unter js-controller 3.2.x\nVerbesserte Prüfung von SMA Energy Meter Multicast-Meldungen, um Geistergeräte und Warnungen bei unbekannten OBIS-Werten zu verhindern.",
+                "ru": "Исправление ошибок\nПредотвращение предупреждений о несуществующих объектах при создании и запуске экземпляра адаптера под js-controller 3.2.x\nУлучшена проверка многоадресных сообщений SMA Energy Meter для предотвращения появления фантомных устройств и предупреждений о неизвестных значениях OBIS.",
+                "pt": "Correções de bugs\nEvita avisos relativos a objetos inexistentes na criação da instância do adaptador e inicialização sob js-controller 3.2.x\nMelhoria na verificação das mensagens multicast do SMA Energy Meter para evitar dispositivos fantasmas e avisos sobre valores desconhecidos do OBIS.",
+                "nl": "Bugfixes\nVoorkom waarschuwingen met betrekking tot niet-bestaande objecten bij het maken en opstarten van de adapterinstantie onder js-controller 3.2.x\nVerbeterde controle van SMA Energy Meter multicast-berichten om spookapparaten en waarschuwingen met betrekking tot onbekende OBIS-waarden te voorkomen.",
+                "fr": "Corrections de bugs\nEmpêcher les avertissements concernant les objets inexistants lors de la création et du démarrage de l'instance d'adaptateur sous js-controller 3.2.x\nVérification améliorée des messages de multidiffusion SMA Energy Meter pour empêcher les appareils fantômes et les avertissements concernant les valeurs OBIS inconnues.",
+                "it": "Correzioni di bug\nImpedisci avvisi relativi a oggetti inesistenti alla creazione e all'avvio dell'istanza dell'adattatore in js-controller 3.2.x\nControllo migliorato dei messaggi multicast di SMA Energy Meter per evitare dispositivi fantasma e avvisi relativi a valori OBIS sconosciuti.",
+                "es": "Corrección de errores\nEvitar advertencias sobre objetos inexistentes durante la creación y el inicio de la instancia del adaptador bajo js-controller 3.2.x\nComprobación mejorada de los mensajes de multidifusión de SMA Energy Meter para evitar dispositivos fantasmas y advertencias sobre valores OBIS desconocidos.",
+                "pl": "Poprawki błędów\nZapobiegaj ostrzeżeniom dotyczącym nieistniejących obiektów podczas tworzenia instancji adaptera i uruchamiania w js-controller 3.2.x\nUdoskonalone sprawdzanie wiadomości multicastowych SMA Energy Meter w celu zapobiegania urządzeniom-widmo i ostrzeżeniom dotyczącym nieznanych wartości OBIS.",
+                "zh-cn": "Bug修复\n防止在 js-controller 3.2.x 下创建和启动适配器实例时出现关于不存在对象的警告\n改进了对 SMA Energy Meter 多播消息的检查，以防止出现关于未知 OBIS 值的幽灵设备和警告。",
+                "uk": "Виправлення помилок\nЗапобігання попереджень щодо неіснуючих об’єктів під час створення екземпляра адаптера та запуску в js-controller 3.2.x\nПокращена перевірка багатоадресних повідомлень SMA Energy Meter для запобігання привидам пристроїв і попереджень щодо невідомих значень OBIS."
+            },
+            "0.6.3": {
+                "en": "The adapter binds now to all external IPv4 addresses.",
+                "de": "Der Adapter wird jetzt an alle externen IPv4-Adressen gebunden.",
+                "ru": "Теперь адаптер привязывается ко всем внешним IPv4-адресам.",
+                "pt": "O adaptador agora se liga a todos os endereços IPv4 externos.",
+                "nl": "De adapter bindt nu aan alle externe IPv4-adressen.",
+                "fr": "L'adaptateur se lie désormais à toutes les adresses IPv4 externes.",
+                "it": "L'adattatore si associa ora a tutti gli indirizzi IPv4 esterni.",
+                "es": "El adaptador se une ahora a todas las direcciones IPv4 externas.",
+                "pl": "Adapter łączy się teraz ze wszystkimi zewnętrznymi adresami IPv4.",
+                "zh-cn": "适配器现在绑定到所有外部IPv4地址。",
+                "uk": "Тепер адаптер прив’язується до всіх зовнішніх адрес IPv4."
+            },
+            "0.6.1-beta.0": {
+                "en": "Bug fixes\nSoftware Version string, last part is the revision as character (e.g. R = release)\nPotential Warning during the first start\nRevised units to follow the SI standardization (DIN 1301)\nTop level hierarchy object description indicates if the device is a SMA Energy Meter or a SMA Home Manger 2.\nReleased to the latest repo, fixed some typo's + news and translations",
+                "de": "Fehlerbehebung\nSoftwareversionszeichenfolge, letzter Teil ist die Revision als Zeichen (z. B. R = Release)\nMögliche Warnung beim ersten Start\nÜberarbeitete Einheiten gemäß SI-Normung (DIN 1301)\nDie Beschreibung des Hierarchieobjekts der obersten Ebene gibt an, ob das Gerät ein SMA-Energiezähler oder ein SMA-Home-Manager 2 ist.\nIm neuesten Repo veröffentlicht, einige Tippfehler + Neuigkeiten und Übersetzungen behoben",
+                "ru": "Исправление ошибок\nСтрока версии программного обеспечения, последняя часть - это версия в виде символа (например, R = выпуск)\nВозможное предупреждение при первом запуске\nПересмотренные единицы измерения в соответствии со стандартизацией SI (DIN 1301)\nОписание объекта иерархии верхнего уровня указывает, является ли устройство измерителем энергии SMA или SMA Home Manger 2.\nВыпущено в последний репо, исправлены некоторые опечатки + новости и переводы",
+                "pt": "Correções de bugs\nString da versão do software, a última parte é a revisão como caractere (por exemplo, R = versão)\nAviso potencial durante a primeira partida\nUnidades revisadas para seguir a padronização SI (DIN 1301)\nA descrição do objeto de hierarquia de nível superior indica se o dispositivo é um SMA Energy Meter ou um SMA Home Manger 2.\nLiberado para o repo mais recente, corrigiu alguns erros de digitação + notícias e traduções",
+                "nl": "Bugfixes\nSoftwareversie string, laatste deel is de revisie als teken (bijv.R = release)\nMogelijke waarschuwing tijdens de eerste start\nHerziene eenheden om de SI-normering te volgen (DIN 1301)\nDe objectbeschrijving van de hoogste hiërarchie geeft aan of het apparaat een SMA Energy Meter of een SMA Home Manger 2 is.\nUitgebracht naar de nieuwste repo, enkele typefouten, nieuws en vertalingen gerepareerd",
+                "fr": "Corrections de bogues\nChaîne de version du logiciel, la dernière partie est la révision sous forme de caractère (par exemple, R = version)\nAvertissement potentiel lors du premier démarrage\nUnités révisées pour suivre la normalisation SI (DIN 1301)\nLa description de l'objet de la hiérarchie de niveau supérieur indique si l'appareil est un SMA Energy Meter ou un SMA Home Manger 2.\nPublié dans le dernier référentiel, correction de quelques fautes de frappe + nouvelles et traductions",
+                "it": "Correzioni di bug\nStringa della versione del software, l'ultima parte è la revisione come carattere (ad esempio R = versione)\nPotenziale avvertenza durante il primo avvio\nUnità riviste per seguire la standardizzazione SI (DIN 1301)\nLa descrizione dell'oggetto gerarchia di primo livello indica se il dispositivo è uno SMA Energy Meter o uno SMA Home Manger 2.\nRilasciato nell'ultimo repository, corretti + notizie e traduzioni di errori di battitura",
+                "es": "Corrección de errores\nCadena de versión de software, la última parte es la revisión como carácter (por ejemplo, R = lanzamiento)\nAdvertencia potencial durante el primer arranque\nUnidades revisadas para seguir la estandarización SI (DIN 1301)\nLa descripción del objeto de la jerarquía de nivel superior indica si el dispositivo es un SMA Energy Meter o un SMA Home Manger 2.\nLanzado al último repositorio, se corrigieron algunos errores tipográficos + noticias y traducciones",
+                "pl": "Poprawki błędów\nCiąg wersji oprogramowania, ostatnia część to wersja jako znak (np. R = wydanie)\nPotencjalne ostrzeżenie podczas pierwszego uruchomienia\nZmienione jednostki zgodne ze standardem SI (DIN 1301)\nOpis obiektu w hierarchii najwyższego poziomu wskazuje, czy urządzenie jest licznikiem energii SMA czy SMA Home Manger 2.\nWydany do najnowszego repozytorium, naprawiono niektóre literówki + wiadomości i tłumaczenia",
+                "zh-cn": "Bug修复\n软件版本字符串，最后一部分是作为字符的修订版（例如R =版本）\n首次启动时的潜在警告\n经修订的单位遵循SI标准化（DIN 1301）\n顶层层次结构对象说明指示该设备是SMA电能表还是SMA Home Manger 2。\n发布到最新的仓库中，修复了一些错字+新闻和翻译",
+                "uk": "Виправлення помилок\nРядок версії програмного забезпечення, остання частина — це версія як символ (наприклад, R = випуск)\nПотенційне попередження під час першого запуску\nПереглянуті одиниці відповідно до стандартизації SI (DIN 1301)\nОпис об’єкта ієрархії верхнього рівня вказує, чи є пристрій SMA Energy Meter або SMA Home Manger 2.\nВипущено до останнього репо, виправлено деякі помилки + новини та переклади"
+            },
+            "0.6.1": {
+                "en": "Bug fixes\nTop level hierarchy object description indicates if the device is a SMA Energy Meter or a SMA Home Manger 2",
+                "de": "Fehlerbehebungen\nDie Objektbeschreibung der Hierarchie auf oberster Ebene gibt an, ob das Gerät ein SMA-Energiezähler oder ein SMA-Home-Manager 2 ist",
+                "ru": "Исправления ошибок\n Описание объекта иерархии верхнего уровня указывает, является ли устройство измерителем энергии SMA или SMA Home Manger 2.",
+                "pt": "Correções de bug\nA descrição do objeto de hierarquia de nível superior indica se o dispositivo é um medidor de energia SMA ou um gerenciador doméstico SMA 2",
+                "nl": "Bugfixes\nHiërarchieobject op het hoogste niveau geeft aan of het apparaat een SMA Energy Meter of een SMA Home Manager 2 is",
+                "fr": "Corrections de bogues\nLa description de l'objet de la hiérarchie de niveau supérieur indique si l'appareil est un SMA Energy Meter ou un SMA Home Manger 2",
+                "it": "Correzioni di bug\nLa descrizione dell'oggetto gerarchia di livello superiore indica se il dispositivo è uno SMA Energy Meter o uno SMA Home Manger 2",
+                "es": "Corrección de errores\nLa descripción del objeto de la jerarquía de nivel superior indica si el dispositivo es un SMA Energy Meter o un SMA Home Manger 2",
+                "pl": "Poprawki błędów\nOpis obiektu w hierarchii najwyższego poziomu wskazuje, czy urządzenie jest miernikiem energii SMA, czy SMA Home Manger 2",
+                "zh-cn": "错误修复__顶级层次结构对象描述指示该设备是SMA电能表还是SMA Home Manger 2",
+                "uk": "Виправлення помилок\nОпис об’єкта ієрархії верхнього рівня вказує, чи є пристрій SMA Energy Meter або SMA Home Manger 2"
+            },
+            "0.6.0": {
+                "en": "Improved compatibility to future new OBIS values\nAdd additional status information\nAdd a timestamp for each received status information",
+                "de": "Verbesserte Kompatibilität mit zukünftigen neuen OBIS-Werten\n Zusätzliche Statusinformationen hinzufügen\n Zeitstempel für jede empfangene Statusinformation hinzufügen",
+                "ru": "Улучшена совместимость с будущими новыми значениями OBIS\nДобавить дополнительную информацию о статусе\nДобавить метку времени для каждой полученной информации о статусе",
+                "pt": "Compatibilidade aprimorada para novos valores OBIS futuros\nAdicione informações de status adicionais\nAdicione um carimbo de data / hora para cada informação de status recebida",
+                "nl": "Verbeterde compatibiliteit met toekomstige nieuwe OBIS-waarden\nVoeg extra statusinformatie toe\nVoeg een tijdstempel toe voor elke ontvangen statusinformatie",
+                "fr": "Amélioration de la compatibilité avec les futures nouvelles valeurs OBIS\nAjoutez des informations d'état supplémentaires\nAjoutez un horodatage pour chaque information d'état reçue",
+                "it": "Compatibilità migliorata con i nuovi valori OBIS futuri\n Aggiungere ulteriori informazioni sullo stato\n Aggiungere un timestamp per ciascuna informazione sullo stato ricevuto",
+                "es": "Compatibilidad mejorada con valores futuros de OBIS nuevos\nAñadir información de estado adicional\nAñadir una marca de tiempo para cada información de estado recibida",
+                "pl": "Poprawiona zgodność z przyszłymi nowymi wartościami OBIS\nDodaj dodatkowe informacje o statusie\nDodaj sygnaturę czasową dla każdej otrzymanej informacji o stanie",
+                "zh-cn": "改进了与未来新OBIS值的兼容性__添加其他状态信息__为每个接收到的状态信息添加时间戳",
+                "uk": "Покращена сумісність із майбутніми новими значеннями OBIS\nДодайте додаткову інформацію про статус\nДодайте позначку часу для кожної отриманої інформації про статус"
+            },
+            "0.5.7": {
+                "en": "Solved incorrect stated ID type for JS-controller 3.x",
+                "de": "Der falsch angegebene ID-Typ für JS-Controller 3.x wurde behoben",
+                "ru": "Исправлено неверное указание типа ID для JS-контроллера 3.x",
+                "pt": "Tipo de ID declarado incorreto resolvido para o controlador JS 3.x",
+                "nl": "Opgelost onjuist vermeld ID-type voor JS-controller 3.x",
+                "fr": "Type d'ID déclaré incorrect résolu pour le contrôleur JS 3.x",
+                "it": "Risolto il tipo di ID dichiarato errato per JS-controller 3.x",
+                "es": "Se resolvió un tipo de ID declarado incorrecto para el controlador JS 3.x",
+                "pl": "Rozwiązany niepoprawny podany typ identyfikatora kontrolera JS 3.x",
+                "zh-cn": "解决了JS-controller 3.x的错误声明ID类型",
+                "uk": "Вирішено неправильно вказаний тип ID для JS-контролера 3.x"
+            }
+        },
+        "titleLang": {
+            "en": "SMA Energy Meter",
+            "de": "SMA Energiezähler",
+            "ru": "Счетчик энергии SMA",
+            "pt": "Medidor de energia SMA",
+            "nl": "SMA Energiemeter",
+            "fr": "Compteur d'énergie SMA",
+            "it": "Contatore di energia SMA",
+            "es": "Medidor de energía SMA",
+            "pl": "Licznik energii SMA",
+            "zh-cn": "SMA能量计",
+            "uk": "Лічильник енергії SMA"
+        },
+        "desc": {
+            "en": "ioBroker sma-em Adapter",
+            "de": "ioBroker Sma-em Adapter",
+            "ru": "ioBroker Sma-em драйвер как образец",
+            "pt": "Modelo de adaptador para o ioBroker",
+            "fr": "ioBroker adaptateur modèle",
+            "nl": "ioBroker Sma-em Adapter",
+            "it": "Adattatore sma-em ioBroker",
+            "es": "Adaptador ioBroker sma-em",
+            "pl": "Adapter ioBroker sma-em",
+            "uk": "ioBroker sma-em адаптер",
+            "zh-cn": "ioBroker sma-em 适配器"
+        },
+        "platform": "Javascript/Node.js",
+        "mode": "daemon",
+        "icon": "sma-em.png",
+        "enabled": true,
+        "extIcon": "https://raw.githubusercontent.com/iobroker-community-adapters/ioBroker.sma-em/master/admin/sma-em.png",
+        "keywords": [
+            "SMA Energy Meter",
+            "Sunny Home Manager"
+        ],
+        "readme": "https://github.com/iobroker-community-adapters/ioBroker.sma-em/blob/master/README.md",
+        "loglevel": "info",
+        "type": "energy",
+        "license": "MIT",
+        "compact": true,
+        "connectionType": "local",
+        "dataSource": "push",
+        "materialize": true,
+        "authors": [
+            {
+                "name": "Marcolotti",
+                "email": "info@ct-j.de"
+            }
+        ],
+        "dependencies": [
+            {
+                "js-controller": ">=2.0.0"
+            }
+        ]
     },
-    "title": "SMA Energy Meter",
-    "titleLang": {
-      "en": "SMA Energy Meter",
-      "de": "SMA Energiezähler",
-      "ru": "Счетчик энергии SMA",
-      "pt": "Medidor de energia SMA",
-      "nl": "SMA Energiemeter",
-      "fr": "Compteur d'énergie SMA",
-      "it": "Contatore di energia SMA",
-      "es": "Medidor de energía SMA",
-      "pl": "Licznik energii SMA",
-      "zh-cn": "SMA能量计"
+    "native": {
+        "BIP": "239.12.255.254",
+        "BPO": 9522,
+        "L1": false,
+        "L2": false,
+        "L3": false,
+        "ext": false
     },
-    "desc": {
-      "en": "ioBroker sma-em Adapter",
-      "de": "ioBroker Sma-em Adapter",
-      "ru": "ioBroker Sma-em драйвер как образец",
-      "pt": "Modelo de adaptador para o ioBroker",
-      "fr": "ioBroker adaptateur modèle",
-      "nl": "ioBroker Sma-em Adapter"
-    },
-    "platform": "Javascript/Node.js",
-    "mode": "daemon",
-    "icon": "sma-em.png",
-    "enabled": true,
-    "extIcon": "https://raw.githubusercontent.com/iobroker-community-adapters/ioBroker.sma-em/master/admin/sma-em.png",
-    "keywords": [
-      "SMA Energy Meter",
-      "Sunny Home Manager"
-    ],
-    "readme": "https://github.com/iobroker-community-adapters/ioBroker.sma-em/blob/master/README.md",
-    "loglevel": "info",
-    "type": "energy",
-    "license": "MIT",
-    "compact": true,
-    "connectionType": "local",
-    "dataSource": "push",
-    "materialize": true,
-    "authors": [
-      {
-        "name": "Marcolotti",
-        "email": "info@ct-j.de"
-      }
-    ],
-    "dependencies": [
-      {
-        "js-controller": ">=2.0.0"
-      }
+    "objects": [],
+    "instanceObjects": [
+        {
+            "_id": "info",
+            "type": "channel",
+            "common": {
+                "name": "Information"
+            },
+            "native": {}
+        },
+        {
+            "_id": "info.connection",
+            "type": "state",
+            "common": {
+                "role": "indicator.connected",
+                "name": "If connected to SMA-EM",
+                "type": "boolean",
+                "read": true,
+                "write": false,
+                "def": false
+            },
+            "native": {}
+        }
     ]
-  },
-  "native": {
-    "BIP": "239.12.255.254",
-    "BPO": 9522,
-    "L1": false,
-    "L2": false,
-    "L3": false,
-    "ext": false
-  },
-  "objects": [],
-  "instanceObjects": [
-    {
-      "_id": "info",
-      "type": "channel",
-      "common": {
-        "name": "Information"
-      },
-      "native": {}
-    },
-    {
-      "_id": "info.connection",
-      "type": "state",
-      "common": {
-        "role": "indicator.connected",
-        "name": "If connected to SMA-EM",
-        "type": "boolean",
-        "read": true,
-        "write": false,
-        "def": false
-      },
-      "native": {}
-    }
-  ]
 }

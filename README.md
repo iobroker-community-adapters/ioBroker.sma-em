@@ -65,6 +65,12 @@ In addition to the states in non-extended mode, the following values are availab
 -->
 
 ## Changelog
+
+### __WORK IN PROGRESS__  2023 maintenance release
+
+- (pdbjjens) Updated dependencies
+- (pdbjjens) New: Use adapter-dev instead of gulp translate
+
 ### 0.6.5 (2022-02-19)
 
 - Updated dependencies
@@ -115,7 +121,7 @@ The authors are in no way endorsed by or affiliated with SMA Solar Technology AG
 
 The MIT License (MIT)
 
-Copyright (c) 2022 IoBroker-Community
+Copyright (c) 2023 IoBroker-Community
 
 Permission is hereby granted, free of charge, to any person obtaining a copy
 of this software and associated documentation files (the "Software"), to deal
