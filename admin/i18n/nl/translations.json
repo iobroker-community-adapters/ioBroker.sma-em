@@ -6,5 +6,12 @@
     "Multicast-IP": "Multicast-IP",
     "Multicast-Port": "Multicast-Port",
     "Multicast-Settings": "Multicast-instellingen",
-    "Select values": "Selecteer waarden"
+    "Select values": "Selecteer waarden",
+    "Options": "Opties",
+    "Multicast IP of EMETER Protocol (Do not change)": "Multicast IP van EMETER-protocol (niet wijzigen)",
+    "Multicast Port of EMETER Protocol (Do not change)": "Multicast-poort van EMETER-protocol (niet wijzigen)",
+    "Realtime Update Interval": "Realtime update-interval",
+    "Update Interval for Realtime Data (in Seconds)": "Update-interval voor realtime gegevens (in seconden)",
+    "non-Realtime Update Interval": "niet-realtime update-interval",
+    "Update Interval for non-Realtime Data (in Seconds)": "Update-interval voor niet-realtime gegevens (in seconden)"
 }

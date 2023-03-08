@@ -6,5 +6,12 @@
     "Multicast-IP": "IP multidiffusion",
     "Multicast-Port": "Multicast-Port",
     "Multicast-Settings": "Paramètres de multidiffusion",
-    "Select values": "Sélectionnez des valeurs"
+    "Select values": "Sélectionnez des valeurs",
+    "Options": "Choix",
+    "Multicast IP of EMETER Protocol (Do not change)": "IP multidiffusion du protocole EMETER (ne pas changer)",
+    "Multicast Port of EMETER Protocol (Do not change)": "Port multidiffusion du protocole EMETER (ne pas modifier)",
+    "Realtime Update Interval": "Intervalle de mise à jour en temps réel",
+    "Update Interval for Realtime Data (in Seconds)": "Intervalle de mise à jour des données en temps réel (en secondes)",
+    "non-Realtime Update Interval": "Intervalle de mise à jour non en temps réel",
+    "Update Interval for non-Realtime Data (in Seconds)": "Intervalle de mise à jour pour les données non en temps réel (en secondes)"
 }

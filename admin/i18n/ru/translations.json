@@ -6,5 +6,12 @@
     "Multicast-IP": "Multicast-IP",
     "Multicast-Port": "Multicast-Port",
     "Multicast-Settings": "Multicast-Настройка",
-    "Select values": "Выберите значения"
+    "Select values": "Выберите значения",
+    "Options": "Параметры",
+    "Multicast IP of EMETER Protocol (Do not change)": "Многоадресный IP-адрес протокола EMETER (не изменять)",
+    "Multicast Port of EMETER Protocol (Do not change)": "Многоадресный порт протокола EMETER (не изменять)",
+    "Realtime Update Interval": "Интервал обновления в реальном времени",
+    "Update Interval for Realtime Data (in Seconds)": "Интервал обновления данных в реальном времени (в секундах)",
+    "non-Realtime Update Interval": "Интервал обновления не в реальном времени",
+    "Update Interval for non-Realtime Data (in Seconds)": "Интервал обновления для данных не в реальном времени (в секундах)"
 }

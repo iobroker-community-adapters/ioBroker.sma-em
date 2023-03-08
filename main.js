@@ -4,15 +4,28 @@
  * Created with @iobroker/create-adapter v1.17.0
  */
 
-// The adapter-core module gives you access to the core ioBroker functions
-// you need to create an adapter
+
 const utils = require('@iobroker/adapter-core');
 const dgram = require('dgram');
-const os = require('os');
-const util = require('util');
+
 // global variables
+const updCache = new Map();
+let updBuffer = {};
 let stopped = true;
+let language    = 'en';
 const client = dgram.createSocket('udp4');
+
+// Define flags for given parameter to determine the parameters of interest.
+let cfg_ext_active = false;
+let cfg_L1_active = false;
+let cfg_L1_ext_active = false;
+let cfg_L2_active = false;
+let cfg_L2_ext_active = false;
+let cfg_L3_active = false;
+let cfg_L3_ext_active = false;
+let cfg_rtP = 1;
+let cfg_nrtP = 30;
+
 
 class SmaEm extends utils.Adapter {
 
@@ -38,34 +51,19 @@ class SmaEm extends utils.Adapter {
 		// Reset the connection indicator during startup
 		await this.setStateAsync('info.connection', false, true);
 
-		let protocol_points = {
-			'SMASusyID': {name: 'SMA Device SUSy-ID'                     , update: false, addr: 18, length: 2, type: 'number', unit: ''},
-			'SMASerial': {name: 'SMA Device Serial Number'               , update: false, addr: 20, length: 4, type: 'number', unit: ''},
-			'TimeTick':  {name: 'SMA Time Tick Counter (32-bit overflow)', update: true , addr: 24, length: 4, type: 'number', units: 'ms'}
-		}
-
-		// - Software version as human readable number
-		// - Active flag
-		// - Time stamp of last message received
-		let derived_points = {
-			'sw_version': {name: 'Software Version', type: 'string', unit: ''},
-			'last_message': {name: 'Time Stamp of the Last Message Received', type: 'number', unit: 'ms'}
-		}
-
-		// Define flags for given parameter to determine the parameters of interest.
-		let cfg_ext_active = false;
-		let cfg_L1_active = false;
-		let cfg_L1_ext_active = false;
-		let cfg_L2_active = false;
-		let cfg_L2_ext_active = false;
-		let cfg_L3_active = false;
-		let cfg_L3_ext_active = false;
+		// Get system language and set it for this adapter
+		await this.getForeignObjectAsync('system.config')
+			.then(sysConf => {
+				if (sysConf && (sysConf.common.language === 'de') ) {
+				// switch language to a language supported or default to english
+					language = sysConf.common.language;
+				}
+			});
 
 		// Set active flags for the data points depending on the parameters.
 		if (this.config.ext && this.config.ext === true) {   
 			cfg_ext_active = true;
-		};
-
+		}
 		if (this.config.L1 && this.config.L1 === true) {   
 			cfg_L1_active = true;
 		
@@ -73,7 +71,6 @@ class SmaEm extends utils.Adapter {
 				cfg_L1_ext_active = true;
 			}
 		}
-
 		if (this.config.L2 && this.config.L2 === true) {   
 			cfg_L2_active = true;
 		
@@ -88,94 +85,109 @@ class SmaEm extends utils.Adapter {
 				cfg_L3_ext_active = true;
 			}
 		}
+		
+		// set update periods
+		if (this.config.rtP && (this.config.rtP >= 1 && this.config.rtP <= 60) ) {   
+			cfg_rtP = this.config.rtP;
+		} else {
+			cfg_rtP = 1;
+		}
+		if (this.config.nrtP && (this.config.nrtP >= 30 && this.config.nrtP <= 3600) ) {   
+			cfg_nrtP = this.config.nrtP;
+		} else {
+			cfg_nrtP = 30;
+		}
 
+		const protocol_points = {
+			'SMASusyID': {name: {'en':'SMA Susy-ID','de':'SMA Susy-ID'}, update: false, addr: 18, length: 2, type: 'number', role: 'info.hardware', unit: ''},
+			'SMASerial': {name: {'en':'SMA Serial Number','de':'SMA Seriennummer'}, update: false, addr: 20, length: 4, type: 'number', role: 'info.serial', unit: ''},
+			'TimeTick':  {name: {'en':'SMA Time Ticker','de':'SMA Time Ticker'}, update: true , addr: 24, length: 4, type: 'number', role: 'value', unit: 'ms'}
+		};
+
+		// - Software version as human readable number
+		const derived_points = {
+			'sw_version': {name: {'en':'software version','de':'Softwareversion'}, type: 'string', role: 'info.firmware', unit: ''},
+		};
 
 		// Define SMA OBIS messages as object the raw obis number is the used as key.
 		// Example: 1:1.4.0 => 00 01 04 00
-
-		// Same points are active by default, other depending on the parameter of the adapter.
+		// Some points are active by default, others depending on the options of the adapter.
 		const obis_points = {
-			0x00010400: {id: 'pregard',         name: 'P-active power / Wirkleistung +',                active: true, length: 4, factor: 1 / 10, type: 'number', unit: 'W'},
-			0x00010800: {id: 'pregardcounter',  name: 'counter P-active power / Zähler Wirkleistung +', active: true, length: 8, factor: 1 / 3600000, type: 'number', unit: 'kWh'},
-			0x00020400: {id: 'psurplus',        name: 'P-active power / Wirkleistung -',                active: true, length: 4, factor: 1 / 10, type: 'number', unit: 'W'},
-			0x00020800: {id: 'psurpluscounter', name: 'counter P-active power / Zähler Wirkleistung -', active: true, length: 8, factor: 1 / 3600000, type: 'number', unit: 'kWh'},
+			0x00010400: {id: 'pregard',         name: {'en':'P-active power +','de':'Wirkleistung +'},    			active: true, updateType: 'mean', updatePeriod: cfg_rtP, length: 4, factor: 1 / 10, 				type: 'number', role: 'value.power', unit: 'W'},
+			0x00010800: {id: 'pregardcounter',  name: {'en':'counter P-active power +','de':'Zähler Wirkleistung +'}, active: true, updateType: 'last', updatePeriod: cfg_nrtP, length: 8, factor: 1 / 3600000, 			type: 'number', role: 'value.energy', unit: 'kWh'},
+			0x00020400: {id: 'psurplus',        name: {'en':'P-active power -','de':'Wirkleistung -'},       			active: true, updateType: 'mean', updatePeriod: cfg_rtP, length: 4, factor: 1 / 10, 				type: 'number', role: 'value.power', unit: 'W'},
+			0x00020800: {id: 'psurpluscounter', name: {'en':'counter P-active power -','de':'Zähler Wirkleistung -'},	active: true, updateType: 'last', updatePeriod: cfg_nrtP, length: 8, factor: 1 / 3600000, 			type: 'number', role: 'value.energy', unit: 'kWh'},
 
-			0x00030400: {id: 'qregard',         name: 'Q-reactive power / Blindleistung +',                  active: cfg_ext_active, length: 4, factor: 1 / 10,      type: 'number', unit: 'var'},
-			0x00030800: {id: 'qregardcounter',  name: 'counter Q-reactive power / Zähler Blindleistung +',   active: cfg_ext_active, length: 8, factor: 1 / 3600000, type: 'number', unit: 'varh'},
-			0x00040400: {id: 'qsurplus',        name: 'Q-reactive power / Blindleistung -',                  active: cfg_ext_active, length: 4, factor: 1 / 10,      type: 'number', unit: 'var'},
-			0x00040800: {id: 'qsurpluscounter', name: 'counter Q-reactive power / Zähler Blindleistung -',   active: cfg_ext_active, length: 8, factor: 1 / 3600000, type: 'number', unit: 'varh'},
-			0x00090400: {id: 'sregard',         name: 'S-apparent power  / Scheinleistung +',                active: cfg_ext_active, length: 4, factor: 1 / 10,      type: 'number', unit: 'VA'},
-			0x00090800: {id: 'sregardcounter',  name: 'counter S-apparent power  / Zähler Scheinleistung +', active: cfg_ext_active, length: 8, factor: 1 / 3600000, type: 'number', unit: 'VAh'},
-			0x000A0400: {id: 'ssurplus',        name: 'S-apparent power / Scheinleistung -',                 active: cfg_ext_active, length: 4, factor: 1 / 10,      type: 'number', unit: 'VA'},
-			0x000A0800: {id: 'ssurpluscounter', name: 'counter S-apparent power / Zähler Scheinleistung -',  active: cfg_ext_active, length: 8, factor: 1 / 3600000, type: 'number', unit: 'VAh'},
-			0x000D0400: {id: 'cosphi',          name: 'power factor / Leistungsfaktor',                      active: cfg_ext_active, length: 4, factor: 1 / 1000,    type: 'number', unit: 'Φ'},
-			0x000E0400: {id: 'frequency',       name: 'frequency / Netzfrequenz',                            active: cfg_ext_active, length: 4, factor: 1 / 1000,    type: 'number', unit: 'Hz'},
+			0x00030400: {id: 'qregard',         name: {'en':'Q-reactive power +','de':'Blindleistung +'},        		active: cfg_ext_active, updateType: 'mean', updatePeriod: cfg_rtP, length: 4, factor: 1 / 10,     	type: 'number', role: 'value.power', unit: 'var'},
+			0x00030800: {id: 'qregardcounter',  name: {'en':'counter Q-reactive power +','de':'Zähler Blindleistung +'},active: cfg_ext_active, updateType: 'last', updatePeriod: cfg_nrtP, length: 8, factor: 1 / 3600000, type: 'number', role: 'value.energy', unit: 'varh'},
+			0x00040400: {id: 'qsurplus',        name: {'en':'Q-reactive power -','de':'Blindleistung -'},        		active: cfg_ext_active, updateType: 'mean', updatePeriod: cfg_rtP, length: 4, factor: 1 / 10,     	type: 'number', role: 'value.power', unit: 'var'},
+			0x00040800: {id: 'qsurpluscounter', name: {'en':'counter Q-reactive power -','de':'Zähler Blindleistung -'},active: cfg_ext_active, updateType: 'last', updatePeriod: cfg_nrtP, length: 8, factor: 1 / 3600000, type: 'number', role: 'value.energy', unit: 'varh'},
+			0x00090400: {id: 'sregard',         name: {'en':'S-apparent power +','de':'Scheinleistung +'},      		active: cfg_ext_active, updateType: 'mean', updatePeriod: cfg_rtP, length: 4, factor: 1 / 10,      	type: 'number', role: 'value.power', unit: 'VA'},
+			0x00090800: {id: 'sregardcounter',  name: {'en':'counter S-apparent power +','de':'Zähler Scheinleistung +'},	active: cfg_ext_active, updateType: 'last', updatePeriod: cfg_nrtP, length: 8, factor: 1 / 3600000, type: 'number', role: 'value.energy', unit: 'VAh'},
+			0x000A0400: {id: 'ssurplus',        name: {'en':'S-apparent power -','de':'Scheinleistung -'},                 		active: cfg_ext_active, updateType: 'mean', updatePeriod: cfg_rtP, length: 4, factor: 1 / 10,      	type: 'number', role: 'value.power', unit: 'VA'},
+			0x000A0800: {id: 'ssurpluscounter', name: {'en':'counter S-apparent power -','de':'Zähler Scheinleistung -'},  		active: cfg_ext_active, updateType: 'last', updatePeriod: cfg_nrtP, length: 8, factor: 1 / 3600000, type: 'number', role: 'value.energy', unit: 'VAh'},
+			0x000D0400: {id: 'cosphi',          name: {'en':'power factor','de':'Leistungsfaktor'},            		active: cfg_ext_active, updateType: 'median', updatePeriod: cfg_rtP, length: 4, factor: 1 / 1000,   type: 'number', role: 'value.phase', unit: 'Φ'},
+			0x000E0400: {id: 'frequency',       name: {'en':'grid frequency','de':'Netzfrequenz'},             		active: cfg_ext_active, updateType: 'median', updatePeriod: cfg_rtP, length: 4, factor: 1 / 1000,   type: 'number', role: 'value.frequency', unit: 'Hz'},
 
-			0x00150400: {id: 'L1.pregard',         name: 'L1 P-active power / Wirkleistung +',                active: cfg_L1_active, length: 4, factor: 1 / 10, type: 'number', unit: 'W'},
-			0x00150800: {id: 'L1.pregardcounter',  name: 'L1 counter P-active power / Zähler Wirkleistung +', active: cfg_L1_active, length: 8, factor: 1 / 3600000, type: 'number', unit: 'kWh'},
-			0x00160400: {id: 'L1.psurplus',        name: 'L1 P-active power / Wirkleistung -',                active: cfg_L1_active, length: 4, factor: 1 / 10, type: 'number', unit: 'W'},
-			0x00160800: {id: 'L1.psurpluscounter', name: 'L1 counter P-active power / Zähler Wirkleistung -', active: cfg_L1_active, length: 8, factor: 1 / 3600000, type: 'number', unit: 'kWh'},
+			0x00150400: {id: 'L1.pregard',         name: {'en':'L1 P-active power +','de':'L1 Wirkleistung +'},                		active: cfg_L1_active, updateType: 'mean', updatePeriod: cfg_rtP, length: 4, factor: 1 / 10, 		type: 'number', role: 'value.power', unit: 'W'},
+			0x00150800: {id: 'L1.pregardcounter',  name: {'en':'L1 counter P-active power +','de':'L1 Zähler Wirkleistung +'}, 		active: cfg_L1_active, updateType: 'last', updatePeriod: cfg_nrtP, length: 8, factor: 1 / 3600000, 	type: 'number', role: 'value.energy', unit: 'kWh'},
+			0x00160400: {id: 'L1.psurplus',        name: {'en':'L1 P-active power -','de':'L1 Wirkleistung -'},                		active: cfg_L1_active, updateType: 'mean', updatePeriod: cfg_rtP, length: 4, factor: 1 / 10, 		type: 'number', role: 'value.power', unit: 'W'},
+			0x00160800: {id: 'L1.psurpluscounter', name: {'en':'L1 counter P-active power -','de':'L1 Zähler Wirkleistung -'}, 		active: cfg_L1_active, updateType: 'last', updatePeriod: cfg_nrtP, length: 8, factor: 1 / 3600000, 	type: 'number', role: 'value.energy', unit: 'kWh'},
 
-			0x00170400: {id: 'L1.qregard',         name: 'L1 Q-reactive power / Blindleistung +',                  active: cfg_L1_ext_active, length: 4, factor: 1 / 10,      type: 'number', unit: 'var'},
-			0x00170800: {id: 'L1.qregardcounter',  name: 'L1 counter Q-reactive power / Zähler Blindleistung +',   active: cfg_L1_ext_active, length: 8, factor: 1 / 3600000, type: 'number', unit: 'varh'},
-			0x00180400: {id: 'L1.qsurplus',        name: 'L1 Q-reactive power / Blindleistung -',                  active: cfg_L1_ext_active, length: 4, factor: 1 / 10,      type: 'number', unit: 'var'},
-			0x00180800: {id: 'L1.qsurpluscounter', name: 'L1 counter Q-reactive power / Zähler Blindleistung -',   active: cfg_L1_ext_active, length: 8, factor: 1 / 3600000, type: 'number', unit: 'varh'},
-			0x001D0400: {id: 'L1.sregard',         name: 'L1 S-apparent power  / Scheinleistung +',                active: cfg_L1_ext_active, length: 4, factor: 1 / 10,      type: 'number', unit: 'VA'},
-			0x001D0800: {id: 'L1.sregardcounter',  name: 'L1 counter S-apparent power  / Zähler Scheinleistung +', active: cfg_L1_ext_active, length: 8, factor: 1 / 3600000, type: 'number', unit: 'VAh'},
-			0x001E0400: {id: 'L1.ssurplus',        name: 'L1 S-apparent power / Scheinleistung -',                 active: cfg_L1_ext_active, length: 4, factor: 1 / 10,      type: 'number', unit: 'VA'},
-			0x001E0800: {id: 'L1.ssurpluscounter', name: 'L1 counter S-apparent power / Zähler Scheinleistung -',  active: cfg_L1_ext_active, length: 8, factor: 1 / 3600000, type: 'number', unit: 'VAh'},
-			0x001F0400: {id: 'L1.amperage',        name: 'L1 amperage / Stromstärke',                              active: cfg_L1_ext_active, length: 4, factor: 1 / 1000,    type: 'number', unit: 'A'},
-			0x00200400: {id: 'L1.voltage',         name: 'L1 voltage / Spannung',                                  active: cfg_L1_ext_active, length: 4, factor: 1 / 1000,    type: 'number', unit: 'V'},
-			0x00210400: {id: 'L1.cosphi',          name: 'L1 power factor / Leistungsfaktor',                      active: cfg_L1_ext_active, length: 4, factor: 1 / 1000,    type: 'number', unit: 'Φ'},
+			0x00170400: {id: 'L1.qregard',         name: {'en':'L1 Q-reactive power +','de':'L1 Blindleistung +'},                  	active: cfg_L1_ext_active, updateType: 'mean', updatePeriod: cfg_rtP, length: 4, factor: 1 / 10,      	type: 'number', role: 'value.power', unit: 'var'},
+			0x00170800: {id: 'L1.qregardcounter',  name: {'en':'L1 counter Q-reactive power +','de':'L1 Zähler Blindleistung +'},   	active: cfg_L1_ext_active, updateType: 'last', updatePeriod: cfg_nrtP, length: 8, factor: 1 / 3600000, 	type: 'number', role: 'value.energy', unit: 'varh'},
+			0x00180400: {id: 'L1.qsurplus',        name: {'en':'L1 Q-reactive power -','de':'L1 Blindleistung -'},                  	active: cfg_L1_ext_active, updateType: 'mean', updatePeriod: cfg_rtP, length: 4, factor: 1 / 10,      	type: 'number', role: 'value.power', unit: 'var'},
+			0x00180800: {id: 'L1.qsurpluscounter', name: {'en':'L1 counter Q-reactive power -','de':'L1 Zähler Blindleistung -'},   	active: cfg_L1_ext_active, updateType: 'last', updatePeriod: cfg_nrtP, length: 8, factor: 1 / 3600000, 	type: 'number', role: 'value.energy', unit: 'varh'},
+			0x001D0400: {id: 'L1.sregard',         name: {'en':'L1 S-apparent power +','de':'L1 Scheinleistung +'},                	active: cfg_L1_ext_active, updateType: 'mean', updatePeriod: cfg_rtP, length: 4, factor: 1 / 10,      	type: 'number', role: 'value.power', unit: 'VA'},
+			0x001D0800: {id: 'L1.sregardcounter',  name: {'en':'L1 counter S-apparent power +','de':'L1 Zähler Scheinleistung +'}, 	active: cfg_L1_ext_active, updateType: 'last', updatePeriod: cfg_nrtP, length: 8, factor: 1 / 3600000, 	type: 'number', role: 'value.energy', unit: 'VAh'},
+			0x001E0400: {id: 'L1.ssurplus',        name: {'en':'L1 S-apparent power -','de':'L1 Scheinleistung -'},                 	active: cfg_L1_ext_active, updateType: 'mean', updatePeriod: cfg_rtP, length: 4, factor: 1 / 10,      	type: 'number', role: 'value.power', unit: 'VA'},
+			0x001E0800: {id: 'L1.ssurpluscounter', name: {'en':'L1 counter S-apparent power -','de':'L1 Zähler Scheinleistung -'},  	active: cfg_L1_ext_active, updateType: 'last', updatePeriod: cfg_nrtP, length: 8, factor: 1 / 3600000, 	type: 'number', role: 'value.energy', unit: 'VAh'},
+			0x001F0400: {id: 'L1.amperage',        name: {'en':'L1 amperage','de':'L1 Stromstärke'},                    	active: cfg_L1_ext_active, updateType: 'mean', updatePeriod: cfg_rtP, length: 4, factor: 1 / 1000,    	type: 'number', role: 'value.current', unit: 'A'},
+			0x00200400: {id: 'L1.voltage',         name: {'en':'L1 voltage','de':'L1 Spannung'},                                  	active: cfg_L1_ext_active, updateType: 'mean', updatePeriod: cfg_rtP, length: 4, factor: 1 / 1000,    	type: 'number', role: 'value.voltage', unit: 'V'},
+			0x00210400: {id: 'L1.cosphi',          name: {'en':'L1 power factor','de':'L1 Leistungsfaktor'},               	active: cfg_L1_ext_active, updateType: 'median', updatePeriod: cfg_rtP, length: 4, factor: 1 / 1000,    type: 'number', role: 'value.phase', unit: 'Φ'},
 
-			0x00290400: {id: 'L2.pregard',         name: 'L2 P-active power / Wirkleistung +',                active: cfg_L2_active, length: 4, factor: 1 / 10, type: 'number', unit: 'W'},
-			0x00290800: {id: 'L2.pregardcounter',  name: 'L2 counter P-active power / Zähler Wirkleistung +', active: cfg_L2_active, length: 8, factor: 1 / 3600000, type: 'number', unit: 'kWh'},
-			0x002a0400: {id: 'L2.psurplus',        name: 'L2 P-active power / Wirkleistung -',                active: cfg_L2_active, length: 4, factor: 1 / 10, type: 'number', unit: 'W'},
-			0x002a0800: {id: 'L2.psurpluscounter', name: 'L2 counter P-active power / Zähler Wirkleistung -', active: cfg_L2_active, length: 8, factor: 1 / 3600000, type: 'number', unit: 'kWh'},
+			0x00290400: {id: 'L2.pregard',         name: {'en':'L2 P-active power +','de':'L2 Wirkleistung +'},                		active: cfg_L2_active, updateType: 'mean', updatePeriod: cfg_rtP, length: 4, factor: 1 / 10, 			type: 'number', role: 'value.power', unit: 'W'},
+			0x00290800: {id: 'L2.pregardcounter',  name: {'en':'L2 counter P-active power +','de':'L2 Zähler Wirkleistung +'}, 		active: cfg_L2_active, updateType: 'last', updatePeriod: cfg_nrtP, length: 8, factor: 1 / 3600000, 		type: 'number', role: 'value.energy', unit: 'kWh'},
+			0x002a0400: {id: 'L2.psurplus',        name: {'en':'L2 P-active power -','de':'L2 Wirkleistung -'},                		active: cfg_L2_active, updateType: 'mean', updatePeriod: cfg_rtP, length: 4, factor: 1 / 10, 			type: 'number', role: 'value.power', unit: 'W'},
+			0x002a0800: {id: 'L2.psurpluscounter', name: {'en':'L2 counter P-active power -','de':'L2 Zähler Wirkleistung -'}, 		active: cfg_L2_active, updateType: 'last', updatePeriod: cfg_nrtP, length: 8, factor: 1 / 3600000, 		type: 'number', role: 'value.energy', unit: 'kWh'},
 
-			0x002b0400: {id: 'L2.qregard',         name: 'L2 Q-reactive power / Blindleistung +',                  active: cfg_L2_ext_active, length: 4, factor: 1 / 10,      type: 'number', unit: 'var'},
-			0x002b0800: {id: 'L2.qregardcounter',  name: 'L2 counter Q-reactive power / Zähler Blindleistung +',   active: cfg_L2_ext_active, length: 8, factor: 1 / 3600000, type: 'number', unit: 'varh'},
-			0x002c0400: {id: 'L2.qsurplus',        name: 'L2 Q-reactive power / Blindleistung -',                  active: cfg_L2_ext_active, length: 4, factor: 1 / 10,      type: 'number', unit: 'var'},
-			0x002c0800: {id: 'L2.qsurpluscounter', name: 'L2 counter Q-reactive power / Zähler Blindleistung -',   active: cfg_L2_ext_active, length: 8, factor: 1 / 3600000, type: 'number', unit: 'varh'},
-			0x00310400: {id: 'L2.sregard',         name: 'L2 S-apparent power  / Scheinleistung +',                active: cfg_L2_ext_active, length: 4, factor: 1 / 10,      type: 'number', unit: 'VA'},
-			0x00310800: {id: 'L2.sregardcounter',  name: 'L2 counter S-apparent power  / Zähler Scheinleistung +', active: cfg_L2_ext_active, length: 8, factor: 1 / 3600000, type: 'number', unit: 'VAh'},
-			0x00320400: {id: 'L2.ssurplus',        name: 'L2 S-apparent power / Scheinleistung -',                 active: cfg_L2_ext_active, length: 4, factor: 1 / 10,      type: 'number', unit: 'VA'},
-			0x00320800: {id: 'L2.ssurpluscounter', name: 'L2 counter S-apparent power / Zähler Scheinleistung -',  active: cfg_L2_ext_active, length: 8, factor: 1 / 3600000, type: 'number', unit: 'VAh'},
-			0x00330400: {id: 'L2.amperage',        name: 'L2 amperage / Stromstärke',                              active: cfg_L2_ext_active, length: 4, factor: 1 / 1000,    type: 'number', unit: 'A'},
-			0x00340400: {id: 'L2.voltage',         name: 'L2 voltage / Spannung',                                  active: cfg_L2_ext_active, length: 4, factor: 1 / 1000,    type: 'number', unit: 'V'},
-			0x00350400: {id: 'L2.cosphi',          name: 'L2 power factor / Leistungsfaktor',                      active: cfg_L2_ext_active, length: 4, factor: 1 / 1000,    type: 'number', unit: 'Φ'},
+			0x002b0400: {id: 'L2.qregard',         name: {'en':'L2 Q-reactive power +','de':'L2 Blindleistung +'},                  	active: cfg_L2_ext_active, updateType: 'mean', updatePeriod: cfg_rtP, length: 4, factor: 1 / 10,      	type: 'number', role: 'value.power', unit: 'var'},
+			0x002b0800: {id: 'L2.qregardcounter',  name: {'en':'L2 counter Q-reactive power +','de':'L2 Zähler Blindleistung +'},   	active: cfg_L2_ext_active, updateType: 'last', updatePeriod: cfg_nrtP, length: 8, factor: 1 / 3600000, 	type: 'number', role: 'value.energy', unit: 'varh'},
+			0x002c0400: {id: 'L2.qsurplus',        name: {'en':'L2 Q-reactive power -','de':'L2 Blindleistung -'},                  	active: cfg_L2_ext_active, updateType: 'mean', updatePeriod: cfg_rtP, length: 4, factor: 1 / 10,      	type: 'number', role: 'value.power', unit: 'var'},
+			0x002c0800: {id: 'L2.qsurpluscounter', name: {'en':'L2 counter Q-reactive power -','de':'L2 Zähler Blindleistung -'},   	active: cfg_L2_ext_active, updateType: 'last', updatePeriod: cfg_nrtP, length: 8, factor: 1 / 3600000, 	type: 'number', role: 'value.energy', unit: 'varh'},
+			0x00310400: {id: 'L2.sregard',         name: {'en':'L2 S-apparent power +','de':'L2 Scheinleistung +'},                	active: cfg_L2_ext_active, updateType: 'mean', updatePeriod: cfg_rtP, length: 4, factor: 1 / 10,      	type: 'number', role: 'value.power', unit: 'VA'},
+			0x00310800: {id: 'L2.sregardcounter',  name: {'en':'L2 counter S-apparent power +','de':'L2 Zähler Scheinleistung +'}, 	active: cfg_L2_ext_active, updateType: 'last', updatePeriod: cfg_nrtP, length: 8, factor: 1 / 3600000, 	type: 'number', role: 'value.energy', unit: 'VAh'},
+			0x00320400: {id: 'L2.ssurplus',        name: {'en':'L2 S-apparent power -','de':'L2 Scheinleistung -'},                 	active: cfg_L2_ext_active, updateType: 'mean', updatePeriod: cfg_rtP, length: 4, factor: 1 / 10,      	type: 'number', role: 'value.power', unit: 'VA'},
+			0x00320800: {id: 'L2.ssurpluscounter', name: {'en':'L2 counter S-apparent power -','de':'L2 Zähler Scheinleistung -'},  	active: cfg_L2_ext_active, updateType: 'last', updatePeriod: cfg_nrtP, length: 8, factor: 1 / 3600000, 	type: 'number', role: 'value.energy', unit: 'VAh'},
+			0x00330400: {id: 'L2.amperage',        name: {'en':'L2 amperage','de':'L2 Stromstärke'},                              	active: cfg_L2_ext_active, updateType: 'mean', updatePeriod: cfg_rtP, length: 4, factor: 1 / 1000,    	type: 'number', role: 'value.current', unit: 'A'},
+			0x00340400: {id: 'L2.voltage',         name: {'en':'L2 voltage','de':'L2 Spannung'},                                  	active: cfg_L2_ext_active, updateType: 'mean', updatePeriod: cfg_rtP, length: 4, factor: 1 / 1000,    	type: 'number', role: 'value.voltage', unit: 'V'},
+			0x00350400: {id: 'L2.cosphi',          name: {'en':'L2 power factor','de':'L2 Leistungsfaktor'},                      	active: cfg_L2_ext_active, updateType: 'median', updatePeriod: cfg_rtP, length: 4, factor: 1 / 1000,    type: 'number', role: 'value.phase', unit: 'Φ'},
 
-			0x003D0400: {id: 'L3.pregard',         name: 'L3 P-active power / Wirkleistung +',                active: cfg_L3_active, length: 4, factor: 1 / 10, type: 'number', unit: 'W'},
-			0x003D0800: {id: 'L3.pregardcounter',  name: 'L3 counter P-active power / Zähler Wirkleistung +', active: cfg_L3_active, length: 8, factor: 1 / 3600000, type: 'number', unit: 'kWh'},
-			0x003E0400: {id: 'L3.psurplus',        name: 'L3 P-active power / Wirkleistung -',                active: cfg_L3_active, length: 4, factor: 1 / 10, type: 'number', unit: 'W'},
-			0x003E0800: {id: 'L3.psurpluscounter', name: 'L3 counter P-active power / Zähler Wirkleistung -', active: cfg_L3_active, length: 8, factor: 1 / 3600000, type: 'number', unit: 'kWh'},
+			0x003D0400: {id: 'L3.pregard',         name: {'en':'L3 P-active power +','de':'L3 Wirkleistung +'},                		active: cfg_L3_active, updateType: 'mean', updatePeriod: cfg_rtP, length: 4, factor: 1 / 10, 			type: 'number', role: 'value.power', unit: 'W'},
+			0x003D0800: {id: 'L3.pregardcounter',  name: {'en':'L3 counter P-active power +','de':'L3 Zähler Wirkleistung +'}, 		active: cfg_L3_active, updateType: 'last', updatePeriod: cfg_nrtP, length: 8, factor: 1 / 3600000, 		type: 'number', role: 'value.energy', unit: 'kWh'},
+			0x003E0400: {id: 'L3.psurplus',        name: {'en':'L3 P-active power-','de':'L3 Wirkleistung -'},                		active: cfg_L3_active, updateType: 'mean', updatePeriod: cfg_rtP, length: 4, factor: 1 / 10, 			type: 'number', role: 'value.power', unit: 'W'},
+			0x003E0800: {id: 'L3.psurpluscounter', name: {'en':'L3 counter P-active power -','de':'L3 Zähler Wirkleistung -'}, 		active: cfg_L3_active, updateType: 'last', updatePeriod: cfg_nrtP, length: 8, factor: 1 / 3600000, 		type: 'number', role: 'value.energy', unit: 'kWh'},
 
-			0x003F0400: {id: 'L3.qregard',         name: 'L3 Q-reactive power / Blindleistung +',                  active: cfg_L3_ext_active, length: 4, factor: 1 / 10,      type: 'number', unit: 'var'},
-			0x003F0800: {id: 'L3.qregardcounter',  name: 'L3 counter Q-reactive power / Zähler Blindleistung +',   active: cfg_L3_ext_active, length: 8, factor: 1 / 3600000, type: 'number', unit: 'varh'},
-			0x00400400: {id: 'L3.qsurplus',        name: 'L3 Q-reactive power / Blindleistung -',                  active: cfg_L3_ext_active, length: 4, factor: 1 / 10,      type: 'number', unit: 'var'},
-			0x00400800: {id: 'L3.qsurpluscounter', name: 'L3 counter Q-reactive power / Zähler Blindleistung -',   active: cfg_L3_ext_active, length: 8, factor: 1 / 3600000, type: 'number', unit: 'varh'},
-			0x00450400: {id: 'L3.sregard',         name: 'L3 S-apparent power  / Scheinleistung +',                active: cfg_L3_ext_active, length: 4, factor: 1 / 10,      type: 'number', unit: 'VA'},
-			0x00450800: {id: 'L3.sregardcounter',  name: 'L3 counter S-apparent power  / Zähler Scheinleistung +', active: cfg_L3_ext_active, length: 8, factor: 1 / 3600000, type: 'number', unit: 'VAh'},
-			0x00460400: {id: 'L3.ssurplus',        name: 'L3 S-apparent power / Scheinleistung -',                 active: cfg_L3_ext_active, length: 4, factor: 1 / 10,      type: 'number', unit: 'VA'},
-			0x00460800: {id: 'L3.ssurpluscounter', name: 'L3 counter S-apparent power / Zähler Scheinleistung -',  active: cfg_L3_ext_active, length: 8, factor: 1 / 3600000, type: 'number', unit: 'VAh'},
-			0x00470400: {id: 'L3.amperage',        name: 'L3 amperage / Stromstärke',                              active: cfg_L3_ext_active, length: 4, factor: 1 / 1000,    type: 'number', unit: 'A'},
-			0x00480400: {id: 'L3.voltage',         name: 'L3 voltage / Spannung',                                  active: cfg_L3_ext_active, length: 4, factor: 1 / 1000,    type: 'number', unit: 'V'},
-			0x00490400: {id: 'L3.cosphi',          name: 'L3 power factor / Leistungsfaktor',                      active: cfg_L3_ext_active, length: 4, factor: 1 / 1000,    type: 'number', unit: 'Φ'},
+			0x003F0400: {id: 'L3.qregard',         name: {'en':'L3 Q-reactive power +','de':'L3 Blindleistung +'},                  	active: cfg_L3_ext_active, updateType: 'mean', updatePeriod: cfg_rtP, length: 4, factor: 1 / 10,      	type: 'number', role: 'value.power', unit: 'var'},
+			0x003F0800: {id: 'L3.qregardcounter',  name: {'en':'L3 counter Q-reactive power +','de':'L3 Zähler Blindleistung +'},   	active: cfg_L3_ext_active, updateType: 'last', updatePeriod: cfg_nrtP, length: 8, factor: 1 / 3600000, 	type: 'number', role: 'value.energy', unit: 'varh'},
+			0x00400400: {id: 'L3.qsurplus',        name: {'en':'L3 Q-reactive power -','de':'L3 Blindleistung -'},                  	active: cfg_L3_ext_active, updateType: 'mean', updatePeriod: cfg_rtP, length: 4, factor: 1 / 10,      	type: 'number', role: 'value.power', unit: 'var'},
+			0x00400800: {id: 'L3.qsurpluscounter', name: {'en':'L3 counter Q-reactive power -','de':'L3 Zähler Blindleistung -'},   	active: cfg_L3_ext_active, updateType: 'last', updatePeriod: cfg_nrtP, length: 8, factor: 1 / 3600000, 	type: 'number', role: 'value.energy', unit: 'varh'},
+			0x00450400: {id: 'L3.sregard',         name: {'en':'L3 S-apparent power +','de':'L3 Scheinleistung +'},                	active: cfg_L3_ext_active, updateType: 'mean', updatePeriod: cfg_rtP, length: 4, factor: 1 / 10,      	type: 'number', role: 'value.power', unit: 'VA'},
+			0x00450800: {id: 'L3.sregardcounter',  name: {'en':'L3 counter S-apparent power +','de':'L3 Zähler Scheinleistung +'}, 	active: cfg_L3_ext_active, updateType: 'last', updatePeriod: cfg_nrtP, length: 8, factor: 1 / 3600000, 	type: 'number', role: 'value.energy', unit: 'VAh'},
+			0x00460400: {id: 'L3.ssurplus',        name: {'en':'L3 S-apparent power -','de':'L3 Scheinleistung -'},                 	active: cfg_L3_ext_active, updateType: 'mean', updatePeriod: cfg_rtP, length: 4, factor: 1 / 10,      	type: 'number', role: 'value.power', unit: 'VA'},
+			0x00460800: {id: 'L3.ssurpluscounter', name: {'en':'L3 counter S-apparent power -','de':'L3 Zähler Scheinleistung -'},  	active: cfg_L3_ext_active, updateType: 'last', updatePeriod: cfg_nrtP, length: 8, factor: 1 / 3600000, 	type: 'number', role: 'value.energy', unit: 'VAh'},
+			0x00470400: {id: 'L3.amperage',        name: {'en':'L3 amperage','de':'L3 Stromstärke'},                              	active: cfg_L3_ext_active, updateType: 'mean', updatePeriod: cfg_rtP, length: 4, factor: 1 / 1000,    	type: 'number', role: 'value.current', unit: 'A'},
+			0x00480400: {id: 'L3.voltage',         name: {'en':'L3 voltage','de':'L3 Spannung'},                                  	active: cfg_L3_ext_active, updateType: 'mean', updatePeriod: cfg_rtP, length: 4, factor: 1 / 1000,    	type: 'number', role: 'value.voltage', unit: 'V'},
+			0x00490400: {id: 'L3.cosphi',          name: {'en':'L3 power factor','de':'L3 Leistungsfaktor'},                      	active: cfg_L3_ext_active, updateType: 'median', updatePeriod: cfg_rtP, length: 4, factor: 1 / 1000,    type: 'number', role: 'value.phase', unit: 'Φ'},
 
-			0x90000000: {id: 'sw_version_raw',     name: 'Software Version Raw',                                   active: true,              length: 4, factor: 1 ,          type: 'number', unit: ''},
+			0x90000000: {id: 'sw_version_raw',     name: {'en':'software version raw','de':'Softwareversion kodiert'},                                	active: true,              updateType: 'once', updatePeriod: 0, length: 4, factor: 1 ,          		type: 'number', role: 'info.firmware', unit: ''},
 		};
 
-		// Member variable to store the path to write the value of the current instance.
-		let id_path;
-		let ser_nums_active = [];
-
-		// Map to handle different devices and to track if all state have been created.
-		let ser_state_num = new Map();
+		// Map to handle different devices
+		const serNumsActive = new Map();
 		stopped = false;
-		// Open UDPv4 socket to receive SMA multicast packets.
-		//const client = dgram.createSocket('udp4');
 	
-		// Bind socket to the multicast address on all devices except localhost
+		// Bind socket to the multicast addresses on all devices found except localhost
 		client.bind(this.config.BPO, () => {
 			this.log.info('Details L1 ' + this.config.L1 + ' Details L2 ' + this.config.L2 + ' Details L3 ' + this.config.L3 + ' Extended info ' + this.config.ext);
 
@@ -187,18 +199,19 @@ class SmaEm extends utils.Adapter {
 
 		// Event handler in case of UDP packet was received.
 		client.on('message', async (message, rinfo) => { 
-
-			// Check if packet is an SMA energy meter packet or adapter stopped
-			if(this.check_message_type(message) === false || stopped)
+			// Check if packet is an SMA energy meter packet or if adapter stopped
+			if(await this.check_message_type(message) === false || stopped)
 				return;
 
-			// Extract serial number as integer of the device in the received messag
+			// Extract serial number as integer of the device in the received message
 			const ser = message.readUIntBE(protocol_points['SMASerial'].addr, protocol_points['SMASerial'].length);
 			const ser_str = ser.toString();
-			
+			// Extract Time Ticker from current message
+			const tTick = message.readUIntBE(protocol_points['TimeTick'].addr, protocol_points['TimeTick'].length);
+						
 			// Check if points must be created and extract id path
-			if (ser_nums_active.includes(ser) === false) {
-				let susy = message.readUIntBE(protocol_points['SMASusyID'].addr, protocol_points['SMASusyID'].length);
+			if (!serNumsActive.has(ser_str)) {
+				const susy = message.readUIntBE(protocol_points['SMASusyID'].addr, protocol_points['SMASusyID'].length);
 				let dev_descr = 'Unkown SMA device S/N: ' + ser_str;
 				
 				if (susy == 372) {
@@ -207,54 +220,46 @@ class SmaEm extends utils.Adapter {
 					dev_descr = 'SMA Energy Meter S/N: ' + ser_str;
 				}
 
-				// Add object in the list with serial number and elements to store the number of elements created / requested
-				ser_state_num.set(ser_str, {states_req: 0, states_created: 0, states_diff: 0});
+				// Add the newly discovered device to the map of active SMA EMs
+				// with serial number as key and details describing the device 
+				serNumsActive.set(ser_str, {
+					suSy: susy, 
+					serNum: ser, 
+					serIp: rinfo.address,  
+					serPort: rinfo.port, 
+					tTickOld: 0 
+				});
+				this.log.info('New device discovered: ' + dev_descr + ' with IP/port: ' + serNumsActive.get(ser_str).serIp + '/' + serNumsActive.get(ser_str).serPort);
 
 				// Create the states tree for the device depending on its serial number and wait for finish
 				await this.createPoints(message, ser_str, dev_descr, obis_points, protocol_points, derived_points);
 
 				// Update connection state.
-				this.setState('info.connection', true, true);
+				await this.setStateAsync('info.connection', true, true);
 
-				// Add the serial number to the list of active SMA EMs
-				ser_nums_active.push(ser);
-				
-				// Write all protocol values only once
+				// Write protocol values only once
 				for (const p in protocol_points) {
-					let val = message.readUIntBE(protocol_points[p].addr, protocol_points[p].length);
-					this.setState(ser_str + '.' + p, val, true);
+					if(protocol_points[p].update === false) {
+						const val = message.readUIntBE(protocol_points[p].addr, protocol_points[p].length);
+						await this.setStateAsync(ser_str + '.' + p, val, true);
+					}
 				}
 
+			}
+
+			//throttle message rate to approx. 1s; SHM message rate can be either 200ms, 600ms or 1000ms
+			if ( serNumsActive.has(ser_str)) {
+				const ttTemp = serNumsActive.get(ser_str).tTickOld + 950;				
+				if (tTick < ttTemp) {
+					return; //drop message
+				} else {
+					serNumsActive.set(ser_str, {tTickOld: tTick});
+				}
 			}
 
 			// Update values by evaluating UDP packet content.
-			this.updatePoints(ser_str, message, obis_points);
-
-			// Update software version as human readable
-			// Major.Minor.Build.Revision(as character)
-			this.getState(ser_str + '.sw_version_raw',  (err, state) => {
-				if (!err && state != null) {
-					let sw = ((state.val >> 24) & 0xFF).toString();
-					sw += '.' + ((state.val >> 16) & 0xFF).toString();
-					sw += '.' + ((state.val >> 8) & 0xFF).toString();
-					sw += '.' + String.fromCharCode(state.val & 0xFF);
-
-					this.setState(ser_str + '.sw_version', sw, true);
-				}
-			});
-
-			// Write current time stamp
-			this.setState(ser_str + '.last_message', Date.now(), true);
-
-			// Update fixed protocol data
-			for (const p in protocol_points) {
-				if(protocol_points[p].update === true) {
-					let val = message.readUIntBE(protocol_points[p].addr, protocol_points[p].length);
-					this.setState(ser_str + '.' + p, val, true);			
-				}
-			}
-
-    	});
+			await this.updatePoints(ser_str, message, obis_points);
+		});
 
 		client.on('close', () => {
 			this.log.info('UDP Socket closed ...');
@@ -268,12 +273,12 @@ class SmaEm extends utils.Adapter {
 		});
 	}
 
-	check_message_type(message) {
-		// Check SMA ident string at the first 0 bytes
+	async check_message_type(message) {
+		// Check SMA ident string at the first 3 bytes of the message
 		if(message.toString('ascii', 0, 3) !=  'SMA')
 			return false;
 
-		// Check protocol type
+		// Check protocol id
 		if(message.readUInt16BE(16) != 0x6069)
 			return false;
 
@@ -296,41 +301,10 @@ class SmaEm extends utils.Adapter {
 		}
 	}
 
-	/**
-	 * Is called if a subscribed object changes
-	 * @param {string} id
-	 * @param {ioBroker.Object | null | undefined} obj
-	 */
-	onObjectChange(id, obj) {
-		if (obj) {
-			// The object was changed
-			this.log.info(`object ${id} changed: ${JSON.stringify(obj)}`);
-		} else {
-			// The object was deleted
-			this.log.info(`object ${id} deleted`);
-		}
-	}
-
-	/**
-	 * Is called if a subscribed state changes
-	 * @param {string} id
-	 * @param {ioBroker.State | null | undefined} state
-	 */
-	onStateChange(id, state) {
-		if (state) {
-			// The state was changed
-			this.log.info(`state ${id} changed: ${state.val} (ack = ${state.ack})`);
-		} else {
-			// The state was deleted
-			this.log.info(`state ${id} deleted`);
-		}
-	}
-
 	// Create or delete iobroker data points and set the fixed data points
 	async createPoints(message, ser_str, dev_str, points, proto, derived) {
 		
-		//const setObjectNotExitsPromise = util.promisify(this.setObjectNotExists)
-		let proms = [];
+		const proms = [];
 
 		// Create id tree structure ("adapterid.serialnumber.points")
 		let prom = this.setObjectNotExistsAsync(ser_str, {
@@ -341,85 +315,105 @@ class SmaEm extends utils.Adapter {
 		proms.push(prom);
 
 		// Create full path prefix
-		let path_pre = ser_str + '.';
+		const path_pre = ser_str + '.';
 
-		// Create other information data points for the protocol objects.
+		// Create data points for the protocol objects.
 		for(const p in proto) {
-			prom = this.setObjectNotExistsAsync (path_pre + p, {
-				type: 'state',
-				common: {
-					name: proto[p].name,
-					type: proto[p].type,
-					role: 'value',
-					unit: proto[p].unit,
-					read: true,
-					write: true
-				},
-				native: {}
-			});
-			proms.push(prom);
-		} 
-
-		// Create OBIS data points which are active
-		for(const p in points) {
-
-			// Create only points which are configured as active
-			if (points[p].active === true) {
-				prom = this.setObjectNotExistsAsync(path_pre + points[p].id, {
+			if(proto[p].update === false) {
+				prom = this.setObjectNotExistsAsync (path_pre + p, {
 					type: 'state',
 					common: {
-						name: points[p].name,
-						type: points[p].type,
-						role: 'value',
-						unit: points[p].unit,
+						name: proto[p].name[language],
+						type: proto[p].type,
+						role: proto[p].role,
+						unit: proto[p].unit,
 						read: true,
-						write: true
+						write: false
 					},
 					native: {}
 				});
 				proms.push(prom);
 			}
+		} 
+
+		// Create OBIS data points
+		for(const p in points) {
+			// Create only points which are configured as active
+			if (points[p].active === true) {
+				prom = this.setObjectNotExistsAsync(path_pre + points[p].id, {
+					type: 'state',
+					common: {
+						name: points[p].name[language],
+						type: points[p].type,
+						role: points[p].role,
+						unit: points[p].unit,
+						read: true,
+						write: false
+					},
+					native: {}
+				});
+
+				updBuffer = {
+					updPeriod:   points[p].updatePeriod,
+					updCounter:   points[p].updatePeriod,
+					updValue: []
+				};
+				updCache.set(path_pre + points[p].id, updBuffer);
+				proms.push(prom);
+			}
 			// Delete point if it is not active
 			else {
 				this.delObject(path_pre + points[p].id);
+				updCache.delete(path_pre + points[p].id);
 			}
 		}
 
-		this.getObject(path_pre + 'L1',  (err, obj ) => { 
-			!err && this.extendObject(path_pre + 'L1', {type: 'channel', common: {name: 'Values of phase 1'}});	
-		});
-
-		this.getObject(path_pre + 'L2',  (err, obj ) => { 
-			!err && this.extendObject(path_pre + 'L2', {type: 'channel', common: {name: 'Values of phase 2'}});	
-		});
-
-		this.getObject(path_pre + 'L3',  (err, obj ) => { 
-			!err && this.extendObject(path_pre + 'L3', {type: 'channel', common: {name: 'Values of phase 3'}});	
-		});
+		// Create or delete optional details channels for L1-L3
+		if (cfg_L1_active) {
+			this.getObject(path_pre + 'L1',  (err, obj ) => { 
+				!err && this.extendObject(path_pre + 'L1', {type: 'channel', common: {name: 'Values of phase 1'}});	
+			});
+		} else {
+			this.delObject(path_pre + 'L1');
+		}
+		if (cfg_L2_active) {
+			this.getObject(path_pre + 'L2',  (err, obj ) => { 
+				!err && this.extendObject(path_pre + 'L2', {type: 'channel', common: {name: 'Values of phase 2'}});	
+			});
+		} else {
+			this.delObject(path_pre + 'L2');
+		}
+		if (cfg_L3_active) {
+			this.getObject(path_pre + 'L3',  (err, obj ) => { 
+				!err && this.extendObject(path_pre + 'L3', {type: 'channel', common: {name: 'Values of phase 3'}});	
+			});
+		} else {
+			this.delObject(path_pre + 'L3');
+		}
 
 		// Create additional derived states
 		for (const p in derived) {
 			prom = this.setObjectNotExistsAsync(path_pre + p, {
 				type: 'state',
 				common: {
-					name: derived[p].name,
+					name: derived[p].name[language],
 					type: derived[p].type,
-					role: 'value',
+					role: derived[p].role,
 					unit: derived[p].unit,
 					read: true,
-					write: true
+					write: false
 				},
 				native: {}
 			});
 			proms.push(prom);
 		}
 		
-		// Wait for all object creation processes.
+		// Wait for all object creation processes
 		await Promise.all(proms);
 	}
 
 	// Update the values of active points
-	updatePoints(id_path, message, points) {
+	async updatePoints(id_path, message, points) {
 
 		// Start with the first obis entry
 		let pos = 28;
@@ -428,10 +422,10 @@ class SmaEm extends utils.Adapter {
 		while (pos < message.length) {
 
 			// Get obis value as 32 bit number
-			let obis_num = message.readUInt32BE(pos);
+			const obis_num = message.readUInt32BE(pos);
 
 			// Check if obis number is known
-			if (!points.hasOwnProperty(obis_num)) {
+			if (!(obis_num in points)) {
 
 				// OBIS = 0x0 at the end of the message indicates end of message
 				if (obis_num === 0 && pos === message.length - 4) {
@@ -441,7 +435,7 @@ class SmaEm extends utils.Adapter {
 				this.log.warn(`Unkown OBIS value ${obis_num} found in UDP packet. Skip it and going to the next OBIS value.`);
 				
 				// Extract length from obis number, second byte is the length
-				let offset = message.readUInt8(pos+2);
+				const offset = message.readUInt8(pos+2);
 
 				// Only 4 or 8 is allowed for offset since all know OBIS values have the length 4 or 8
 				// Add 4 for the OBIS value itself.
@@ -454,7 +448,7 @@ class SmaEm extends utils.Adapter {
 			}
 
 			// Get expected message length of current obis value and set read address to message start.
-			let length = points[obis_num].length;
+			const length = points[obis_num].length;
 			pos += 4;
 
 			// If point is marked as inactive skip it and go to the next point.
@@ -470,27 +464,102 @@ class SmaEm extends utils.Adapter {
 			} else if (length === 8) {
 				val = message.readBigUInt64BE(pos);
 			} else {
-				this.log.error(`Only OBIS message length of 4 or 8 is support, current length is ${length}`);
+				this.log.error(`Only OBIS message length of 4 or 8 is supported, current length is ${length}`);
 			}
 
 			// Convert raw value to final value
 			val = Number(val) * points[obis_num].factor;
 			
-			// Write value to data point
-			this.setState(id_path + '.' + points[obis_num].id, val, true);
+			// throttle states update
+			const cachePath = updCache.get(id_path + '.' + points[obis_num].id);
+
+			switch (points[obis_num].updateType) {
+				case 'last':
+					// for non-realtime values like meters write the last value of the update interval
+					if (cachePath.updCounter >= 1) {
+						cachePath.updValue[0] = val;
+						cachePath.updCounter -= 1;
+					}
+					if (cachePath.updCounter == 0) {
+						cachePath.updCounter = points[obis_num].updatePeriod;
+						await this.setStateAsync(id_path + '.' + points[obis_num].id, cachePath.updValue[0], true);
+						cachePath.updValue = [];
+					}
+					break;
+				case 'median':
+					// for realtime values like frequency or phase write the median value of the update interval
+					if (cachePath.updCounter >= 1) {
+						cachePath.updValue.push(val);
+						cachePath.updCounter -= 1;
+					} 
+					if (cachePath.updCounter == 0) {
+						cachePath.updCounter = points[obis_num].updatePeriod;
+						const median = arr => {
+							const mid = Math.floor(arr.length / 2),
+								nums = [...arr].sort((a, b) => a - b);
+							return arr.length % 2 >= 1 ? nums[mid] : (nums[mid - 1] + nums[mid]) / 2;
+						};
+						await this.setStateAsync(id_path + '.' + points[obis_num].id, median(cachePath.updValue), true);
+						cachePath.updValue = [];
+					}
+					break;
+				case 'mean':
+					// for realtime values like instantaneous power write the mean value of the update interval
+					if (cachePath.updCounter >= 1) {
+						if (cachePath.updValue.length === 0) {
+							cachePath.updValue[0] = val;
+						} else {
+							cachePath.updValue[0] += val;
+						}
+						cachePath.updCounter -= 1;
+					}
+					if (cachePath.updCounter == 0) {
+						cachePath.updCounter = points[obis_num].updatePeriod;
+						cachePath.updValue[0] = cachePath.updValue[0]/cachePath.updCounter;
+						await this.setStateAsync(id_path + '.' + points[obis_num].id, cachePath.updValue[0], true);
+						cachePath.updValue = [];
+					}
+					break;
+				case 'once':
+					//Update this value only once at the detection of a new device
+					if (cachePath.updCounter === 0 && (cachePath.updValue.length === 0 || cachePath.updValue[0] !== val)) {
+						cachePath.updValue[0] = val;
+						await this.setStateAsync(id_path + '.' + points[obis_num].id, val, true);
+						if ( (points[obis_num].id) === 'sw_version_raw') {
+							const tmpVal =  cachePath.updValue[0];
+							let sw = ((tmpVal >> 24) & 0xFF).toString();
+							sw += '.' + ((tmpVal >> 16) & 0xFF).toString();
+							sw += '.' + ((tmpVal >> 8) & 0xFF).toString();
+							sw += '.' + String.fromCharCode(tmpVal & 0xFF);	
+							await this.setStateAsync(id_path + '.sw_version', sw, true);
+							//this.log.debug ( id_path + '.' + points[obis_num].id + JSON.stringify(cachePath) + sw);
+
+						}
+					}
+					break;
+				case 'each':
+					//Update this value each message (currently not used since this would increase system load)
+					await this.setStateAsync(id_path + '.' + points[obis_num].id, val, true);	
+					break;
+				default:
+					this.log.error('Unknown update type');
+					break;
+			}
 
 			// Set read address to next obis value
 			pos += length;
 		}
 	}
 
+
+
 	findIPv4IPs() {
 		// Get all network devices
 		const ifaces = require('os').networkInterfaces();
-		var net_devs = [];
+		const net_devs = [];
 
-		for (var dev in ifaces) {
-			if (ifaces.hasOwnProperty(dev)) {
+		for (const dev in ifaces) {
+			if (dev in ifaces) {
 				
 				// Read IPv4 address properties of each device by filtering for the IPv4 external interfaces
 				ifaces[dev].forEach(details => {
