@@ -9,10 +9,15 @@ const utils = require('@iobroker/adapter-core');
 const dgram = require('dgram');
 
 // global variables
-const updCache = new Map();
-let updBuffer = {};
 let stopped = true;
 let language    = 'en';
+
+// Map to handle the update cache
+const updCache = new Map();
+
+// Map to handle different devices
+const serNumsActive = new Map();
+
 const client = dgram.createSocket('udp4');
 
 // Define flags for given parameter to determine the parameters of interest.
@@ -183,13 +188,12 @@ class SmaEm extends utils.Adapter {
 			0x90000000: {id: 'sw_version_raw',     name: {'en':'software version raw','de':'Softwareversion kodiert'},                                	active: true,              updateType: 'once', updatePeriod: 0, length: 4, factor: 1 ,          		type: 'number', role: 'info.firmware', unit: ''},
 		};
 
-		// Map to handle different devices
-		const serNumsActive = new Map();
 		stopped = false;
+		serNumsActive.clear();
 	
 		// Bind socket to the multicast addresses on all devices found except localhost
 		client.bind(this.config.BPO, () => {
-			this.log.info('Details L1 ' + this.config.L1 + ' Details L2 ' + this.config.L2 + ' Details L3 ' + this.config.L3 + ' Extended info ' + this.config.ext);
+			this.log.info('Details L1 ' + this.config.L1 + ' Details L2 ' + this.config.L2 + ' Details L3 ' + this.config.L3 + ' Extended Mode ' + this.config.ext + ' RealTime Interval ' + this.config.rtP + ' non-Realtime Interval ' + this.config.nrtP);
 
 			for (const dev of this.findIPv4IPs()) {
 				this.log.info(`Listen via UDP on Device ${dev.name} with IP ${dev.ipaddr} on Port ${this.config.BPO} for Multicast IP ${this.config.BIP}`);
@@ -201,7 +205,7 @@ class SmaEm extends utils.Adapter {
 		client.on('message', async (message, rinfo) => { 
 			// Check if packet is an SMA energy meter packet or if adapter stopped
 			if(await this.check_message_type(message) === false || stopped)
-				return;
+				return; // discard message
 
 			// Extract serial number as integer of the device in the received message
 			const ser = message.readUIntBE(protocol_points['SMASerial'].addr, protocol_points['SMASerial'].length);
@@ -209,33 +213,65 @@ class SmaEm extends utils.Adapter {
 			// Extract Time Ticker from current message
 			const tTick = message.readUIntBE(protocol_points['TimeTick'].addr, protocol_points['TimeTick'].length);
 						
-			// Check if points must be created and extract id path
+			// Check if points must be created and determine message rate
 			if (!serNumsActive.has(ser_str)) {
+				// determine device type
 				const susy = message.readUIntBE(protocol_points['SMASusyID'].addr, protocol_points['SMASusyID'].length);
 				let dev_descr = 'Unkown SMA device S/N: ' + ser_str;
-				
 				if (susy == 372) {
 					dev_descr = 'Sunny Home Manager 2.0 S/N: ' + ser_str;
 				} else if (susy == 349) {
 					dev_descr = 'SMA Energy Meter S/N: ' + ser_str;
 				}
-
 				// Add the newly discovered device to the map of active SMA EMs
 				// with serial number as key and details describing the device 
 				serNumsActive.set(ser_str, {
-					suSy: susy, 
 					serNum: ser, 
-					serIp: rinfo.address,  
-					serPort: rinfo.port, 
-					tTickOld: 0 
+					suSy: susy,
+					devDescr: dev_descr, 
+					devIp: rinfo.address,  
+					devPort: rinfo.port, 
+					tTickOld: tTick,
+					throttleFactor: 1,
+					checkRate: true 
 				});
-				this.log.info('New device discovered: ' + dev_descr + ' with IP/port: ' + serNumsActive.get(ser_str).serIp + '/' + serNumsActive.get(ser_str).serPort);
-
-				// Create the states tree for the device depending on its serial number and wait for finish
-				await this.createPoints(message, ser_str, dev_descr, obis_points, protocol_points, derived_points);
+				return;
+			} else { 
+				if (serNumsActive.get(ser_str).checkRate === true) {
+					//this.log.debug('checkRate: ' + serNumsActive.get(ser_str).checkRate);
+					const tTOld = serNumsActive.get(ser_str).tTickOld;
+					const tTTemp = tTOld + 950;
+					if ((tTick < tTOld) || (tTTemp < tTOld)) { // check for Ticker overflow if so, restart
+						serNumsActive.set(ser_str, {...serNumsActive.get(ser_str), throttleFactor: 1});
+						serNumsActive.set(ser_str, {...serNumsActive.get(ser_str), tTickOld: tTick});
+						this.log.debug('Overflow happened - restart: ' + serNumsActive.get(ser_str).throttleFactor);
+						return; 
+					}
+					//this.log.debug('ThrottleF: ' + serNumsActive.get(ser_str).throttleFactor);
+					const tF = serNumsActive.get(ser_str).throttleFactor; 
+					//this.log.debug('ThrottleF: tF=' + tF + ' tTickOld ' + serNumsActive.get(ser_str).tTickOld + ' tTick ' + tTick + ' tTTemp ' + tTTemp);	
+							
+					if (tTick < tTTemp) {
+						serNumsActive.set(ser_str, {...serNumsActive.get(ser_str), throttleFactor: tF + 1});
+						//serNumsActive.set(ser_str, {...serNumsActive.get(ser_str), tTickOld: tTick});
+						//this.log.debug('ThrottleF after inc: ' + serNumsActive.get(ser_str).throttleFactor );
+						return; //drop message
+					} else {
+						serNumsActive.set(ser_str, {...serNumsActive.get(ser_str), checkRate: false});
+						this.log.info('New device discovered: ' + serNumsActive.get(ser_str).devDescr + ' with IP/port: ' + serNumsActive.get(ser_str).devIp + '/' + serNumsActive.get(ser_str).devPort + ' message rate: ' + serNumsActive.get(ser_str).throttleFactor + '/sec');
+						// Update connection state.
+						await this.setStateAsync('info.connection', true, true);
+	
+						// Create the states tree for the device depending on its serial number and wait for finish
+						await this.createPoints(message, ser_str, obis_points, protocol_points, derived_points);
+						return;
+					} 
+				}
 
 				// Update connection state.
 				await this.setStateAsync('info.connection', true, true);
+				// Update values by evaluating UDP packet content.
+				await this.updatePoints(ser_str, message, obis_points);
 
 				// Write protocol values only once
 				for (const p in protocol_points) {
@@ -244,22 +280,10 @@ class SmaEm extends utils.Adapter {
 						await this.setStateAsync(ser_str + '.' + p, val, true);
 					}
 				}
-
+				
 			}
-
-			//throttle message rate to approx. 1s; SHM message rate can be either 200ms, 600ms or 1000ms
-			if ( serNumsActive.has(ser_str)) {
-				const ttTemp = serNumsActive.get(ser_str).tTickOld + 950;				
-				if (tTick < ttTemp) {
-					return; //drop message
-				} else {
-					serNumsActive.set(ser_str, {tTickOld: tTick});
-				}
-			}
-
-			// Update values by evaluating UDP packet content.
-			await this.updatePoints(ser_str, message, obis_points);
 		});
+
 
 		client.on('close', () => {
 			this.log.info('UDP Socket closed ...');
@@ -302,14 +326,17 @@ class SmaEm extends utils.Adapter {
 	}
 
 	// Create or delete iobroker data points and set the fixed data points
-	async createPoints(message, ser_str, dev_str, points, proto, derived) {
+	async createPoints(message, ser_str, points, proto, derived) {
 		
 		const proms = [];
 
 		// Create id tree structure ("adapterid.serialnumber.points")
+		const dstr = serNumsActive.get(ser_str).devDescr;
+		//this.log.debug('Device description: ' + serNumsActive.get(ser_str).devDescr );
+
 		let prom = this.setObjectNotExistsAsync(ser_str, {
 			type: 'device',
-			common: {name: dev_str},
+			common: {name: dstr},
 			native: {}
 		});
 		proms.push(prom);
@@ -352,13 +379,16 @@ class SmaEm extends utils.Adapter {
 					},
 					native: {}
 				});
+				const updP = points[p].updatePeriod * serNumsActive.get(ser_str).throttleFactor;
+				//this.log.debug('Update period: ' + updP );
 
-				updBuffer = {
-					updPeriod:   points[p].updatePeriod,
-					updCounter:   points[p].updatePeriod,
-					updValue: []
-				};
-				updCache.set(path_pre + points[p].id, updBuffer);
+				updCache.set(path_pre + points[p].id, 
+					{
+						updPeriod:   updP,
+						updCounter:   updP,
+						updValue: []
+					});
+				//this.log.debug('updCAche: ' + updCache);
 				proms.push(prom);
 			}
 			// Delete point if it is not active
@@ -481,7 +511,7 @@ class SmaEm extends utils.Adapter {
 						cachePath.updCounter -= 1;
 					}
 					if (cachePath.updCounter == 0) {
-						cachePath.updCounter = points[obis_num].updatePeriod;
+						cachePath.updCounter = cachePath.updPeriod;
 						await this.setStateAsync(id_path + '.' + points[obis_num].id, cachePath.updValue[0], true);
 						cachePath.updValue = [];
 					}
@@ -493,7 +523,7 @@ class SmaEm extends utils.Adapter {
 						cachePath.updCounter -= 1;
 					} 
 					if (cachePath.updCounter == 0) {
-						cachePath.updCounter = points[obis_num].updatePeriod;
+						cachePath.updCounter = cachePath.updPeriod;
 						const median = arr => {
 							const mid = Math.floor(arr.length / 2),
 								nums = [...arr].sort((a, b) => a - b);
@@ -514,7 +544,7 @@ class SmaEm extends utils.Adapter {
 						cachePath.updCounter -= 1;
 					}
 					if (cachePath.updCounter == 0) {
-						cachePath.updCounter = points[obis_num].updatePeriod;
+						cachePath.updCounter = cachePath.updPeriod;
 						cachePath.updValue[0] = cachePath.updValue[0]/cachePath.updCounter;
 						await this.setStateAsync(id_path + '.' + points[obis_num].id, cachePath.updValue[0], true);
 						cachePath.updValue = [];

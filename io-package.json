@@ -141,6 +141,14 @@
         "adminUI": {
             "config": "json"
         },
+        "docs": {
+            "en": [
+              "docs/en/sma-em.md"
+            ],
+            "de": [
+              "docs/de/sma-em.md"
+            ]
+          },
         "authors": [
             {
                 "name": "Marcolotti",
@@ -158,7 +166,7 @@
         ],
         "globalDependencies": [
             {
-                "admin": ">=5.1.28"
+                "admin": ">=5.2.28"
             }
         ]
     },
@@ -178,7 +186,19 @@
             "_id": "info",
             "type": "channel",
             "common": {
-                "name": "Information"
+                "name": {
+                    "en": "Information",
+                    "de": "Information",
+                    "ru": "Информация",
+                    "pt": "Em formação",
+                    "nl": "Informatie",
+                    "fr": "Information",
+                    "it": "Informazione",
+                    "es": "Información",
+                    "pl": "Informacja",
+                    "uk": "Інформація",
+                    "zh-cn": "信息"
+                  }
             },
             "native": {}
         },
@@ -187,7 +207,19 @@
             "type": "state",
             "common": {
                 "role": "indicator.connected",
-                "name": "If connected to SMA-EM",
+                "name": {
+                    "en": "SMA device connected",
+                    "de": "SMA-Gerät angeschlossen",
+                    "ru": "SMA устройство подключено",
+                    "pt": "Dispositivo SMA conectado",
+                    "nl": "SMA apparaat verbonden",
+                    "fr": "Appareil SMA connecté",
+                    "it": "Dispositivo SMA collegato",
+                    "es": "Dispositivo SMA conectado",
+                    "pl": "Urządzenie SMA połączone",
+                    "uk": "Пристрій SMA підключений",
+                    "zh-cn": "SMA设备"
+                  },
                 "type": "boolean",
                 "read": true,
                 "write": false,
