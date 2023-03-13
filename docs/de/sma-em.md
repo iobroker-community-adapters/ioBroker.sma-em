@@ -2,7 +2,7 @@
 
 ## Allgemeine Informationen
 
-Der SMA Energy Meter Adapter empfängt die Multicast Datagramme des Energy-Meters bzw. des Sunny Home Managers. Diese senden jede Sekunde oder öfter ein Datenpaket mit ihren Messwerten ins Netzwerk. Das Sendeintervall von 200ms, 600ms oder 1000ms ist einstellbar im Sunny Portal.
+Der SMA Energy Meter Adapter empfängt die Multicast Datagramme des Energy-Meters bzw. des Sunny Home Managers. Diese senden jede Sekunde oder öfter Datenpakete mit ihren Messwerten ins Netzwerk. Das Sendeintervall von 200ms, 600ms oder 1000ms ist einstellbar im Sunny Portal.
 
 ## Administration / Admin-Seite
 
@@ -26,7 +26,7 @@ Der SMA Energy Meter Adapter empfängt die Multicast Datagramme des Energy-Meter
 Nach Installation und Start des Adapters wird die auf dem Bild gezeigte Ordnerstruktur angelegt. Im Stammverzeichnis befinden sich die Gesamtdaten des Energy Meters. Sofern sie konfiguriert wurden, befinden sich in den Unterordnern L1-L3 jeweils die Werte der einzelnen Phasen.
 Wenn sich mehrere Energy Meter oder Sunny Home Manager im Netzwerk befinden, werden die Objektordner für jedes Gerät in derselben sma-em Instanz angelegt.
 
-## Erklärung der Objektnamen
+## Erklärung der Objekt-IDs
 
 Die Buchstaben p, q und s und stehen für folgende Begriffe aus der Elektrotechnik:
 
