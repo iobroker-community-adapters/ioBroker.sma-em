@@ -64,7 +64,7 @@ class SmaEm extends utils.Adapter {
 					language = sysConf.common.language;
 				}
 			});
-
+		//this.log.debug('Language: ' + language);
 		// Set active flags for the data points depending on the parameters.
 		if (this.config.ext && this.config.ext === true) {   
 			cfg_ext_active = true;
@@ -111,7 +111,7 @@ class SmaEm extends utils.Adapter {
 
 		// - Software version as human readable number
 		const derived_points = {
-			'sw_version': {name: {'en':'software version','de':'Softwareversion'}, type: 'string', role: 'info.firmware', unit: ''},
+			'sw_version': {name: {'en':'Software version','de':'Softwareversion'}, type: 'string', role: 'info.firmware', unit: ''},
 		};
 
 		// Define SMA OBIS messages as object the raw obis number is the used as key.
@@ -131,8 +131,8 @@ class SmaEm extends utils.Adapter {
 			0x00090800: {id: 'sregardcounter',  name: {'en':'Meter S-apparent work +','de':'Zähler Scheinarbeit +'},	active: cfg_ext_active, updateType: 'last', updatePeriod: cfg_nrtP, length: 8, factor: 1 / 3600000, type: 'number', role: 'value.energy', unit: 'VAh'},
 			0x000A0400: {id: 'ssurplus',        name: {'en':'S-apparent power -','de':'Scheinleistung -'},                 		active: cfg_ext_active, updateType: 'mean', updatePeriod: cfg_rtP, length: 4, factor: 1 / 10,      	type: 'number', role: 'value.power', unit: 'VA'},
 			0x000A0800: {id: 'ssurpluscounter', name: {'en':'Meter S-apparent work -','de':'Zähler Scheinarbeit -'},  		active: cfg_ext_active, updateType: 'last', updatePeriod: cfg_nrtP, length: 8, factor: 1 / 3600000, type: 'number', role: 'value.energy', unit: 'VAh'},
-			0x000D0400: {id: 'cosphi',          name: {'en':'power factor','de':'Leistungsfaktor'},            		active: cfg_ext_active, updateType: 'median', updatePeriod: cfg_rtP, length: 4, factor: 1 / 1000,   type: 'number', role: 'value.phase', unit: 'Φ'},
-			0x000E0400: {id: 'frequency',       name: {'en':'grid frequency','de':'Netzfrequenz'},             		active: cfg_ext_active, updateType: 'median', updatePeriod: cfg_rtP, length: 4, factor: 1 / 1000,   type: 'number', role: 'value.frequency', unit: 'Hz'},
+			0x000D0400: {id: 'cosphi',          name: {'en':'Power factor','de':'Leistungsfaktor'},            		active: cfg_ext_active, updateType: 'median', updatePeriod: cfg_rtP, length: 4, factor: 1 / 1000,   type: 'number', role: 'value.phase', unit: 'Φ'},
+			0x000E0400: {id: 'frequency',       name: {'en':'Grid frequency','de':'Netzfrequenz'},             		active: cfg_ext_active, updateType: 'median', updatePeriod: cfg_rtP, length: 4, factor: 1 / 1000,   type: 'number', role: 'value.frequency', unit: 'Hz'},
 
 			0x00150400: {id: 'L1.pregard',         name: {'en':'L1 P-active power +','de':'L1 Wirkleistung +'},                		active: cfg_L1_active, updateType: 'mean', updatePeriod: cfg_rtP, length: 4, factor: 1 / 10, 		type: 'number', role: 'value.power', unit: 'W'},
 			0x00150800: {id: 'L1.pregardcounter',  name: {'en':'L1 Meter P-active work +','de':'L1 Zähler Wirkarbeit +'}, 		active: cfg_L1_active, updateType: 'last', updatePeriod: cfg_nrtP, length: 8, factor: 1 / 3600000, 	type: 'number', role: 'value.energy', unit: 'kWh'},
@@ -147,9 +147,9 @@ class SmaEm extends utils.Adapter {
 			0x001D0800: {id: 'L1.sregardcounter',  name: {'en':'L1 Meter S-apparent work +','de':'L1 Zähler Scheinarbeit +'}, 	active: cfg_L1_ext_active, updateType: 'last', updatePeriod: cfg_nrtP, length: 8, factor: 1 / 3600000, 	type: 'number', role: 'value.energy', unit: 'VAh'},
 			0x001E0400: {id: 'L1.ssurplus',        name: {'en':'L1 S-apparent power -','de':'L1 Scheinleistung -'},                 	active: cfg_L1_ext_active, updateType: 'mean', updatePeriod: cfg_rtP, length: 4, factor: 1 / 10,      	type: 'number', role: 'value.power', unit: 'VA'},
 			0x001E0800: {id: 'L1.ssurpluscounter', name: {'en':'L1 Meter S-apparent work -','de':'L1 Zähler Scheinarbeit -'},  	active: cfg_L1_ext_active, updateType: 'last', updatePeriod: cfg_nrtP, length: 8, factor: 1 / 3600000, 	type: 'number', role: 'value.energy', unit: 'VAh'},
-			0x001F0400: {id: 'L1.amperage',        name: {'en':'L1 amperage','de':'L1 Stromstärke'},                    	active: cfg_L1_ext_active, updateType: 'mean', updatePeriod: cfg_rtP, length: 4, factor: 1 / 1000,    	type: 'number', role: 'value.current', unit: 'A'},
-			0x00200400: {id: 'L1.voltage',         name: {'en':'L1 voltage','de':'L1 Spannung'},                                  	active: cfg_L1_ext_active, updateType: 'mean', updatePeriod: cfg_rtP, length: 4, factor: 1 / 1000,    	type: 'number', role: 'value.voltage', unit: 'V'},
-			0x00210400: {id: 'L1.cosphi',          name: {'en':'L1 power factor','de':'L1 Leistungsfaktor'},               	active: cfg_L1_ext_active, updateType: 'median', updatePeriod: cfg_rtP, length: 4, factor: 1 / 1000,    type: 'number', role: 'value.phase', unit: 'Φ'},
+			0x001F0400: {id: 'L1.amperage',        name: {'en':'L1 Amperage','de':'L1 Stromstärke'},                    	active: cfg_L1_ext_active, updateType: 'mean', updatePeriod: cfg_rtP, length: 4, factor: 1 / 1000,    	type: 'number', role: 'value.current', unit: 'A'},
+			0x00200400: {id: 'L1.voltage',         name: {'en':'L1 Voltage','de':'L1 Spannung'},                                  	active: cfg_L1_ext_active, updateType: 'mean', updatePeriod: cfg_rtP, length: 4, factor: 1 / 1000,    	type: 'number', role: 'value.voltage', unit: 'V'},
+			0x00210400: {id: 'L1.cosphi',          name: {'en':'L1 Power factor','de':'L1 Leistungsfaktor'},               	active: cfg_L1_ext_active, updateType: 'median', updatePeriod: cfg_rtP, length: 4, factor: 1 / 1000,    type: 'number', role: 'value.phase', unit: 'Φ'},
 
 			0x00290400: {id: 'L2.pregard',         name: {'en':'L2 P-active power +','de':'L2 Wirkleistung +'},                		active: cfg_L2_active, updateType: 'mean', updatePeriod: cfg_rtP, length: 4, factor: 1 / 10, 			type: 'number', role: 'value.power', unit: 'W'},
 			0x00290800: {id: 'L2.pregardcounter',  name: {'en':'L2 Meter P-active work +','de':'L2 Zähler Wirkarbeit +'}, 		active: cfg_L2_active, updateType: 'last', updatePeriod: cfg_nrtP, length: 8, factor: 1 / 3600000, 		type: 'number', role: 'value.energy', unit: 'kWh'},
@@ -164,9 +164,9 @@ class SmaEm extends utils.Adapter {
 			0x00310800: {id: 'L2.sregardcounter',  name: {'en':'L2 Meter S-apparent work +','de':'L2 Zähler Scheinarbeit +'}, 	active: cfg_L2_ext_active, updateType: 'last', updatePeriod: cfg_nrtP, length: 8, factor: 1 / 3600000, 	type: 'number', role: 'value.energy', unit: 'VAh'},
 			0x00320400: {id: 'L2.ssurplus',        name: {'en':'L2 S-apparent power -','de':'L2 Scheinleistung -'},                 	active: cfg_L2_ext_active, updateType: 'mean', updatePeriod: cfg_rtP, length: 4, factor: 1 / 10,      	type: 'number', role: 'value.power', unit: 'VA'},
 			0x00320800: {id: 'L2.ssurpluscounter', name: {'en':'L2 Meter S-apparent work -','de':'L2 Zähler Scheinarbeit -'},  	active: cfg_L2_ext_active, updateType: 'last', updatePeriod: cfg_nrtP, length: 8, factor: 1 / 3600000, 	type: 'number', role: 'value.energy', unit: 'VAh'},
-			0x00330400: {id: 'L2.amperage',        name: {'en':'L2 amperage','de':'L2 Stromstärke'},                              	active: cfg_L2_ext_active, updateType: 'mean', updatePeriod: cfg_rtP, length: 4, factor: 1 / 1000,    	type: 'number', role: 'value.current', unit: 'A'},
-			0x00340400: {id: 'L2.voltage',         name: {'en':'L2 voltage','de':'L2 Spannung'},                                  	active: cfg_L2_ext_active, updateType: 'mean', updatePeriod: cfg_rtP, length: 4, factor: 1 / 1000,    	type: 'number', role: 'value.voltage', unit: 'V'},
-			0x00350400: {id: 'L2.cosphi',          name: {'en':'L2 power factor','de':'L2 Leistungsfaktor'},                      	active: cfg_L2_ext_active, updateType: 'median', updatePeriod: cfg_rtP, length: 4, factor: 1 / 1000,    type: 'number', role: 'value.phase', unit: 'Φ'},
+			0x00330400: {id: 'L2.amperage',        name: {'en':'L2 Amperage','de':'L2 Stromstärke'},                              	active: cfg_L2_ext_active, updateType: 'mean', updatePeriod: cfg_rtP, length: 4, factor: 1 / 1000,    	type: 'number', role: 'value.current', unit: 'A'},
+			0x00340400: {id: 'L2.voltage',         name: {'en':'L2 Voltage','de':'L2 Spannung'},                                  	active: cfg_L2_ext_active, updateType: 'mean', updatePeriod: cfg_rtP, length: 4, factor: 1 / 1000,    	type: 'number', role: 'value.voltage', unit: 'V'},
+			0x00350400: {id: 'L2.cosphi',          name: {'en':'L2 Power factor','de':'L2 Leistungsfaktor'},                      	active: cfg_L2_ext_active, updateType: 'median', updatePeriod: cfg_rtP, length: 4, factor: 1 / 1000,    type: 'number', role: 'value.phase', unit: 'Φ'},
 
 			0x003D0400: {id: 'L3.pregard',         name: {'en':'L3 P-active power +','de':'L3 Wirkleistung +'},                		active: cfg_L3_active, updateType: 'mean', updatePeriod: cfg_rtP, length: 4, factor: 1 / 10, 			type: 'number', role: 'value.power', unit: 'W'},
 			0x003D0800: {id: 'L3.pregardcounter',  name: {'en':'L3 Meter P-active work +','de':'L3 Zähler Wirkarbeit +'}, 		active: cfg_L3_active, updateType: 'last', updatePeriod: cfg_nrtP, length: 8, factor: 1 / 3600000, 		type: 'number', role: 'value.energy', unit: 'kWh'},
@@ -181,11 +181,11 @@ class SmaEm extends utils.Adapter {
 			0x00450800: {id: 'L3.sregardcounter',  name: {'en':'L3 Meter S-apparent work +','de':'L3 Zähler Scheinarbeit +'}, 	active: cfg_L3_ext_active, updateType: 'last', updatePeriod: cfg_nrtP, length: 8, factor: 1 / 3600000, 	type: 'number', role: 'value.energy', unit: 'VAh'},
 			0x00460400: {id: 'L3.ssurplus',        name: {'en':'L3 S-apparent power -','de':'L3 Scheinleistung -'},                 	active: cfg_L3_ext_active, updateType: 'mean', updatePeriod: cfg_rtP, length: 4, factor: 1 / 10,      	type: 'number', role: 'value.power', unit: 'VA'},
 			0x00460800: {id: 'L3.ssurpluscounter', name: {'en':'L3 Meter S-apparent work -','de':'L3 Zähler Scheinarbeit -'},  	active: cfg_L3_ext_active, updateType: 'last', updatePeriod: cfg_nrtP, length: 8, factor: 1 / 3600000, 	type: 'number', role: 'value.energy', unit: 'VAh'},
-			0x00470400: {id: 'L3.amperage',        name: {'en':'L3 amperage','de':'L3 Stromstärke'},                              	active: cfg_L3_ext_active, updateType: 'mean', updatePeriod: cfg_rtP, length: 4, factor: 1 / 1000,    	type: 'number', role: 'value.current', unit: 'A'},
-			0x00480400: {id: 'L3.voltage',         name: {'en':'L3 voltage','de':'L3 Spannung'},                                  	active: cfg_L3_ext_active, updateType: 'mean', updatePeriod: cfg_rtP, length: 4, factor: 1 / 1000,    	type: 'number', role: 'value.voltage', unit: 'V'},
-			0x00490400: {id: 'L3.cosphi',          name: {'en':'L3 power factor','de':'L3 Leistungsfaktor'},                      	active: cfg_L3_ext_active, updateType: 'median', updatePeriod: cfg_rtP, length: 4, factor: 1 / 1000,    type: 'number', role: 'value.phase', unit: 'Φ'},
+			0x00470400: {id: 'L3.amperage',        name: {'en':'L3 Amperage','de':'L3 Stromstärke'},                              	active: cfg_L3_ext_active, updateType: 'mean', updatePeriod: cfg_rtP, length: 4, factor: 1 / 1000,    	type: 'number', role: 'value.current', unit: 'A'},
+			0x00480400: {id: 'L3.voltage',         name: {'en':'L3 Voltage','de':'L3 Spannung'},                                  	active: cfg_L3_ext_active, updateType: 'mean', updatePeriod: cfg_rtP, length: 4, factor: 1 / 1000,    	type: 'number', role: 'value.voltage', unit: 'V'},
+			0x00490400: {id: 'L3.cosphi',          name: {'en':'L3 Power factor','de':'L3 Leistungsfaktor'},                      	active: cfg_L3_ext_active, updateType: 'median', updatePeriod: cfg_rtP, length: 4, factor: 1 / 1000,    type: 'number', role: 'value.phase', unit: 'Φ'},
 
-			0x90000000: {id: 'sw_version_raw',     name: {'en':'software version raw','de':'Softwareversion kodiert'},                                	active: true,              updateType: 'once', updatePeriod: 0, length: 4, factor: 1 ,          		type: 'number', role: 'info.firmware', unit: ''},
+			0x90000000: {id: 'sw_version_raw',     name: {'en':'Software version raw','de':'Softwareversion kodiert'},                                	active: true,              updateType: 'once', updatePeriod: 0, length: 4, factor: 1 ,          		type: 'number', role: 'info.firmware', unit: ''},
 		};
 
 		stopped = false;
@@ -193,7 +193,7 @@ class SmaEm extends utils.Adapter {
 	
 		// Bind socket to the multicast addresses on all devices found except localhost
 		client.bind(this.config.BPO, () => {
-			this.log.info('Details L1 ' + this.config.L1 + ' Details L2 ' + this.config.L2 + ' Details L3 ' + this.config.L3 + ' Extended Mode ' + this.config.ext + ' RealTime Interval ' + this.config.rtP + ' non-Realtime Interval ' + this.config.nrtP);
+			this.log.info('Details L1 ' + this.config.L1 + ' Details L2 ' + this.config.L2 + ' Details L3 ' + this.config.L3 + ' Extended Mode ' + this.config.ext + ' RealTime Interval ' + this.config.rtP + ' non-Realtime Interval ' + this.config.nrtP + ' Language: ' + language);
 
 			for (const dev of this.findIPv4IPs()) {
 				this.log.info(`Listen via UDP on Device ${dev.name} with IP ${dev.ipaddr} on Port ${this.config.BPO} for Multicast IP ${this.config.BIP}`);
@@ -400,22 +400,22 @@ class SmaEm extends utils.Adapter {
 
 		// Create or delete optional details channels for L1-L3
 		if (cfg_L1_active) {
-			this.getObject(path_pre + 'L1',  (err, obj ) => { 
-				!err && this.extendObject(path_pre + 'L1', {type: 'channel', common: {name: 'Values of phase 1'}});	
+			this.getObject(path_pre + 'L1',  (err) => { 
+				!err && this.extendObject(path_pre + 'L1', {type: 'channel', common: {name: {'en':'Values of phase 1','de':'Messwerte Phase 1'}[language]}});	
 			});
 		} else {
 			this.delObject(path_pre + 'L1');
 		}
 		if (cfg_L2_active) {
-			this.getObject(path_pre + 'L2',  (err, obj ) => { 
-				!err && this.extendObject(path_pre + 'L2', {type: 'channel', common: {name: 'Values of phase 2'}});	
+			this.getObject(path_pre + 'L2',  (err) => { 
+				!err && this.extendObject(path_pre + 'L2', {type: 'channel', common: {name: {'en':'Values of phase 2','de':'Messwerte Phase 2'}[language]}});	
 			});
 		} else {
 			this.delObject(path_pre + 'L2');
 		}
 		if (cfg_L3_active) {
-			this.getObject(path_pre + 'L3',  (err, obj ) => { 
-				!err && this.extendObject(path_pre + 'L3', {type: 'channel', common: {name: 'Values of phase 3'}});	
+			this.getObject(path_pre + 'L3',  (err) => { 
+				!err && this.extendObject(path_pre + 'L3', {type: 'channel', common: {name: {'en':'Values of phase 3','de':'Messwerte Phase 3'}[language]}});	
 			});
 		} else {
 			this.delObject(path_pre + 'L3');
@@ -592,6 +592,7 @@ class SmaEm extends utils.Adapter {
 			if (dev in ifaces) {
 				
 				// Read IPv4 address properties of each device by filtering for the IPv4 external interfaces
+				// @ts-ignore
 				ifaces[dev].forEach(details => {
 					if (!details.internal && details.family === 'IPv4') {
 						net_devs.push({name: dev, ipaddr: details.address});

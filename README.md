@@ -17,7 +17,7 @@
 This adapter reads information from SMA Energy Meter (EMETER-20) and Sunny Home Manager 2 (HM-20).
 It supports the SMA-EMETER-protocol-2. Thus also compatible energy meters from other manufacturers will work.
 
-SMA Energy Meter and Sunny Home Manager 2 multicast datagrams with their energy measurement data to the network once or more per second.
+SMA Energy Meter and Sunny Home Manager 2 multicast datagrams with their energy measurement data to the network once or more times per second.
 The SMA Energy Meter Adapter receives these multicast messages and stores them as iobroker states.
 A single instance of the SMA Energy Meter Adapter detects all SMA Energy Meters and Sunny Home Managers in all connected networks.
 
@@ -69,7 +69,7 @@ In addition to the states in non-extended mode, the following values are availab
 
 ### __WORK IN PROGRESS__
 
-- (pdbjjens) New: Settings for update interval
+- (pdbjjens) New: Configurable data point update intervals to reduce system load
 - (pdbjjens) New: Use JSON config
 
 ### 0.6.6 (2023-02-28)  2023 maintenance release
