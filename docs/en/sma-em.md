@@ -7,8 +7,8 @@ The SMA Energy Meter Adapter receives multicast datagrams from the Energy Meter 
 
 ## Administration / Admin page
 
-![Adapter_admin_config](img/adminpage.png)
-![Adapter_admin_config](img/adminpage2.png)
+![Adapter_admin_config](img/adminpage1-en.png)
+![Adapter_admin_config2](img/adminpage2-en.png)
 
 - Tab Multicast Settings
   - Multicast IP: The default setting and predefined by SMA is the IP address 239.12.255.254.
@@ -22,9 +22,10 @@ The SMA Energy Meter Adapter receives multicast datagrams from the Energy Meter 
 
 ## Folder structure / objects
 
-![Adapter_overview](img/overview.png)
+![Adapter_overview](img/overview-en.png)
 
-After installing and starting the adapter, the folder structure shown in the picture is created. The entire data of the Energy Meter is located in the root directory. If they have been configured, the values of the individual phases are located in the subfolders L1-L3.
+After installing and starting the adapter, the folder structure shown in the picture is created. The entire data of the Energy Meter is located in the root folder. If they have been configured, the values of the individual phases are located in the subfolders L1-L3.
+If there are several Energy Meters or Sunny Home Managers in the network, the object folders for each device are created in the same sma-em instance.
 
 ## Explanation of object names
 

@@ -6,14 +6,14 @@ Der SMA Energy Meter Adapter empfängt die Multicast Datagramme des Energy-Meter
 
 ## Administration / Admin-Seite
 
-![adapter_admin_konfiguration](img/adminpage.png)
-![adapter_admin_konfiguration](img/adminpage2.png)
+![adapter_admin_konfiguration](img/adminpage1-de.png)
+![adapter_admin_konfiguration2](img/adminpage2-de.png)
 
-- Multicast-Einstellungen
+- Reiter Multicast-Einstellungen
   - Multicast IP: Standardmäßig eingestellt und von SMA vorgegeben ist die IP-Adresse 239.12.255.254.
   - Multicast Port: Standardmäßig eingestellt und von SMA vorgegeben ist der UDP Port: 9522.
 
-- Optionen
+- Reiter Optionen
   - Details L1 - L3: Über diese Auswahlpunkte können Details zu jeder einzelnen Phase angezeigt werden.
   - Erweiterter Modus: Bietet detailiertere Information wie Blindleistung, Scheinleistung, cosphi, Spannungen, Stromstärke usw. Diese Einstellung ist standardmäßig deaktiviert.
   - Echtzeit-Aktualisierungsintervall: Hier wird das Update-Intervall für Echzeitdaten wie z.B Momentanleistung oder Netzfrequenz eingestellt. Dies dient der Verminderung der Systemlast. Beispiel: Bei einer Datenpaktrate von 5/s (200ms Sendeintervall) werden während eines Echtzeit-Aktualisierungsintervalls von einer Sekunde alle Werte aufsummiert und erst am Ende des Intervalls der Mittelwert bzw. bei Frequenz und Phase der Median im entsprechenden ioBroker Datenpunkt aktualisiert.
@@ -21,9 +21,10 @@ Der SMA Energy Meter Adapter empfängt die Multicast Datagramme des Energy-Meter
 
 ## Ordnerstruktur / Objekte
 
-![adapter_uebersicht](img/overview.png)
+![adapter_uebersicht](img/overview-de.png)
 
 Nach Installation und Start des Adapters wird die auf dem Bild gezeigte Ordnerstruktur angelegt. Im Stammverzeichnis befinden sich die Gesamtdaten des Energy Meters. Sofern sie konfiguriert wurden, befinden sich in den Unterordnern L1-L3 jeweils die Werte der einzelnen Phasen.
+Wenn sich mehrere Energy Meter oder Sunny Home Manager im Netzwerk befinden, werden die Objektordner für jedes Gerät in derselben sma-em Instanz angelegt.
 
 ## Erklärung der Objektnamen
 
