@@ -2,29 +2,37 @@
 
 ## Allgemeine Informationen
 
-Der SMA Energy Meter Adapter empfängt den Multicast des Energy-Meters. Dieser sendet etwa jede Sekunde ein Datenpaket ins Netzwerk.
+Der SMA Energy Meter Adapter empfängt die Multicast Datagramme des Energy-Meters bzw. des Sunny Home Managers. Diese senden jede Sekunde oder öfter Datenpakete mit ihren Messwerten ins Netzwerk. Das Sendeintervall von 200ms, 600ms oder 1000ms ist einstellbar im Sunny Portal.
 
 ## Administration / Admin-Seite
-![adapter_admin_konfiguration](img/adminpage.png)
 
-Multicast IP: Standardmäßig eingestellt und von SMA vorgegeben ist die IP-Adresse 239.12.255.254.
-Multicast Port: Standardmäßig eingestellt und von SMA vorgegeben ist der UDP Port: 9522. 
+![adapter_admin_konfiguration](img/adminpage1-de.png)
+![adapter_admin_konfiguration2](img/adminpage2-de.png)
 
-Erweiterter Modus: Bietet detailiertere Information wie Blindleistung, Scheinleistung, cosphi, Spannungen, usw. Diese Einstellung ist standardmäßig deaktiviert. 
-ACHTUNG: Der erweiterte Modus verlangt deutlich mehr Rechenleistung.
+- Reiter Multicast-Einstellungen
+  - Multicast IP: Standardmäßig eingestellt und von SMA vorgegeben ist die IP-Adresse 239.12.255.254.
+  - Multicast Port: Standardmäßig eingestellt und von SMA vorgegeben ist der UDP Port: 9522.
 
-Details L1 - L3: Über diese Auswahlpunkte können Details zu jeder einzelnen Phase angezeigt werden.
+- Reiter Optionen
+  - Details L1 - L3: Über diese Auswahlpunkte können Details zu jeder einzelnen Phase angezeigt werden.
+  - Erweiterter Modus: Bietet detailiertere Information wie Blindleistung, Scheinleistung, cosphi, Spannungen, Stromstärke usw. Diese Einstellung ist standardmäßig deaktiviert.
+  - Echtzeit-Aktualisierungsintervall: Hier wird das Update-Intervall für Echzeitdaten wie z.B Momentanleistung oder Netzfrequenz eingestellt. Dies dient der Verminderung der Systemlast. Beispiel: Bei einer Datenpaktrate von 5/s (200ms Sendeintervall) werden während eines Echtzeit-Aktualisierungsintervalls von einer Sekunde alle Werte aufsummiert und erst am Ende des Intervalls der Mittelwert bzw. bei Frequenz und Phase der Median im entsprechenden ioBroker Datenpunkt aktualisiert.
+  - Nicht-Echtzeit-Aktualisierungsintervall: Hier wird das Update-Intervall für Nicht-Echzeitdaten wie z.B Zählerstände eingestellt. Hier wird erst am Ende des Intervalls der letzte empfangene Wert im entsprechenden ioBroker Datenpunkt aktualisiert.
 
 ## Ordnerstruktur / Objekte
-![adapter_uebersicht](img/overview.png)
 
-Nach Installation und Start des Adapters wird wie auf dem Bild angezeigt folgende Ordnerstruktur angelegt. Im Stammverzeichnis befinden sich die Gesamtdaten des Energy Meters. In den Unterordnern L1-L3 jeweils die einzelnen Phasen.
+![adapter_uebersicht](img/overview-de.png)
 
-## Erklärung der Objektnamen
-Die Buchstaben P, Q und S stammen aus der Elektrotechnik und stehen für:
-* P - Wirkleistung
-* Q - Blindleistung
-* S - Scheinleistung
+Nach Installation und Start des Adapters wird die auf dem Bild gezeigte Ordnerstruktur angelegt. Im Stammverzeichnis befinden sich die Gesamtdaten des Energy Meters. Sofern sie konfiguriert wurden, befinden sich in den Unterordnern L1-L3 jeweils die Werte der einzelnen Phasen.
+Wenn sich mehrere Energy Meter oder Sunny Home Manager im Netzwerk befinden, werden die Objektordner für jedes Gerät in derselben sma-em Instanz angelegt.
+
+## Erklärung der Objekt-IDs
+
+Die Buchstaben p, q und s und stehen für folgende Begriffe aus der Elektrotechnik:
+
+- P - Wirkleistung
+- Q - Blindleistung
+- S - Scheinleistung
 
 - Das Wort "regard" bedeutet hier soviel wie Netzbezug. (Strom, der vom Netz bezogen wird)
 - Das Wort "surplus" bedeutet Überschuss und hier soviel wie Netzeinspeisung. (Strom, der ins Netz eingespeist wird)

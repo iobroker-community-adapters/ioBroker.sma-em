@@ -17,17 +17,16 @@
 This adapter reads information from SMA Energy Meter (EMETER-20) and Sunny Home Manager 2 (HM-20).
 It supports the SMA-EMETER-protocol-2. Thus also compatible energy meters from other manufacturers will work.
 
-SMA Energy Meter and Sunny Home Manager 2 multicast datagrams with their energy measurement data to the network every second.
+SMA Energy Meter and Sunny Home Manager 2 multicast datagrams with their energy measurement data to the network once or more times per second.
 The SMA Energy Meter Adapter receives these multicast messages and stores them as iobroker states.
 A single instance of the SMA Energy Meter Adapter detects all SMA Energy Meters and Sunny Home Managers in all connected networks.
 
-![States](docs/en/img/overview.png)
+![States](docs/en/img/overview-en.png)
 
 ### States in non-extended mode
 
 - Instantaneous values of total active power consumption (pregard) and active power feed-in (psurplus)
 - Energy meter values of total active power consumption (pregardcounter) and active power feed-in (psurpluscounter)
-- SMA Time Tick counter, Timestamp of last Message received,
 - Serial Number, SUSyID, Software Version of SMA Energy Meter and Sunny Home Manager
 - Detailed values for each of the individual phases L1 / L2 / L3 (optional):
   - Instantaneous values of active power consumption (pregard) and active power feed-in (psurplus) per phase
@@ -42,22 +41,25 @@ In addition to the states in non-extended mode, the following values are availab
 - Instantaneous values of total apparent power consumption (sregard) and apparent power feed-in (ssurplus)
 - Energy meter values of total apparent power consumption (sregardcounter) and apparent power feed-in (ssurpluscounter)
 - cosphi (power factor)
-- grid frequency (only available with Sunny Home Manager 2, SMA Energy Meter currently does not provide any grid frequency values)
+- grid frequency (only available with Sunny Home Manager 2, SMA Energy Meter currently does not provide the grid frequency value)
 - Detailed for each of the individual phases L1 / L2 / L3 (optional):
   - Instantaneous values of reactive and apparent power consumption/feed-in per phase
   - Energy meter values of reactive and apparent power consumption/feed-in per phase
-  - Voltage and Amperage per phase
+  - Voltage and current per phase
 
 ### Configuration Options
 
-![Settings](docs/en/img/adminpage.png)
+![Settings](docs/en/img/adminpage1-en.png)
+![Settings](docs/en/img/adminpage2-en.png)
 
 - Multicast IP: The default setting is 239.12.255.254.
 - Multicast Port: The default setting for the UDP port is 9522.
   (Both should not be changed, as SMA devices always use this IP address and port)
 - Details L1 - L3: These selection options can be used to display details of each phase.
-- Extended Mode: Provides more detailed information such as reactive power, apparent power, cosphi, grid frequency, voltage, amperage
-  (Do not configure Details L1-L3 and Extended Mode simultaneously since this puts a high load on the ioBroker system)
+- Extended Mode: Provides more detailed information such as reactive power, apparent power, cosphi, grid frequency, voltage, current.
+- Update Interval for realtime data like instantaneous values of power consumption (pregard) and power feed-in (psurplus). This setting throttles the update rate of the data points to any value between 1 second up to 30 seconds. The default value is 1 second.
+- Update Interval for non-realtime data like instantaneous values of power consumption (pregardcounter) and power feed-in (psurpluscounter). This setting throttles the update rate of the data points to any value between 30 second up to 3600 seconds. The default value is 30 seconds.
+
 
 <!--
     Placeholder for the next version (at the beginning of the line):
@@ -65,6 +67,12 @@ In addition to the states in non-extended mode, the following values are availab
 -->
 
 ## Changelog
+
+### __WORK IN PROGRESS__
+
+- (pdbjjens) New: Configurable data point update intervals to reduce system load
+- (pdbjjens) New: Use JSON config
+
 ### 0.6.6 (2023-02-28)  2023 maintenance release
 
 - (pdbjjens) Updated dependencies

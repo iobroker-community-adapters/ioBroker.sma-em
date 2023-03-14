@@ -3,8 +3,14 @@
     "Details-L2": "Dettagli-L2",
     "Details-L3": "Dettagli-L3",
     "Extended Mode": "Modalità estesa",
-    "Multicast-IP": "Multicast-IP",
-    "Multicast-Port": "Multicast-Port",
-    "Multicast-Settings": "Multicast-Settings",
-    "Select values": "Seleziona valori"
+    "Multicast-IP": "IP multicast",
+    "Multicast-Port": "Porta multicast",
+    "Multicast-Settings": "Impostazioni multicast",
+    "Options": "Opzioni",
+    "Multicast IP of EMETER Protocol (Do not change)": "IP multicast del protocollo EMETER (non modificare)",
+    "Multicast Port of EMETER Protocol (Do not change)": "Porta multicast del protocollo EMETER (non modificare)",
+    "Realtime Update Interval": "Intervallo di aggiornamento in tempo reale",
+    "Update Interval for Realtime Data (in Seconds)": "Intervallo di aggiornamento per i dati in tempo reale (in secondi)",
+    "non-Realtime Update Interval": "Intervallo di aggiornamento non in tempo reale",
+    "Update Interval for non-Realtime Data (in Seconds)": "Intervallo di aggiornamento per dati non in tempo reale (in secondi)"
 }
