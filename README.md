@@ -67,8 +67,7 @@ In addition to the states in non-extended mode, the following values are availab
 -->
 
 ## Changelog
-
-### __WORK IN PROGRESS__
+### 0.7.0 (2023-03-14)
 
 - (pdbjjens) New: Configurable data point update intervals to reduce system load
 - (pdbjjens) New: Use JSON config
@@ -93,15 +92,6 @@ In addition to the states in non-extended mode, the following values are availab
 ### 0.6.3 (2021-03-04)
 
 - (TGuybrush) The adapter binds now to all external IPv4 addresses.
-
-### 0.6.1-beta.0 (2021-01-18)
-
-- (TGuybrush) Bug fixes
-  - Software Version string, last part is the revision as character (e.g. R = release)
-  - Potential Warning during the first start
-  - Revised units to follow the SI standardization (DIN 1301)
-- (TGuybrush) Top level hierarchy object description indicates if the device is a SMA Energy Meter or a SMA Home Manager 2.
-- (DutchmanNL) Released to the latest repo, fixed some typo's + news and translations
 
 ## Legal Notices
 
