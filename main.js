@@ -196,8 +196,13 @@ class SmaEm extends utils.Adapter {
 			this.log.info('Details L1 ' + this.config.L1 + ' Details L2 ' + this.config.L2 + ' Details L3 ' + this.config.L3 + ' Extended Mode ' + this.config.ext + ' RealTime Interval ' + this.config.rtP + ' non-Realtime Interval ' + this.config.nrtP + ' Language: ' + language);
 
 			for (const dev of this.findIPv4IPs()) {
-				this.log.info(`Listen via UDP on Device ${dev.name} with IP ${dev.ipaddr} on Port ${this.config.BPO} for Multicast IP ${this.config.BIP}`);
-				client.addMembership(this.config.BIP, dev.ipaddr);
+				try {			
+					client.addMembership(this.config.BIP, dev.ipaddr);
+					this.log.info(`Listen via UDP on Device ${dev.name} with IP ${dev.ipaddr} on Port ${this.config.BPO} for Multicast IP ${this.config.BIP}`);
+				} catch (error){
+					this.log.debug(error);
+					this.log.info(`Drop Device ${dev.name} with IP ${dev.ipaddr}`);
+				}
 			}
 		});
 
