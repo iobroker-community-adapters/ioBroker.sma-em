@@ -54,15 +54,15 @@ In addition to the states in non-extended mode, the following values are availab
 - Multicast IP: The default setting is 239.12.255.254.
 - Multicast Port: The default setting for the UDP port is 9522.
   (Both should not be changed, as SMA devices always use this IP address and port)
-- Own Network Interface IPs: Select box for all available Network Interface IPv4s.
+- Own Network Interface IPs: Select box for all available Network Interface IPv4s on ioBroker Server.
 - Selected Network Interface IP: Currently selected Network Interface IP listening for Multicast messages. IP 0.0.0.0 means that the adapter listens on all available Network Interfaces.
 
 ![Settings](docs/en/img/adminpage2-en.png)
 
-- Details L1 - L3: These selection options can be used to display details of each phase.
+- Details L1 - L3: These selection options can be set to display details of each phase.
 - Extended Mode: Provides more detailed information such as reactive power, apparent power, cosphi, grid frequency, voltage, current.
-- Update Interval for realtime data like instantaneous values of power consumption (pregard) and power feed-in (psurplus). This setting throttles the update rate of the data points to any value between 1 second up to 30 seconds. The default value is 1 second.
-- Update Interval for non-realtime data like instantaneous values of power consumption (pregardcounter) and power feed-in (psurpluscounter). This setting throttles the update rate of the data points to any value between 30 second up to 3600 seconds. The default value is 30 seconds.
+- Realtime Update Interval: Update Interval for realtime data like instantaneous values of power consumption (pregard) and power feed-in (psurplus). This setting throttles the update rate of the data points to any value between 1 second up to 30 seconds. The default value is 1 second.
+- Non Realtime Update Interval: Update Interval for non-realtime data like instantaneous values of power consumption (pregardcounter) and power feed-in (psurpluscounter). This setting throttles the update rate of the data points to any value between 30 seconds up to 1 hour (3600 seconds). The default value is 30 seconds.
 
 <!--
     Placeholder for the next version (at the beginning of the line):
