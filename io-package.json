@@ -166,13 +166,14 @@
     ],
     "globalDependencies": [
       {
-        "admin": ">=5.2.28"
+        "admin": ">=6.3.5"
       }
     ]
   },
   "native": {
     "BIP": "239.12.255.254",
     "BPO": 9522,
+    "OIP": "",
     "L1": false,
     "L2": false,
     "L3": false,

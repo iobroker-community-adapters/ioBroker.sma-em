@@ -56,6 +56,11 @@ class SmaEm extends utils.Adapter {
 		// Reset the connection indicator during startup
 		await this.setStateAsync('info.connection', false, true);
 
+		if (this.config.OIP === '') {
+			this.log.error(`Own IP is empty - please check instance configuration of ${this.namespace}`);
+			return;
+		}
+
 		// Get system language and set it for this adapter
 		await this.getForeignObjectAsync('system.config')
 			.then(sysConf => {
@@ -194,14 +199,15 @@ class SmaEm extends utils.Adapter {
 		// Bind socket to the multicast addresses on all devices found except localhost
 		client.bind(this.config.BPO, () => {
 			this.log.info('Details L1 ' + this.config.L1 + ' Details L2 ' + this.config.L2 + ' Details L3 ' + this.config.L3 + ' Extended Mode ' + this.config.ext + ' RealTime Interval ' + this.config.rtP + ' non-Realtime Interval ' + this.config.nrtP + ' Language: ' + language);
-
-			for (const dev of this.findIPv4IPs()) {
+			const ownIp = this.config.OIP;
+			for (const dev of this.findIPv4IPs(ownIp)) {
 				try {			
 					client.addMembership(this.config.BIP, dev.ipaddr);
 					this.log.info(`Listen via UDP on Device ${dev.name} with IP ${dev.ipaddr} on Port ${this.config.BPO} for Multicast IP ${this.config.BIP}`);
 				} catch (error){
+					// @ts-ignore
 					this.log.debug(error);
-					this.log.info(`Drop Device ${dev.name} with IP ${dev.ipaddr}`);
+					this.log.info(`Skip Device ${dev.name} with IP ${dev.ipaddr}`);
 				}
 			}
 		});
@@ -590,21 +596,34 @@ class SmaEm extends utils.Adapter {
 
 
 
-	findIPv4IPs() {
+	findIPv4IPs(ownIP) {
 		// Get all network devices
 		const ifaces = require('os').networkInterfaces();
 		const net_devs = [];
 
-		for (const dev in ifaces) {
-			if (dev in ifaces) {
-				
-				// Read IPv4 address properties of each device by filtering for the IPv4 external interfaces
-				// @ts-ignore
-				ifaces[dev].forEach(details => {
-					if (!details.internal && details.family === 'IPv4') {
-						net_devs.push({name: dev, ipaddr: details.address});
-					}
-				});
+		if (ownIP === '0.0.0.0') { // look up all IPs
+			for (const dev in ifaces) {
+				if (dev in ifaces) {				
+					// Read IPv4 address properties of each device by filtering for the IPv4 external interfaces
+					// @ts-ignore
+					ifaces[dev].forEach(details => {
+						if (!details.internal && details.family === 'IPv4') {
+							net_devs.push({name: dev, ipaddr: details.address});
+						}
+					});
+				}
+			}
+		} else { // find selected own IP
+			for (const dev in ifaces) {
+				if (dev in ifaces) {
+					// Search address properties of each device for selected own IP 
+					// @ts-ignore
+					ifaces[dev].forEach(details => {
+						if (details.address === ownIP && !details.internal && details.family === 'IPv4') {
+							net_devs.push({name: dev, ipaddr: details.address});
+						}
+					});
+				}
 			}
 		}
 		return net_devs;

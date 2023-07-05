@@ -60,13 +60,19 @@ In addition to the states in non-extended mode, the following values are availab
 - Update Interval for realtime data like instantaneous values of power consumption (pregard) and power feed-in (psurplus). This setting throttles the update rate of the data points to any value between 1 second up to 30 seconds. The default value is 1 second.
 - Update Interval for non-realtime data like instantaneous values of power consumption (pregardcounter) and power feed-in (psurpluscounter). This setting throttles the update rate of the data points to any value between 30 second up to 3600 seconds. The default value is 30 seconds.
 
-
 <!--
     Placeholder for the next version (at the beginning of the line):
     ### __WORK IN PROGRESS__
 -->
 
 ## Changelog
+
+### __WORK IN PROGRESS__
+
+- (pdbjjens) New: Selectable own network device IP (single or all) to listen for multicast messages
+- (ticaki) Fix: Catch interface errors
+- (pdbjjens) New: Detect SMA-EM1.0 SUSy270
+
 ### 0.7.0 (2023-03-14)
 
 - (pdbjjens) New: Configurable data point update intervals to reduce system load

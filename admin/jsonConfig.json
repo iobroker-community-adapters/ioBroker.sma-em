@@ -23,6 +23,25 @@
                     "lg": 6,
                     "label": "Multicast-Port",
                     "help": "Multicast Port of EMETER Protocol (Do not change)"
+                },
+                "OIP": {
+                    "type": "ip",
+                    "label": "Own IP-Address",
+                    "listenOnAllPorts": true,
+                    "onlyIp4": true,
+                    "sm":4,
+                    "md":4,
+                    "lg":4,
+                    "xs":4,
+                    "newLine": true
+                },
+                "ipVal": {
+                    "type":"pattern",
+                    "pattern":"Selected IP Address is ${data.OIP}",
+                    "sm":4,
+                    "md":4,
+                    "lg":4,
+                    "xs":4
                 }
             }
         },
