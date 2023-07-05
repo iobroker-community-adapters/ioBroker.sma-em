@@ -12,5 +12,9 @@
     "Realtime Update Interval": "Realtime update-interval",
     "Update Interval for Realtime Data (in Seconds)": "Update-interval voor realtime gegevens (in seconden)",
     "non-Realtime Update Interval": "niet-realtime update-interval",
-    "Update Interval for non-Realtime Data (in Seconds)": "Update-interval voor niet-realtime gegevens (in seconden)"
+    "Update Interval for non-Realtime Data (in Seconds)": "Update-interval voor niet-realtime gegevens (in seconden)",
+    "Own Network Interface IPs": "Eigen netwerkinterface-IP's",
+    "Selected Network Interface IP": "Geselecteerde netwerkinterface-IP",
+    "Select Network Interface IP to listen for Multicasts": "Selecteer Network Interface IP om te luisteren naar multicasts",
+    "IP 0.0.0.0 means listen to all available Network Interfaces": "IP 0.0.0.0 betekent luisteren naar alle beschikbare netwerkinterfaces"
 }

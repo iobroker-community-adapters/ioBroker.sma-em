@@ -12,5 +12,9 @@
     "Realtime Update Interval": "Realtime Update Interval",
     "Update Interval for Realtime Data (in Seconds)": "Update Interval for Realtime Data (in Seconds)",
     "non-Realtime Update Interval": "non-Realtime Update Interval",
-    "Update Interval for non-Realtime Data (in Seconds)": "Update Interval for non-Realtime Data (in Seconds)"
+    "Update Interval for non-Realtime Data (in Seconds)": "Update Interval for non-Realtime Data (in Seconds)",
+    "Own Network Interface IPs": "Own Network Interface IPs",
+    "Selected Network Interface IP": "Selected Network Interface IP",
+    "Select Network Interface IP to listen for Multicasts": "Select Network Interface IP to listen for Multicasts",
+    "IP 0.0.0.0 means listen to all available Network Interfaces": "IP 0.0.0.0 means listen to all available Network Interfaces"
 }

@@ -12,5 +12,9 @@
     "Realtime Update Interval": "Інтервал оновлення в реальному часі",
     "Update Interval for Realtime Data (in Seconds)": "Інтервал оновлення даних у реальному часі (у секундах)",
     "non-Realtime Update Interval": "Інтервал оновлення не в реальному часі",
-    "Update Interval for non-Realtime Data (in Seconds)": "Інтервал оновлення для даних не в реальному часі (у секундах)"
+    "Update Interval for non-Realtime Data (in Seconds)": "Інтервал оновлення для даних не в реальному часі (у секундах)",
+    "Own Network Interface IPs": "Власні IP-адреси мережевого інтерфейсу",
+    "Selected Network Interface IP": "Вибрана IP-адреса мережевого інтерфейсу",
+    "Select Network Interface IP to listen for Multicasts": "Виберіть IP-адресу мережевого інтерфейсу, щоб прослуховувати групові передачі",
+    "IP 0.0.0.0 means listen to all available Network Interfaces": "IP 0.0.0.0 означає прослуховування всіх доступних мережевих інтерфейсів"
 }

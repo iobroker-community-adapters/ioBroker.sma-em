@@ -12,5 +12,9 @@
     "Realtime Update Interval": "Intervallo di aggiornamento in tempo reale",
     "Update Interval for Realtime Data (in Seconds)": "Intervallo di aggiornamento per i dati in tempo reale (in secondi)",
     "non-Realtime Update Interval": "Intervallo di aggiornamento non in tempo reale",
-    "Update Interval for non-Realtime Data (in Seconds)": "Intervallo di aggiornamento per dati non in tempo reale (in secondi)"
+    "Update Interval for non-Realtime Data (in Seconds)": "Intervallo di aggiornamento per dati non in tempo reale (in secondi)",
+    "Own Network Interface IPs": "I propri IP dell'interfaccia di rete",
+    "Selected Network Interface IP": "IP dell'interfaccia di rete selezionato",
+    "Select Network Interface IP to listen for Multicasts": "Selezionare l'IP dell'interfaccia di rete per ascoltare i multicast",
+    "IP 0.0.0.0 means listen to all available Network Interfaces": "IP 0.0.0.0 significa ascoltare tutte le interfacce di rete disponibili"
 }

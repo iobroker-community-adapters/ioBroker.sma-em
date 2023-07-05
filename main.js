@@ -203,11 +203,11 @@ class SmaEm extends utils.Adapter {
 			for (const dev of this.findIPv4IPs(ownIp)) {
 				try {			
 					client.addMembership(this.config.BIP, dev.ipaddr);
-					this.log.info(`Listen via UDP on Device ${dev.name} with IP ${dev.ipaddr} on Port ${this.config.BPO} for Multicast IP ${this.config.BIP}`);
+					this.log.info(`Listen via UDP on Network Interface ${dev.name} with IP ${dev.ipaddr} on Port ${this.config.BPO} for Multicast IP ${this.config.BIP}`);
 				} catch (error){
 					// @ts-ignore
 					this.log.debug(error);
-					this.log.info(`Skip Device ${dev.name} with IP ${dev.ipaddr}`);
+					this.log.info(`Skip Network Interface ${dev.name} with IP ${dev.ipaddr}`);
 				}
 			}
 		});

@@ -8,6 +8,7 @@
             "items": {
                 "BIP": {
                     "type": "text",
+                    "xs":12,
                     "sm": 12,
                     "md": 6,
                     "lg": 6,
@@ -18,6 +19,7 @@
                     "type": "number",
                     "min": 1,
                     "max": 65535,
+                    "xs":12,
                     "sm": 12,
                     "md": 6,
                     "lg": 6,
@@ -26,22 +28,25 @@
                 },
                 "OIP": {
                     "type": "ip",
-                    "label": "Own IP-Address",
+                    "label": "Own Network Interface IPs",
                     "listenOnAllPorts": true,
                     "onlyIp4": true,
-                    "sm":4,
-                    "md":4,
-                    "lg":4,
-                    "xs":4,
-                    "newLine": true
+                    "sm":12,
+                    "md":6,
+                    "lg":6,
+                    "xs":12,
+                    "newLine": true,
+                    "help": "Select Network Interface IP to listen for Multicasts"
                 },
                 "ipVal": {
                     "type":"pattern",
-                    "pattern":"Selected IP Address is ${data.OIP}",
-                    "sm":4,
-                    "md":4,
-                    "lg":4,
-                    "xs":4
+                    "label": "Selected Network Interface IP",
+                    "pattern":"${data.OIP}",
+                    "sm":12,
+                    "md":6,
+                    "lg":6,
+                    "xs":12,
+                    "help": "IP 0.0.0.0 means listen to all available Network Interfaces"
                 }
             }
         },

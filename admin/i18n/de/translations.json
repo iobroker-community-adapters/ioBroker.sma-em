@@ -12,5 +12,9 @@
     "Realtime Update Interval": "Echtzeit-Aktualisierungsintervall",
     "Update Interval for Realtime Data (in Seconds)": "Aktualisierungsintervall für Echtzeitdaten (in Sekunden)",
     "non-Realtime Update Interval": "Nicht-Echtzeit-Aktualisierungsintervall",
-    "Update Interval for non-Realtime Data (in Seconds)": "Aktualisierungsintervall für Nicht-Echtzeitdaten (in Sekunden)"
+    "Update Interval for non-Realtime Data (in Seconds)": "Aktualisierungsintervall für Nicht-Echtzeitdaten (in Sekunden)",
+    "Own Network Interface IPs": "Eigene Netzwerkschnittstellen-IPs",
+    "Selected Network Interface IP": "Ausgewählte Netzwerkschnittstellen-IP",
+    "Select Network Interface IP to listen for Multicasts": "Wählen Sie die Netzwerkschnittstellen-IP aus, auf der auf Multicasts gewartet werden soll",
+    "IP 0.0.0.0 means listen to all available Network Interfaces": "IP 0.0.0.0 bedeutet, auf allen verfügbaren Netzwerkschnittstellen zu lauschen"
 }

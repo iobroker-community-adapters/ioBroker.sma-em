@@ -12,5 +12,9 @@
     "Realtime Update Interval": "Интервал обновления в реальном времени",
     "Update Interval for Realtime Data (in Seconds)": "Интервал обновления данных в реальном времени (в секундах)",
     "non-Realtime Update Interval": "Интервал обновления не в реальном времени",
-    "Update Interval for non-Realtime Data (in Seconds)": "Интервал обновления для данных не в реальном времени (в секундах)"
+    "Update Interval for non-Realtime Data (in Seconds)": "Интервал обновления для данных не в реальном времени (в секундах)",
+    "Own Network Interface IPs": "Собственные IP-адреса сетевого интерфейса",
+    "Selected Network Interface IP": "Выбранный IP-адрес сетевого интерфейса",
+    "Select Network Interface IP to listen for Multicasts": "Выберите IP-адрес сетевого интерфейса для прослушивания многоадресной рассылки.",
+    "IP 0.0.0.0 means listen to all available Network Interfaces": "IP 0.0.0.0 означает прослушивание всех доступных сетевых интерфейсов."
 }
