@@ -198,17 +198,22 @@ class SmaEm extends utils.Adapter {
 	
 		// Bind socket to the multicast addresses on all devices found except localhost
 		client.bind(this.config.BPO, () => {
-			this.log.info('Details L1 ' + this.config.L1 + ' Details L2 ' + this.config.L2 + ' Details L3 ' + this.config.L3 + ' Extended Mode ' + this.config.ext + ' RealTime Interval ' + this.config.rtP + ' non-Realtime Interval ' + this.config.nrtP + ' Language: ' + language);
-			const ownIp = this.config.OIP;
-			for (const dev of this.findIPv4IPs(ownIp)) {
-				try {			
-					client.addMembership(this.config.BIP, dev.ipaddr);
-					this.log.info(`Listen via UDP on Network Interface ${dev.name} with IP ${dev.ipaddr} on Port ${this.config.BPO} for Multicast IP ${this.config.BIP}`);
-				} catch (error){
+			const networkInterfaces = this.findIPv4IPs(this.config.OIP);
+			if (networkInterfaces.length !== 0) {
+				this.log.info('Options selected: Details L1 ' + this.config.L1 + ' Details L2 ' + this.config.L2 + ' Details L3 ' + this.config.L3 + ' Extended Mode ' + this.config.ext + ' RealTime Interval ' + this.config.rtP + ' non-Realtime Interval ' + this.config.nrtP + ' Language: ' + language);
+				for (const dev of networkInterfaces) {
+				
+					try {			
+						client.addMembership(this.config.BIP, dev.ipaddr);
+						this.log.info(`Listen via UDP on Network Interface ${dev.name} with IP ${dev.ipaddr} on Port ${this.config.BPO} for Multicast IP ${this.config.BIP}`);
+					} catch (error){
 					// @ts-ignore
-					this.log.debug(error);
-					this.log.info(`Skip Network Interface ${dev.name} with IP ${dev.ipaddr}`);
+						this.log.debug(error);
+						this.log.info(`Skip Network Interface ${dev.name} with IP ${dev.ipaddr}`);
+					}
 				}
+			} else {
+				this.log.error (`Invalid own IP address ${this.config.OIP}, please try another one from the Multicast Settings configuration panel`);
 			}
 		});
 
