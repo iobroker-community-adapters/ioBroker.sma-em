@@ -234,7 +234,7 @@ class SmaEm extends utils.Adapter {
 				// determine device type
 				const susy = message.readUIntBE(protocol_points['SMASusyID'].addr, protocol_points['SMASusyID'].length);
 				let dev_descr = 'Unkown SMA device S/N: ' + ser_str;
-				if (susy == 372) {
+				if (susy == 372  || susy == 501) {
 					dev_descr = 'Sunny Home Manager 2.0 S/N: ' + ser_str;
 				} else if (susy == 349) {
 					dev_descr = 'SMA Energy Meter 2.0 S/N: ' + ser_str;
