@@ -73,7 +73,8 @@ In addition to the states in non-extended mode, the following values are availab
 
 ### __WORK IN PROGRESS__
 
-- (pdbjjens) New: Selectable own network device IP (single or all) to listen for multicast messages
+- (pdbjjens) Breaking Change: Configurable Energy Meter (single or all) to handle within one adapter instance
+- (pdbjjens) Breaking Change: Selectable own network device IP to listen for multicast messages
 - (ticaki) Fix: Catch interface errors
 - (pdbjjens) New: Detect SMA-EM1.0 SUSy270
 

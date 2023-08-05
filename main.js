@@ -18,7 +18,10 @@ const updCache = new Map();
 // Map to handle different devices
 const serNumsActive = new Map();
 
-const client = dgram.createSocket('udp4');
+const client = dgram.createSocket({type: 'udp4', reuseAddr: true});
+
+const IP_FORMAT = /^(25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)\.(25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)\.(25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)\.(25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)$/;
+
 
 // Define flags for given parameter to determine the parameters of interest.
 let cfg_ext_active = false;
@@ -58,6 +61,14 @@ class SmaEm extends utils.Adapter {
 
 		if (this.config.OIP === '') {
 			this.log.error(`Own IP is empty - please check instance configuration of ${this.namespace}`);
+			return;
+		}
+
+		if (!this.config.EMIP) {
+			this.log.error(`Energy Meter IP is empty - please check instance configuration of ${this.namespace}`);
+			return;
+		} else if (!this.config.EMIP.match(IP_FORMAT)) {
+			this.log.error(`Energy Meter IP format not valid. Should be e.g. 192.168.123.123`);
 			return;
 		}
 
@@ -220,7 +231,7 @@ class SmaEm extends utils.Adapter {
 		// Event handler in case of UDP packet was received.
 		client.on('message', async (message, rinfo) => { 
 			// Check if packet is an SMA energy meter packet or if adapter stopped
-			if(await this.check_message_type(message) === false || stopped)
+			if(await this.check_message_type(message, rinfo) === false || stopped)
 				return; // discard message
 
 			// Extract serial number as integer of the device in the received message
@@ -315,16 +326,20 @@ class SmaEm extends utils.Adapter {
 		});
 	}
 
-	async check_message_type(message) {
+	async check_message_type(message, rinfo) {
+		if (this.config.EMIP === rinfo.address || this.config.EMIP === '0.0.0.0') {
 		// Check SMA ident string at the first 3 bytes of the message
-		if(message.toString('ascii', 0, 3) !=  'SMA')
-			return false;
+			if(message.toString('ascii', 0, 3) !=  'SMA')
+				return false;
 
-		// Check protocol id
-		if(message.readUInt16BE(16) != 0x6069)
-			return false;
+			// Check protocol id
+			if(message.readUInt16BE(16) != 0x6069)
+				return false;
 
-		return true;
+			return true;
+		} else {
+			return false;
+		}
 	}
 	
 	/**

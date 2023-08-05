@@ -47,6 +47,15 @@
                     "lg":6,
                     "xs":12,
                     "help": "IP 0.0.0.0 means listen to all available Network Interfaces"
+                },
+                "EMIP": {
+                    "type": "text",
+                    "sm": 12,
+                    "md": 6,
+                    "lg": 6,
+                    "newLine": true,
+                    "label": "Energy Meter IP",
+                    "help": "Select the IP of a specific Energy Meter - IP 0.0.0.0 selects all Energy Meters"
                 }
             }
         },
