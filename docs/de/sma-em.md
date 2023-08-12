@@ -7,11 +7,14 @@ Der SMA Energy Meter Adapter empfängt die Multicast Datagramme des Energy-Meter
 ## Administration / Admin-Seite
 
 ![adapter_admin_konfiguration](img/adminpage1-de.png)
-![adapter_admin_konfiguration2](img/adminpage2-de.png)
 
 - Reiter Multicast-Einstellungen
   - Multicast IP: Standardmäßig eingestellt und von SMA vorgegeben ist die IP-Adresse 239.12.255.254.
   - Multicast Port: Standardmäßig eingestellt und von SMA vorgegeben ist der UDP Port: 9522.
+  - Eigene Netzwerkschnittstellen-IPs: Ein Auswahlfeld, das alle verfügbaren Netzwerkschnittstellen-IPv4s auf dem ioBroker-Server anzeigt. Wählen Sie hier die Netzwerkschnittstellen-IP aus, auf der auf Multicasts gewartet werden soll.
+  - Ausgewählte Netzwerkschnittstellen-IP: Derzeit ausgewählte Netzwerkschnittstellen-IP, die auf Multicast-Nachrichten wartet. IP 0.0.0.0 bedeutet, dass der Adapter auf alle verfügbaren Netzwerkschnittstellen lauscht.
+
+![adapter_admin_konfiguration2](img/adminpage2-de.png)
 
 - Reiter Optionen
   - Details L1 - L3: Über diese Auswahlpunkte können Details zu jeder einzelnen Phase angezeigt werden.

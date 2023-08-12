@@ -18,7 +18,10 @@ const updCache = new Map();
 // Map to handle different devices
 const serNumsActive = new Map();
 
-const client = dgram.createSocket('udp4');
+const client = dgram.createSocket({type: 'udp4', reuseAddr: true});
+
+const IP_FORMAT = /^(25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)\.(25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)\.(25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)\.(25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)$/;
+
 
 // Define flags for given parameter to determine the parameters of interest.
 let cfg_ext_active = false;
@@ -55,6 +58,19 @@ class SmaEm extends utils.Adapter {
 
 		// Reset the connection indicator during startup
 		await this.setStateAsync('info.connection', false, true);
+
+		if (this.config.OIP === '') {
+			this.log.error(`Own IP is empty - please check instance configuration of ${this.namespace}`);
+			return;
+		}
+
+		if (!this.config.EMIP) {
+			this.log.error(`Energy Meter IP is empty - please check instance configuration of ${this.namespace}`);
+			return;
+		} else if (!this.config.EMIP.match(IP_FORMAT)) {
+			this.log.error(`Energy Meter IP format not valid. Should be e.g. 192.168.123.123`);
+			return;
+		}
 
 		// Get system language and set it for this adapter
 		await this.getForeignObjectAsync('system.config')
@@ -193,18 +209,29 @@ class SmaEm extends utils.Adapter {
 	
 		// Bind socket to the multicast addresses on all devices found except localhost
 		client.bind(this.config.BPO, () => {
-			this.log.info('Details L1 ' + this.config.L1 + ' Details L2 ' + this.config.L2 + ' Details L3 ' + this.config.L3 + ' Extended Mode ' + this.config.ext + ' RealTime Interval ' + this.config.rtP + ' non-Realtime Interval ' + this.config.nrtP + ' Language: ' + language);
-
-			for (const dev of this.findIPv4IPs()) {
-				this.log.info(`Listen via UDP on Device ${dev.name} with IP ${dev.ipaddr} on Port ${this.config.BPO} for Multicast IP ${this.config.BIP}`);
-				client.addMembership(this.config.BIP, dev.ipaddr);
+			const networkInterfaces = this.findIPv4IPs(this.config.OIP);
+			if (networkInterfaces.length !== 0) {
+				this.log.info('Options selected: Details L1 ' + this.config.L1 + ' Details L2 ' + this.config.L2 + ' Details L3 ' + this.config.L3 + ' Extended Mode ' + this.config.ext + ' RealTime Interval ' + this.config.rtP + ' non-Realtime Interval ' + this.config.nrtP + ' Language: ' + language);
+				for (const dev of networkInterfaces) {
+				
+					try {			
+						client.addMembership(this.config.BIP, dev.ipaddr);
+						this.log.info(`Listen via UDP on Network Interface ${dev.name} with IP ${dev.ipaddr} on Port ${this.config.BPO} for Multicast IP ${this.config.BIP}`);
+					} catch (error){
+					// @ts-ignore
+						this.log.debug(error);
+						this.log.info(`Skip Network Interface ${dev.name} with IP ${dev.ipaddr}`);
+					}
+				}
+			} else {
+				this.log.error (`Invalid own IP address ${this.config.OIP}, please try another one from the Multicast Settings configuration panel`);
 			}
 		});
 
 		// Event handler in case of UDP packet was received.
 		client.on('message', async (message, rinfo) => { 
 			// Check if packet is an SMA energy meter packet or if adapter stopped
-			if(await this.check_message_type(message) === false || stopped)
+			if(await this.check_message_type(message, rinfo) === false || stopped)
 				return; // discard message
 
 			// Extract serial number as integer of the device in the received message
@@ -218,10 +245,12 @@ class SmaEm extends utils.Adapter {
 				// determine device type
 				const susy = message.readUIntBE(protocol_points['SMASusyID'].addr, protocol_points['SMASusyID'].length);
 				let dev_descr = 'Unkown SMA device S/N: ' + ser_str;
-				if (susy == 372) {
+				if (susy == 372  || susy == 501) {
 					dev_descr = 'Sunny Home Manager 2.0 S/N: ' + ser_str;
 				} else if (susy == 349) {
-					dev_descr = 'SMA Energy Meter S/N: ' + ser_str;
+					dev_descr = 'SMA Energy Meter 2.0 S/N: ' + ser_str;
+				} else if (susy == 270) {
+					dev_descr = 'SMA Energy Meter 1.0 S/N: ' + ser_str;
 				}
 				// Add the newly discovered device to the map of active SMA EMs
 				// with serial number as key and details describing the device 
@@ -297,16 +326,20 @@ class SmaEm extends utils.Adapter {
 		});
 	}
 
-	async check_message_type(message) {
+	async check_message_type(message, rinfo) {
+		if (this.config.EMIP === rinfo.address || this.config.EMIP === '0.0.0.0') {
 		// Check SMA ident string at the first 3 bytes of the message
-		if(message.toString('ascii', 0, 3) !=  'SMA')
-			return false;
+			if(message.toString('ascii', 0, 3) !=  'SMA')
+				return false;
 
-		// Check protocol id
-		if(message.readUInt16BE(16) != 0x6069)
-			return false;
+			// Check protocol id
+			if(message.readUInt16BE(16) != 0x6069)
+				return false;
 
-		return true;
+			return true;
+		} else {
+			return false;
+		}
 	}
 	
 	/**
@@ -583,21 +616,34 @@ class SmaEm extends utils.Adapter {
 
 
 
-	findIPv4IPs() {
+	findIPv4IPs(ownIP) {
 		// Get all network devices
 		const ifaces = require('os').networkInterfaces();
 		const net_devs = [];
 
-		for (const dev in ifaces) {
-			if (dev in ifaces) {
-				
-				// Read IPv4 address properties of each device by filtering for the IPv4 external interfaces
-				// @ts-ignore
-				ifaces[dev].forEach(details => {
-					if (!details.internal && details.family === 'IPv4') {
-						net_devs.push({name: dev, ipaddr: details.address});
-					}
-				});
+		if (ownIP === '0.0.0.0') { // look up all IPs
+			for (const dev in ifaces) {
+				if (dev in ifaces) {				
+					// Read IPv4 address properties of each device by filtering for the IPv4 external interfaces
+					// @ts-ignore
+					ifaces[dev].forEach(details => {
+						if (!details.internal && details.family === 'IPv4') {
+							net_devs.push({name: dev, ipaddr: details.address});
+						}
+					});
+				}
+			}
+		} else { // find selected own IP
+			for (const dev in ifaces) {
+				if (dev in ifaces) {
+					// Search address properties of each device for selected own IP 
+					// @ts-ignore
+					ifaces[dev].forEach(details => {
+						if (details.address === ownIP && !details.internal && details.family === 'IPv4') {
+							net_devs.push({name: dev, ipaddr: details.address});
+						}
+					});
+				}
 			}
 		}
 		return net_devs;

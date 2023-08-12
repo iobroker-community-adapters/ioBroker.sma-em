@@ -1,8 +1,21 @@
 {
     "common": {
         "name": "sma-em",
-        "version": "0.6.6",
+        "version": "0.7.0",
         "news": {
+            "0.7.0": {
+                "en": "New: Configurable data point update intervals to reduce system load\nNew: Use JSON config",
+                "de": "Neu: Konfigurierbare Datenpunkt-Updateintervalle zur Reduzierung der Systemlast\nNeu: Verwenden Sie JSON config",
+                "ru": "Новый: Конфигурируемые интервалы обновления данных для уменьшения нагрузки системы\nНовое: Используйте JSON config",
+                "pt": "Novo: intervalos de atualização de ponto de dados configuráveis para reduzir a carga do sistema\nNovo: Use JSON config",
+                "nl": "Bevestigde data punt updates om het systeem te verminderen\nGebruik JSON configuur",
+                "fr": "Nouveau: Intervalles de mise à jour des points de données configurables pour réduire la charge du système\nNouveau: Utilisez la configuration JSON",
+                "it": "Novità: Intervalli di aggiornamento del punto di dati configurabili per ridurre il carico del sistema\nNuovo: Utilizzare JSON config",
+                "es": "Nuevo: intervalos de actualización de puntos de datos configurables para reducir la carga del sistema\nNuevo: Usar config JSON",
+                "pl": "Nowy: Zawartość danych\nZastosowanie JSON",
+                "uk": "Новий: Налаштування інтервалів оновлення точки даних для зменшення навантаження системи\nНовий: Використовуйте JSON config",
+                "zh-cn": "新的:可靠数据点更新间隔,以减少系统装载量\n新的:使用联合信息中心"
+            },
             "0.6.6": {
                 "en": "Updated dependencies\nNew: Use adapter-dev instead of gulp translate",
                 "de": "Aktualisierte Abhängigkeiten\nNeu: Verwenden Sie Adapter-dev anstelle von gulp translate",
@@ -80,19 +93,6 @@
                 "pl": "Poprawki błędów\nOpis obiektu w hierarchii najwyższego poziomu wskazuje, czy urządzenie jest miernikiem energii SMA, czy SMA Home Manger 2",
                 "zh-cn": "错误修复__顶级层次结构对象描述指示该设备是SMA电能表还是SMA Home Manger 2",
                 "uk": "Виправлення помилок\nОпис об’єкта ієрархії верхнього рівня вказує, чи є пристрій SMA Energy Meter або SMA Home Manger 2"
-            },
-            "0.6.0": {
-                "en": "Improved compatibility to future new OBIS values\nAdd additional status information\nAdd a timestamp for each received status information",
-                "de": "Verbesserte Kompatibilität mit zukünftigen neuen OBIS-Werten\n Zusätzliche Statusinformationen hinzufügen\n Zeitstempel für jede empfangene Statusinformation hinzufügen",
-                "ru": "Улучшена совместимость с будущими новыми значениями OBIS\nДобавить дополнительную информацию о статусе\nДобавить метку времени для каждой полученной информации о статусе",
-                "pt": "Compatibilidade aprimorada para novos valores OBIS futuros\nAdicione informações de status adicionais\nAdicione um carimbo de data / hora para cada informação de status recebida",
-                "nl": "Verbeterde compatibiliteit met toekomstige nieuwe OBIS-waarden\nVoeg extra statusinformatie toe\nVoeg een tijdstempel toe voor elke ontvangen statusinformatie",
-                "fr": "Amélioration de la compatibilité avec les futures nouvelles valeurs OBIS\nAjoutez des informations d'état supplémentaires\nAjoutez un horodatage pour chaque information d'état reçue",
-                "it": "Compatibilità migliorata con i nuovi valori OBIS futuri\n Aggiungere ulteriori informazioni sullo stato\n Aggiungere un timestamp per ciascuna informazione sullo stato ricevuto",
-                "es": "Compatibilidad mejorada con valores futuros de OBIS nuevos\nAñadir información de estado adicional\nAñadir una marca de tiempo para cada información de estado recibida",
-                "pl": "Poprawiona zgodność z przyszłymi nowymi wartościami OBIS\nDodaj dodatkowe informacje o statusie\nDodaj sygnaturę czasową dla każdej otrzymanej informacji o stanie",
-                "zh-cn": "改进了与未来新OBIS值的兼容性__添加其他状态信息__为每个接收到的状态信息添加时间戳",
-                "uk": "Покращена сумісність із майбутніми новими значеннями OBIS\nДодайте додаткову інформацію про статус\nДодайте позначку часу для кожної отриманої інформації про статус"
             }
         },
         "titleLang": {
@@ -143,12 +143,12 @@
         },
         "docs": {
             "en": [
-              "docs/en/sma-em.md"
+                "docs/en/sma-em.md"
             ],
             "de": [
-              "docs/de/sma-em.md"
+                "docs/de/sma-em.md"
             ]
-          },
+        },
         "authors": [
             {
                 "name": "Marcolotti",
@@ -166,13 +166,15 @@
         ],
         "globalDependencies": [
             {
-                "admin": ">=5.2.28"
+                "admin": ">=6.3.5"
             }
         ]
     },
     "native": {
         "BIP": "239.12.255.254",
         "BPO": 9522,
+        "OIP": "",
+        "EMIP": "0.0.0.0",
         "L1": false,
         "L2": false,
         "L3": false,
@@ -198,7 +200,7 @@
                     "pl": "Informacja",
                     "uk": "Інформація",
                     "zh-cn": "信息"
-                  }
+                }
             },
             "native": {}
         },
@@ -219,7 +221,7 @@
                     "pl": "Urządzenie SMA połączone",
                     "uk": "Пристрій SMA підключений",
                     "zh-cn": "SMA设备"
-                  },
+                },
                 "type": "boolean",
                 "read": true,
                 "write": false,

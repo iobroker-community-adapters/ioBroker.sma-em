@@ -1,4 +1,13 @@
 # Older changes
+## 0.6.1-beta.0 (2021-01-18)
+
+- (TGuybrush) Bug fixes
+  - Software Version string, last part is the revision as character (e.g. R = release)
+  - Potential Warning during the first start
+  - Revised units to follow the SI standardization (DIN 1301)
+- (TGuybrush) Top level hierarchy object description indicates if the device is a SMA Energy Meter or a SMA Home Manager 2.
+- (DutchmanNL) Released to the latest repo, fixed some typo's + news and translations
+
 ## 0.6.0
 
 - (TGuybrush) Fixed wrong status information
