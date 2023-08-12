@@ -59,7 +59,7 @@ class SmaEm extends utils.Adapter {
 		// Reset the connection indicator during startup
 		await this.setStateAsync('info.connection', false, true);
 
-		if (this.config.OIP === '') {
+		if (!this.config.OIP) {
 			this.log.error(`Own IP is empty - please check instance configuration of ${this.namespace}`);
 			return;
 		}
