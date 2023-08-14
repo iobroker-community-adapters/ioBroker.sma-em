@@ -59,8 +59,11 @@ class SmaEm extends utils.Adapter {
 		// Reset the connection indicator during startup
 		await this.setStateAsync('info.connection', false, true);
 
-		if (this.config.OIP === '') {
+		if (!this.config.OIP) {
 			this.log.error(`Own IP is empty - please check instance configuration of ${this.namespace}`);
+			return;
+		} else if (!this.config.OIP.match(IP_FORMAT)) {
+			this.log.error(`Own IP ${this.config.OIP} format not valid. Should be e.g. 192.168.123.123`);
 			return;
 		}
 
@@ -68,7 +71,7 @@ class SmaEm extends utils.Adapter {
 			this.log.error(`Energy Meter IP is empty - please check instance configuration of ${this.namespace}`);
 			return;
 		} else if (!this.config.EMIP.match(IP_FORMAT)) {
-			this.log.error(`Energy Meter IP format not valid. Should be e.g. 192.168.123.123`);
+			this.log.error(`Energy Meter IP ${this.config.EMIP} format not valid. Should be e.g. 192.168.123.123`);
 			return;
 		}
 
@@ -225,6 +228,8 @@ class SmaEm extends utils.Adapter {
 				}
 			} else {
 				this.log.error (`Invalid own IP address ${this.config.OIP}, please try another one from the Multicast Settings configuration panel`);
+				client.close;
+				//return;
 			}
 		});
 
