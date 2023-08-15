@@ -14,7 +14,7 @@
     "Multicast-Settings": "Multicast-Einstellungen",
     "Options": "Optionen",
     "Realtime Update Interval": "Echtzeit-Aktualisierungsintervall",
-    "Select Network Interface IP to listen for Multicasts": "Wählen Sie die Netzwerkschnittstellen-IP aus, um auf Multicasts zu warten",
+    "Select Network Interface IP to listen for Multicasts": "Wählen Sie die Netzwerkschnittstellen-IP aus, auf der auf Multicasts gewartet werden soll",
     "Selected Network Interface IP": "Ausgewählte Netzwerkschnittstellen-IP",
     "Update Interval for Realtime Data (in Seconds)": "Aktualisierungsintervall für Echtzeitdaten (in Sekunden)",
     "Update Interval for non-Realtime Data (in Seconds)": "Aktualisierungsintervall für Nicht-Echtzeitdaten (in Sekunden)",

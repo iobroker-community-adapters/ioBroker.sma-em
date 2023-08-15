@@ -54,8 +54,9 @@ In addition to the states in non-extended mode, the following values are availab
 - Multicast IP: The default setting is 239.12.255.254.
 - Multicast Port: The default setting for the UDP port is 9522.
   (Both should not be changed, as SMA devices always use this IP address and port)
-- Own Network Interface IPs: Select box for all available Network Interface IPv4s on ioBroker Server.
+- Own Network Interface IPs: Select box for all available Network Interface IPv4s on the ioBroker Server.
 - Selected Network Interface IP: Currently selected Network Interface IP listening for Multicast messages. IP 0.0.0.0 means that the adapter listens on all available Network Interfaces.
+- Energy Meter IP: IP address of a specific Energy Meter - IP 0.0.0.0 selects all Energy Meters (default)
 
 ![Settings](docs/en/img/adminpage2-en.png)
 
@@ -73,11 +74,12 @@ In addition to the states in non-extended mode, the following values are availab
 
 ### __WORK IN PROGRESS__
 
+- (pdbjjens) Breaking Change: node>=16, js-contoller>=4 and admin>=6 required
 - (pdbjjens) Breaking Change: Configurable Energy Meters per adapter instance
 - (pdbjjens) Breaking Change: Selectable own network device IP to listen for multicast messages
 - (pdbjjens) New: Support ioBroker discovery
 - (pdbjjens) New: Detect SMA-EM 1.0 (SUSy 270)
-- (arteck) New: Detect SHM 2.0 with SUSy 501
+- (arteck) New: Detect new SHM 2.0 with SUSy 501
 - (ticaki) Fix: Catch interface errors
 
 ### 0.7.0 (2023-03-14)
