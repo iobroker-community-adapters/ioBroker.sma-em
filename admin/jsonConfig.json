@@ -28,7 +28,7 @@
                 },
                 "OIP": {
                     "type": "ip",
-                    "label": "Own Network Interface IPs",
+                    "label": "Available own Network Interface IPs",
                     "listenOnAllPorts": true,
                     "onlyIp4": true,
                     "sm":12,
@@ -55,7 +55,7 @@
                     "lg": 6,
                     "newLine": true,
                     "label": "Energy Meter IP",
-                    "help": "Select the IP of a specific Energy Meter - IP 0.0.0.0 selects all Energy Meters"
+                    "help": "Enter the IP of a specific Energy Meter - IP 0.0.0.0 selects all Energy Meters"
                 }
             }
         },
