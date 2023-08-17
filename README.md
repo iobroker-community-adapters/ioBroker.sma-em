@@ -19,7 +19,22 @@ It supports the SMA-EMETER-protocol-2. Thus also compatible energy meters from o
 
 SMA Energy Meter and Sunny Home Manager 2 multicast datagrams with their energy measurement data to the network once or more times per second.
 The SMA Energy Meter Adapter receives these multicast messages and stores them as iobroker states.
-A single instance of the SMA Energy Meter Adapter detects all SMA Energy Meters and Sunny Home Managers in all connected networks.
+
+RELEASE NOTES: Version 1.0.x includes some Breaking Changes:
+
+- node>=16, js-contoller>=4 and admin>=6 required
+Upgrade your ioBroker to at least this software level, if you want to use this adapter.
+
+- Configurable Energy Meters per adapter instance
+This feature mainly has been introduced to support ioBroker auto-discovery. Normally, if you do not configure sma-em via auto-discovery you will not have to change anything in the config page because the adapter defaults to serving all reachable Energy Meters like the previous versions did. 
+If you update this adapter from a previous version configured for multiple Energy Meters and decide to have only one Energy Meter in this instance from now on, just enter the IP of the desired Energy Meter. Do not forget to delete the objects in the object tree belonging to the other Energy Meters since their values will not be updated anymore. Of course you can create new instances of sma-em, one for each of these other Energy Meters.
+
+- Selectable own network device IP to listen for multicast messages
+Previous versions of sma-em listen on all available network interfaces for Energy Meter multicasts. This results in problems when ioBroker hosts have network interfaces with multiple IP addresses or multiple interfaces in the same network. For example, a typical configuration might have eth0 and wlan0 both assigned to the same network. In this case Energy Meter multicasts arrive on both interfaces, thus effectively doubling the message rate and in some cases halve the realtime values.
+Although for compatibilty reasons the option to listen on all network interface IPs is available, one of the own network device IPs should be selected from the new config option by any means to avoid the problems mentioned above. Of course make sure to select an IP from the same network the Energy Meters are sending their multicasts. Please note that for these reasons you are prompted on the config page to explicitely enter the Own IP address even when you update the adapter from earlier versions.
+
+- The objects "last_message" and "TimeTick" were removed from the adapter completely since they generate an excessive load on the iobroker. If the info regarding when some objects's state value was last received and/or updated is needed, it can be read from the timestamps of the objects's state values.
+If you update this adapter from a previous version instead of a new installation, you will find that the states of the objects "last_message" and "TimeTick"  will not be updated anymore. In this case you should manually remove these objects from the object tree. The most simple solution to achieve this is to stop the adapter in the instances tab of ioBroker, completely delete the object tree in the objects tab and then restart the adapter. This of course is only neccessary once after the update and is not required if you do a clean new installation. Alternatively you can delete only the objects "last_message" and "TimeTick" from the object tree.
 
 ![States](docs/en/img/overview-en.png)
 
@@ -55,7 +70,7 @@ In addition to the states in non-extended mode, the following values are availab
 - Multicast Port: The default setting for the UDP port is 9522.
   (Both should not be changed, as SMA devices always use this IP address and port)
 - Own Network Interface IPs: Select box for all available Network Interface IPv4s on the ioBroker Server.
-- Selected Network Interface IP: Currently selected Network Interface IP listening for Multicast messages. IP 0.0.0.0 means that the adapter listens on all available Network Interfaces.
+- Selected Network Interface IP: Currently selected Network Interface IP listening for Multicast messages. IP 0.0.0.0 means that the adapter listens on all available Network Interfaces (not recommended).
 - Energy Meter IP: IP address of a specific Energy Meter - IP 0.0.0.0 selects all Energy Meters (default)
 
 ![Settings](docs/en/img/adminpage2-en.png)
@@ -74,9 +89,10 @@ In addition to the states in non-extended mode, the following values are availab
 
 ### __WORK IN PROGRESS__
 
-- (pdbjjens) Breaking Change: node>=16, js-contoller>=4 and admin>=6 required
-- (pdbjjens) Breaking Change: Configurable Energy Meters per adapter instance
-- (pdbjjens) Breaking Change: Selectable own network device IP to listen for multicast messages
+- (pdbjjens) Change: node>=16, js-contoller>=4 and admin>=6 required
+- (pdbjjens) Change: Configurable Energy Meters per adapter instance
+- (pdbjjens) Change: Selectable own network device IP to listen for multicast messages
+- (pdbjjens) Change: Objects "last_message" and "TimeTick" were removed
 - (pdbjjens) New: Support ioBroker discovery
 - (pdbjjens) New: Detect SMA-EM 1.0 (SUSy 270)
 - (arteck) New: Detect new SHM 2.0 with SUSy 501

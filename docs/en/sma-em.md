@@ -13,7 +13,7 @@ The SMA Energy Meter Adapter receives multicast datagrams from the Energy Meter 
   - Multicast IP: The default setting and predefined by SMA is the IP address 239.12.255.254.
   - Multicast Port: The default setting and predefined by SMA is the UDP port 9522.
   - Own Network Interface IPs: Select box showing all available Network Interface IPv4s on ioBroker Server. Select the Network Interface IP to listen for Multicasts from this box.
-  - Selected Network Interface IP: Currently selected Network Interface IP listening for Multicast messages. IP 0.0.0.0 means that the adapter listens on all available Network Interfaces.
+  - Selected Network Interface IP: Currently selected Network Interface IP listening for Multicast messages. IP 0.0.0.0 means that the adapter listens on all available Network Interfaces. This setting is not recommended as it can cause problems on some networks.
   - Energy Meter IP: IP address of a specific energy meter. If this is entered, the data will only be recorded for this one energy meter in one instance of the adapter. If there are several energy meters, they can each be configured individually in other instances of the adapter. This procedure is simplified via the ioBroker discovery, which detects the SMA energy meters that can be reached in the network and offers the creation of one instance for each energy meter found.
   IP 0.0.0.0 selects all energy meters. All existing energy meters are handled by one instance of the adapter. This is the default and provides compatibility with previous versions of the adapter.
 
@@ -30,7 +30,6 @@ The SMA Energy Meter Adapter receives multicast datagrams from the Energy Meter 
 ![Adapter_overview](img/overview-en.png)
 
 After installing and starting the adapter, the folder structure shown in the picture is created. The entire data of the Energy Meter is located in the root folder. If they have been configured, the values of the individual phases are located in the subfolders L1-L3.
-If there are several Energy Meters or Sunny Home Managers in the network, the object folders for each device are created in the same sma-em instance.
 
 ## Explanation of object IDs
 

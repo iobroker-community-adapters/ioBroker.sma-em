@@ -12,7 +12,7 @@ Der SMA Energy Meter Adapter empfängt die Multicast Datagramme des Energy-Meter
   - Multicast IP: Standardmäßig eingestellt und von SMA vorgegeben ist die IP-Adresse 239.12.255.254.
   - Multicast Port: Standardmäßig eingestellt und von SMA vorgegeben ist der UDP Port: 9522.
   - Eigene Netzwerkschnittstellen-IPs: Ein Auswahlfeld, das alle verfügbaren Netzwerkschnittstellen-IPv4s auf dem ioBroker-Server anzeigt. Wählen Sie hier die Netzwerkschnittstellen-IP aus, auf der auf Multicasts gewartet werden soll.
-  - Ausgewählte Netzwerkschnittstellen-IP: Derzeit ausgewählte Netzwerkschnittstellen-IP, die auf Multicast-Nachrichten wartet. IP 0.0.0.0 bedeutet, dass der Adapter auf alle verfügbaren Netzwerkschnittstellen lauscht.
+  - Ausgewählte Netzwerkschnittstellen-IP: Derzeit ausgewählte Netzwerkschnittstellen-IP, die auf Multicast-Nachrichten wartet. IP 0.0.0.0 bedeutet, dass der Adapter auf alle verfügbaren Netzwerkschnittstellen lauscht. Diese Einstellung wird nicht empfohlen, da sie in manchen Netzwerken zu Problemen führen kann.
   - Energiezähler-IP: IP Adresse eines bestimmten Energiezählers. Wird diese eingegeben, werden die Daten nur dieses einen Energiezählers in einer Instanz des Adapters erfasst. Sind mehrere Energiezähler vorhanden, so können diese jeweils einzeln in weiteren Instanzen des Adapters konfiguriert werden. Vereinfacht wird dieses Verfahren über die ioBroker discovery, die die im Netzwerk erreichbaren SMA Energiezähler detektiert und die Erstellungen von einer Instanz je gefundenem Energiezähler anbietet.
   IP 0.0.0.0 wählt alle Energiezähler aus. Alle vorhandenen Energiezähler werden von einer Instanz des Adapters erfasst. Dies ist die Standardeinstellung und bietet die Kompatibilität mit früheren Versionen des Adapters.
 
@@ -29,7 +29,6 @@ Der SMA Energy Meter Adapter empfängt die Multicast Datagramme des Energy-Meter
 ![adapter_uebersicht](img/overview-de.png)
 
 Nach Installation und Start des Adapters wird die auf dem Bild gezeigte Ordnerstruktur angelegt. Im Stammverzeichnis befinden sich die Gesamtdaten des Energy Meters. Sofern sie konfiguriert wurden, befinden sich in den Unterordnern L1-L3 jeweils die Werte der einzelnen Phasen.
-Wenn sich mehrere Energy Meter oder Sunny Home Manager im Netzwerk befinden, werden die Objektordner für jedes Gerät in derselben sma-em Instanz angelegt.
 
 ## Erklärung der Objekt-IDs
 

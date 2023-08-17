@@ -31,6 +31,7 @@
                     "label": "Available own Network Interface IPs",
                     "listenOnAllPorts": true,
                     "onlyIp4": true,
+                    "noInternal": true,
                     "sm":12,
                     "md":6,
                     "lg":6,
