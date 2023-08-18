@@ -33,6 +33,8 @@ let cfg_L3_active = false;
 let cfg_L3_ext_active = false;
 let cfg_rtP = 1;
 let cfg_nrtP = 30;
+let cfg_rtMavg = 'mean';
+let cfg_rtMmed = 'median';
 
 
 class SmaEm extends utils.Adapter {
@@ -121,6 +123,23 @@ class SmaEm extends utils.Adapter {
 		} else {
 			cfg_nrtP = 30;
 		}
+		
+		if (this.config.nrtP && (this.config.nrtP >= 30 && this.config.nrtP <= 3600) ) {   
+			cfg_nrtP = this.config.nrtP;
+		} else {
+			cfg_nrtP = 30;
+		}
+
+		// set averaging methods
+		if (this.config.rtP && (this.config.rtP > 0) ) {   
+			cfg_rtMavg = 'mean';
+			cfg_rtMmed = 'median';
+		
+		} else {
+			cfg_rtMavg = 'each';
+			cfg_rtMmed = 'each';
+		}
+		
 
 		const protocol_points = {
 			'SMASusyID': {name: {'en':'SMA Susy-ID','de':'SMA Susy-ID'}, update: false, addr: 18, length: 2, type: 'number', role: 'info.hardware', unit: ''},
@@ -137,72 +156,72 @@ class SmaEm extends utils.Adapter {
 		// Example: 1:1.4.0 => 00 01 04 00
 		// Some points are active by default, others depending on the options of the adapter.
 		const obis_points = {
-			0x00010400: {id: 'pregard',         name: {'en':'P-active power +','de':'Wirkleistung +'},    			active: true, updateType: 'mean', updatePeriod: cfg_rtP, length: 4, factor: 1 / 10, 				type: 'number', role: 'value.power', unit: 'W'},
+			0x00010400: {id: 'pregard',         name: {'en':'P-active power +','de':'Wirkleistung +'},    			active: true, updateType: cfg_rtMavg, updatePeriod: cfg_rtP, length: 4, factor: 1 / 10, 				type: 'number', role: 'value.power', unit: 'W'},
 			0x00010800: {id: 'pregardcounter',  name: {'en':'Meter P-active work +','de':'Zähler Wirkarbeit +'}, active: true, updateType: 'last', updatePeriod: cfg_nrtP, length: 8, factor: 1 / 3600000, 			type: 'number', role: 'value.energy', unit: 'kWh'},
-			0x00020400: {id: 'psurplus',        name: {'en':'P-active power -','de':'Wirkleistung -'},       			active: true, updateType: 'mean', updatePeriod: cfg_rtP, length: 4, factor: 1 / 10, 				type: 'number', role: 'value.power', unit: 'W'},
+			0x00020400: {id: 'psurplus',        name: {'en':'P-active power -','de':'Wirkleistung -'},       			active: true, updateType: cfg_rtMavg, updatePeriod: cfg_rtP, length: 4, factor: 1 / 10, 				type: 'number', role: 'value.power', unit: 'W'},
 			0x00020800: {id: 'psurpluscounter', name: {'en':'Meter P-active work -','de':'Zähler Wirkarbeit -'},	active: true, updateType: 'last', updatePeriod: cfg_nrtP, length: 8, factor: 1 / 3600000, 			type: 'number', role: 'value.energy', unit: 'kWh'},
 
-			0x00030400: {id: 'qregard',         name: {'en':'Q-reactive power +','de':'Blindleistung +'},        		active: cfg_ext_active, updateType: 'mean', updatePeriod: cfg_rtP, length: 4, factor: 1 / 10,     	type: 'number', role: 'value.power', unit: 'var'},
+			0x00030400: {id: 'qregard',         name: {'en':'Q-reactive power +','de':'Blindleistung +'},        		active: cfg_ext_active, updateType: cfg_rtMavg, updatePeriod: cfg_rtP, length: 4, factor: 1 / 10,     	type: 'number', role: 'value.power', unit: 'var'},
 			0x00030800: {id: 'qregardcounter',  name: {'en':'Meter Q-reactive work +','de':'Zähler Blindarbeit +'},active: cfg_ext_active, updateType: 'last', updatePeriod: cfg_nrtP, length: 8, factor: 1 / 3600000, type: 'number', role: 'value.energy', unit: 'varh'},
-			0x00040400: {id: 'qsurplus',        name: {'en':'Q-reactive power -','de':'Blindleistung -'},        		active: cfg_ext_active, updateType: 'mean', updatePeriod: cfg_rtP, length: 4, factor: 1 / 10,     	type: 'number', role: 'value.power', unit: 'var'},
+			0x00040400: {id: 'qsurplus',        name: {'en':'Q-reactive power -','de':'Blindleistung -'},        		active: cfg_ext_active, updateType: cfg_rtMavg, updatePeriod: cfg_rtP, length: 4, factor: 1 / 10,     	type: 'number', role: 'value.power', unit: 'var'},
 			0x00040800: {id: 'qsurpluscounter', name: {'en':'Meter Q-reactive work -','de':'Zähler Blindarbeit -'},active: cfg_ext_active, updateType: 'last', updatePeriod: cfg_nrtP, length: 8, factor: 1 / 3600000, type: 'number', role: 'value.energy', unit: 'varh'},
-			0x00090400: {id: 'sregard',         name: {'en':'S-apparent power +','de':'Scheinleistung +'},      		active: cfg_ext_active, updateType: 'mean', updatePeriod: cfg_rtP, length: 4, factor: 1 / 10,      	type: 'number', role: 'value.power', unit: 'VA'},
+			0x00090400: {id: 'sregard',         name: {'en':'S-apparent power +','de':'Scheinleistung +'},      		active: cfg_ext_active, updateType: cfg_rtMavg, updatePeriod: cfg_rtP, length: 4, factor: 1 / 10,      	type: 'number', role: 'value.power', unit: 'VA'},
 			0x00090800: {id: 'sregardcounter',  name: {'en':'Meter S-apparent work +','de':'Zähler Scheinarbeit +'},	active: cfg_ext_active, updateType: 'last', updatePeriod: cfg_nrtP, length: 8, factor: 1 / 3600000, type: 'number', role: 'value.energy', unit: 'VAh'},
-			0x000A0400: {id: 'ssurplus',        name: {'en':'S-apparent power -','de':'Scheinleistung -'},                 		active: cfg_ext_active, updateType: 'mean', updatePeriod: cfg_rtP, length: 4, factor: 1 / 10,      	type: 'number', role: 'value.power', unit: 'VA'},
+			0x000A0400: {id: 'ssurplus',        name: {'en':'S-apparent power -','de':'Scheinleistung -'},                 		active: cfg_ext_active, updateType: cfg_rtMavg, updatePeriod: cfg_rtP, length: 4, factor: 1 / 10,      	type: 'number', role: 'value.power', unit: 'VA'},
 			0x000A0800: {id: 'ssurpluscounter', name: {'en':'Meter S-apparent work -','de':'Zähler Scheinarbeit -'},  		active: cfg_ext_active, updateType: 'last', updatePeriod: cfg_nrtP, length: 8, factor: 1 / 3600000, type: 'number', role: 'value.energy', unit: 'VAh'},
-			0x000D0400: {id: 'cosphi',          name: {'en':'Power factor','de':'Leistungsfaktor'},            		active: cfg_ext_active, updateType: 'median', updatePeriod: cfg_rtP, length: 4, factor: 1 / 1000,   type: 'number', role: 'value.phase', unit: 'Φ'},
-			0x000E0400: {id: 'frequency',       name: {'en':'Grid frequency','de':'Netzfrequenz'},             		active: cfg_ext_active, updateType: 'median', updatePeriod: cfg_rtP, length: 4, factor: 1 / 1000,   type: 'number', role: 'value.frequency', unit: 'Hz'},
+			0x000D0400: {id: 'cosphi',          name: {'en':'Power factor','de':'Leistungsfaktor'},            		active: cfg_ext_active, updateType: cfg_rtMmed, updatePeriod: cfg_rtP, length: 4, factor: 1 / 1000,   type: 'number', role: 'value.phase', unit: 'Φ'},
+			0x000E0400: {id: 'frequency',       name: {'en':'Grid frequency','de':'Netzfrequenz'},             		active: cfg_ext_active, updateType: cfg_rtMmed, updatePeriod: cfg_rtP, length: 4, factor: 1 / 1000,   type: 'number', role: 'value.frequency', unit: 'Hz'},
 
-			0x00150400: {id: 'L1.pregard',         name: {'en':'L1 P-active power +','de':'L1 Wirkleistung +'},                		active: cfg_L1_active, updateType: 'mean', updatePeriod: cfg_rtP, length: 4, factor: 1 / 10, 		type: 'number', role: 'value.power', unit: 'W'},
+			0x00150400: {id: 'L1.pregard',         name: {'en':'L1 P-active power +','de':'L1 Wirkleistung +'},                		active: cfg_L1_active, updateType: cfg_rtMavg, updatePeriod: cfg_rtP, length: 4, factor: 1 / 10, 		type: 'number', role: 'value.power', unit: 'W'},
 			0x00150800: {id: 'L1.pregardcounter',  name: {'en':'L1 Meter P-active work +','de':'L1 Zähler Wirkarbeit +'}, 		active: cfg_L1_active, updateType: 'last', updatePeriod: cfg_nrtP, length: 8, factor: 1 / 3600000, 	type: 'number', role: 'value.energy', unit: 'kWh'},
-			0x00160400: {id: 'L1.psurplus',        name: {'en':'L1 P-active power -','de':'L1 Wirkleistung -'},                		active: cfg_L1_active, updateType: 'mean', updatePeriod: cfg_rtP, length: 4, factor: 1 / 10, 		type: 'number', role: 'value.power', unit: 'W'},
+			0x00160400: {id: 'L1.psurplus',        name: {'en':'L1 P-active power -','de':'L1 Wirkleistung -'},                		active: cfg_L1_active, updateType: cfg_rtMavg, updatePeriod: cfg_rtP, length: 4, factor: 1 / 10, 		type: 'number', role: 'value.power', unit: 'W'},
 			0x00160800: {id: 'L1.psurpluscounter', name: {'en':'L1 Meter P-active work -','de':'L1 Zähler Wirkarbeit -'}, 		active: cfg_L1_active, updateType: 'last', updatePeriod: cfg_nrtP, length: 8, factor: 1 / 3600000, 	type: 'number', role: 'value.energy', unit: 'kWh'},
 
-			0x00170400: {id: 'L1.qregard',         name: {'en':'L1 Q-reactive power +','de':'L1 Blindleistung +'},                  	active: cfg_L1_ext_active, updateType: 'mean', updatePeriod: cfg_rtP, length: 4, factor: 1 / 10,      	type: 'number', role: 'value.power', unit: 'var'},
+			0x00170400: {id: 'L1.qregard',         name: {'en':'L1 Q-reactive power +','de':'L1 Blindleistung +'},                  	active: cfg_L1_ext_active, updateType: cfg_rtMavg, updatePeriod: cfg_rtP, length: 4, factor: 1 / 10,      	type: 'number', role: 'value.power', unit: 'var'},
 			0x00170800: {id: 'L1.qregardcounter',  name: {'en':'L1 Meter Q-reactive work +','de':'L1 Zähler Blindarbeit +'},   	active: cfg_L1_ext_active, updateType: 'last', updatePeriod: cfg_nrtP, length: 8, factor: 1 / 3600000, 	type: 'number', role: 'value.energy', unit: 'varh'},
-			0x00180400: {id: 'L1.qsurplus',        name: {'en':'L1 Q-reactive power -','de':'L1 Blindleistung -'},                  	active: cfg_L1_ext_active, updateType: 'mean', updatePeriod: cfg_rtP, length: 4, factor: 1 / 10,      	type: 'number', role: 'value.power', unit: 'var'},
+			0x00180400: {id: 'L1.qsurplus',        name: {'en':'L1 Q-reactive power -','de':'L1 Blindleistung -'},                  	active: cfg_L1_ext_active, updateType: cfg_rtMavg, updatePeriod: cfg_rtP, length: 4, factor: 1 / 10,      	type: 'number', role: 'value.power', unit: 'var'},
 			0x00180800: {id: 'L1.qsurpluscounter', name: {'en':'L1 Meter Q-reactive work -','de':'L1 Zähler Blindarbeit -'},   	active: cfg_L1_ext_active, updateType: 'last', updatePeriod: cfg_nrtP, length: 8, factor: 1 / 3600000, 	type: 'number', role: 'value.energy', unit: 'varh'},
-			0x001D0400: {id: 'L1.sregard',         name: {'en':'L1 S-apparent power +','de':'L1 Scheinleistung +'},                	active: cfg_L1_ext_active, updateType: 'mean', updatePeriod: cfg_rtP, length: 4, factor: 1 / 10,      	type: 'number', role: 'value.power', unit: 'VA'},
+			0x001D0400: {id: 'L1.sregard',         name: {'en':'L1 S-apparent power +','de':'L1 Scheinleistung +'},                	active: cfg_L1_ext_active, updateType: cfg_rtMavg, updatePeriod: cfg_rtP, length: 4, factor: 1 / 10,      	type: 'number', role: 'value.power', unit: 'VA'},
 			0x001D0800: {id: 'L1.sregardcounter',  name: {'en':'L1 Meter S-apparent work +','de':'L1 Zähler Scheinarbeit +'}, 	active: cfg_L1_ext_active, updateType: 'last', updatePeriod: cfg_nrtP, length: 8, factor: 1 / 3600000, 	type: 'number', role: 'value.energy', unit: 'VAh'},
-			0x001E0400: {id: 'L1.ssurplus',        name: {'en':'L1 S-apparent power -','de':'L1 Scheinleistung -'},                 	active: cfg_L1_ext_active, updateType: 'mean', updatePeriod: cfg_rtP, length: 4, factor: 1 / 10,      	type: 'number', role: 'value.power', unit: 'VA'},
+			0x001E0400: {id: 'L1.ssurplus',        name: {'en':'L1 S-apparent power -','de':'L1 Scheinleistung -'},                 	active: cfg_L1_ext_active, updateType: cfg_rtMavg, updatePeriod: cfg_rtP, length: 4, factor: 1 / 10,      	type: 'number', role: 'value.power', unit: 'VA'},
 			0x001E0800: {id: 'L1.ssurpluscounter', name: {'en':'L1 Meter S-apparent work -','de':'L1 Zähler Scheinarbeit -'},  	active: cfg_L1_ext_active, updateType: 'last', updatePeriod: cfg_nrtP, length: 8, factor: 1 / 3600000, 	type: 'number', role: 'value.energy', unit: 'VAh'},
-			0x001F0400: {id: 'L1.amperage',        name: {'en':'L1 Amperage','de':'L1 Stromstärke'},                    	active: cfg_L1_ext_active, updateType: 'mean', updatePeriod: cfg_rtP, length: 4, factor: 1 / 1000,    	type: 'number', role: 'value.current', unit: 'A'},
-			0x00200400: {id: 'L1.voltage',         name: {'en':'L1 Voltage','de':'L1 Spannung'},                                  	active: cfg_L1_ext_active, updateType: 'mean', updatePeriod: cfg_rtP, length: 4, factor: 1 / 1000,    	type: 'number', role: 'value.voltage', unit: 'V'},
-			0x00210400: {id: 'L1.cosphi',          name: {'en':'L1 Power factor','de':'L1 Leistungsfaktor'},               	active: cfg_L1_ext_active, updateType: 'median', updatePeriod: cfg_rtP, length: 4, factor: 1 / 1000,    type: 'number', role: 'value.phase', unit: 'Φ'},
+			0x001F0400: {id: 'L1.amperage',        name: {'en':'L1 Amperage','de':'L1 Stromstärke'},                    	active: cfg_L1_ext_active, updateType: cfg_rtMavg, updatePeriod: cfg_rtP, length: 4, factor: 1 / 1000,    	type: 'number', role: 'value.current', unit: 'A'},
+			0x00200400: {id: 'L1.voltage',         name: {'en':'L1 Voltage','de':'L1 Spannung'},                                  	active: cfg_L1_ext_active, updateType: cfg_rtMavg, updatePeriod: cfg_rtP, length: 4, factor: 1 / 1000,    	type: 'number', role: 'value.voltage', unit: 'V'},
+			0x00210400: {id: 'L1.cosphi',          name: {'en':'L1 Power factor','de':'L1 Leistungsfaktor'},               	active: cfg_L1_ext_active, updateType: cfg_rtMmed, updatePeriod: cfg_rtP, length: 4, factor: 1 / 1000,    type: 'number', role: 'value.phase', unit: 'Φ'},
 
-			0x00290400: {id: 'L2.pregard',         name: {'en':'L2 P-active power +','de':'L2 Wirkleistung +'},                		active: cfg_L2_active, updateType: 'mean', updatePeriod: cfg_rtP, length: 4, factor: 1 / 10, 			type: 'number', role: 'value.power', unit: 'W'},
+			0x00290400: {id: 'L2.pregard',         name: {'en':'L2 P-active power +','de':'L2 Wirkleistung +'},                		active: cfg_L2_active, updateType: cfg_rtMavg, updatePeriod: cfg_rtP, length: 4, factor: 1 / 10, 			type: 'number', role: 'value.power', unit: 'W'},
 			0x00290800: {id: 'L2.pregardcounter',  name: {'en':'L2 Meter P-active work +','de':'L2 Zähler Wirkarbeit +'}, 		active: cfg_L2_active, updateType: 'last', updatePeriod: cfg_nrtP, length: 8, factor: 1 / 3600000, 		type: 'number', role: 'value.energy', unit: 'kWh'},
-			0x002a0400: {id: 'L2.psurplus',        name: {'en':'L2 P-active power -','de':'L2 Wirkleistung -'},                		active: cfg_L2_active, updateType: 'mean', updatePeriod: cfg_rtP, length: 4, factor: 1 / 10, 			type: 'number', role: 'value.power', unit: 'W'},
+			0x002a0400: {id: 'L2.psurplus',        name: {'en':'L2 P-active power -','de':'L2 Wirkleistung -'},                		active: cfg_L2_active, updateType: cfg_rtMavg, updatePeriod: cfg_rtP, length: 4, factor: 1 / 10, 			type: 'number', role: 'value.power', unit: 'W'},
 			0x002a0800: {id: 'L2.psurpluscounter', name: {'en':'L2 Meter P-active work -','de':'L2 Zähler Wirkarbeit -'}, 		active: cfg_L2_active, updateType: 'last', updatePeriod: cfg_nrtP, length: 8, factor: 1 / 3600000, 		type: 'number', role: 'value.energy', unit: 'kWh'},
 
-			0x002b0400: {id: 'L2.qregard',         name: {'en':'L2 Q-reactive power +','de':'L2 Blindleistung +'},                  	active: cfg_L2_ext_active, updateType: 'mean', updatePeriod: cfg_rtP, length: 4, factor: 1 / 10,      	type: 'number', role: 'value.power', unit: 'var'},
+			0x002b0400: {id: 'L2.qregard',         name: {'en':'L2 Q-reactive power +','de':'L2 Blindleistung +'},                  	active: cfg_L2_ext_active, updateType: cfg_rtMavg, updatePeriod: cfg_rtP, length: 4, factor: 1 / 10,      	type: 'number', role: 'value.power', unit: 'var'},
 			0x002b0800: {id: 'L2.qregardcounter',  name: {'en':'L2 Meter Q-reactive work +','de':'L2 Zähler Blindarbeit +'},   	active: cfg_L2_ext_active, updateType: 'last', updatePeriod: cfg_nrtP, length: 8, factor: 1 / 3600000, 	type: 'number', role: 'value.energy', unit: 'varh'},
-			0x002c0400: {id: 'L2.qsurplus',        name: {'en':'L2 Q-reactive power -','de':'L2 Blindleistung -'},                  	active: cfg_L2_ext_active, updateType: 'mean', updatePeriod: cfg_rtP, length: 4, factor: 1 / 10,      	type: 'number', role: 'value.power', unit: 'var'},
+			0x002c0400: {id: 'L2.qsurplus',        name: {'en':'L2 Q-reactive power -','de':'L2 Blindleistung -'},                  	active: cfg_L2_ext_active, updateType: cfg_rtMavg, updatePeriod: cfg_rtP, length: 4, factor: 1 / 10,      	type: 'number', role: 'value.power', unit: 'var'},
 			0x002c0800: {id: 'L2.qsurpluscounter', name: {'en':'L2 Meter Q-reactive work -','de':'L2 Zähler Blindarbeit -'},   	active: cfg_L2_ext_active, updateType: 'last', updatePeriod: cfg_nrtP, length: 8, factor: 1 / 3600000, 	type: 'number', role: 'value.energy', unit: 'varh'},
-			0x00310400: {id: 'L2.sregard',         name: {'en':'L2 S-apparent power +','de':'L2 Scheinleistung +'},                	active: cfg_L2_ext_active, updateType: 'mean', updatePeriod: cfg_rtP, length: 4, factor: 1 / 10,      	type: 'number', role: 'value.power', unit: 'VA'},
+			0x00310400: {id: 'L2.sregard',         name: {'en':'L2 S-apparent power +','de':'L2 Scheinleistung +'},                	active: cfg_L2_ext_active, updateType: cfg_rtMavg, updatePeriod: cfg_rtP, length: 4, factor: 1 / 10,      	type: 'number', role: 'value.power', unit: 'VA'},
 			0x00310800: {id: 'L2.sregardcounter',  name: {'en':'L2 Meter S-apparent work +','de':'L2 Zähler Scheinarbeit +'}, 	active: cfg_L2_ext_active, updateType: 'last', updatePeriod: cfg_nrtP, length: 8, factor: 1 / 3600000, 	type: 'number', role: 'value.energy', unit: 'VAh'},
-			0x00320400: {id: 'L2.ssurplus',        name: {'en':'L2 S-apparent power -','de':'L2 Scheinleistung -'},                 	active: cfg_L2_ext_active, updateType: 'mean', updatePeriod: cfg_rtP, length: 4, factor: 1 / 10,      	type: 'number', role: 'value.power', unit: 'VA'},
+			0x00320400: {id: 'L2.ssurplus',        name: {'en':'L2 S-apparent power -','de':'L2 Scheinleistung -'},                 	active: cfg_L2_ext_active, updateType: cfg_rtMavg, updatePeriod: cfg_rtP, length: 4, factor: 1 / 10,      	type: 'number', role: 'value.power', unit: 'VA'},
 			0x00320800: {id: 'L2.ssurpluscounter', name: {'en':'L2 Meter S-apparent work -','de':'L2 Zähler Scheinarbeit -'},  	active: cfg_L2_ext_active, updateType: 'last', updatePeriod: cfg_nrtP, length: 8, factor: 1 / 3600000, 	type: 'number', role: 'value.energy', unit: 'VAh'},
-			0x00330400: {id: 'L2.amperage',        name: {'en':'L2 Amperage','de':'L2 Stromstärke'},                              	active: cfg_L2_ext_active, updateType: 'mean', updatePeriod: cfg_rtP, length: 4, factor: 1 / 1000,    	type: 'number', role: 'value.current', unit: 'A'},
-			0x00340400: {id: 'L2.voltage',         name: {'en':'L2 Voltage','de':'L2 Spannung'},                                  	active: cfg_L2_ext_active, updateType: 'mean', updatePeriod: cfg_rtP, length: 4, factor: 1 / 1000,    	type: 'number', role: 'value.voltage', unit: 'V'},
-			0x00350400: {id: 'L2.cosphi',          name: {'en':'L2 Power factor','de':'L2 Leistungsfaktor'},                      	active: cfg_L2_ext_active, updateType: 'median', updatePeriod: cfg_rtP, length: 4, factor: 1 / 1000,    type: 'number', role: 'value.phase', unit: 'Φ'},
+			0x00330400: {id: 'L2.amperage',        name: {'en':'L2 Amperage','de':'L2 Stromstärke'},                              	active: cfg_L2_ext_active, updateType: cfg_rtMavg, updatePeriod: cfg_rtP, length: 4, factor: 1 / 1000,    	type: 'number', role: 'value.current', unit: 'A'},
+			0x00340400: {id: 'L2.voltage',         name: {'en':'L2 Voltage','de':'L2 Spannung'},                                  	active: cfg_L2_ext_active, updateType: cfg_rtMavg, updatePeriod: cfg_rtP, length: 4, factor: 1 / 1000,    	type: 'number', role: 'value.voltage', unit: 'V'},
+			0x00350400: {id: 'L2.cosphi',          name: {'en':'L2 Power factor','de':'L2 Leistungsfaktor'},                      	active: cfg_L2_ext_active, updateType: cfg_rtMmed, updatePeriod: cfg_rtP, length: 4, factor: 1 / 1000,    type: 'number', role: 'value.phase', unit: 'Φ'},
 
-			0x003D0400: {id: 'L3.pregard',         name: {'en':'L3 P-active power +','de':'L3 Wirkleistung +'},                		active: cfg_L3_active, updateType: 'mean', updatePeriod: cfg_rtP, length: 4, factor: 1 / 10, 			type: 'number', role: 'value.power', unit: 'W'},
+			0x003D0400: {id: 'L3.pregard',         name: {'en':'L3 P-active power +','de':'L3 Wirkleistung +'},                		active: cfg_L3_active, updateType: cfg_rtMavg, updatePeriod: cfg_rtP, length: 4, factor: 1 / 10, 			type: 'number', role: 'value.power', unit: 'W'},
 			0x003D0800: {id: 'L3.pregardcounter',  name: {'en':'L3 Meter P-active work +','de':'L3 Zähler Wirkarbeit +'}, 		active: cfg_L3_active, updateType: 'last', updatePeriod: cfg_nrtP, length: 8, factor: 1 / 3600000, 		type: 'number', role: 'value.energy', unit: 'kWh'},
-			0x003E0400: {id: 'L3.psurplus',        name: {'en':'L3 P-active power-','de':'L3 Wirkleistung -'},                		active: cfg_L3_active, updateType: 'mean', updatePeriod: cfg_rtP, length: 4, factor: 1 / 10, 			type: 'number', role: 'value.power', unit: 'W'},
+			0x003E0400: {id: 'L3.psurplus',        name: {'en':'L3 P-active power-','de':'L3 Wirkleistung -'},                		active: cfg_L3_active, updateType: cfg_rtMavg, updatePeriod: cfg_rtP, length: 4, factor: 1 / 10, 			type: 'number', role: 'value.power', unit: 'W'},
 			0x003E0800: {id: 'L3.psurpluscounter', name: {'en':'L3 Meter P-active work -','de':'L3 Zähler Wirkarbeit -'}, 		active: cfg_L3_active, updateType: 'last', updatePeriod: cfg_nrtP, length: 8, factor: 1 / 3600000, 		type: 'number', role: 'value.energy', unit: 'kWh'},
 
-			0x003F0400: {id: 'L3.qregard',         name: {'en':'L3 Q-reactive power +','de':'L3 Blindleistung +'},                  	active: cfg_L3_ext_active, updateType: 'mean', updatePeriod: cfg_rtP, length: 4, factor: 1 / 10,      	type: 'number', role: 'value.power', unit: 'var'},
+			0x003F0400: {id: 'L3.qregard',         name: {'en':'L3 Q-reactive power +','de':'L3 Blindleistung +'},                  	active: cfg_L3_ext_active, updateType: cfg_rtMavg, updatePeriod: cfg_rtP, length: 4, factor: 1 / 10,      	type: 'number', role: 'value.power', unit: 'var'},
 			0x003F0800: {id: 'L3.qregardcounter',  name: {'en':'L3 Meter Q-reactive work +','de':'L3 Zähler Blindarbeit +'},   	active: cfg_L3_ext_active, updateType: 'last', updatePeriod: cfg_nrtP, length: 8, factor: 1 / 3600000, 	type: 'number', role: 'value.energy', unit: 'varh'},
-			0x00400400: {id: 'L3.qsurplus',        name: {'en':'L3 Q-reactive power -','de':'L3 Blindleistung -'},                  	active: cfg_L3_ext_active, updateType: 'mean', updatePeriod: cfg_rtP, length: 4, factor: 1 / 10,      	type: 'number', role: 'value.power', unit: 'var'},
+			0x00400400: {id: 'L3.qsurplus',        name: {'en':'L3 Q-reactive power -','de':'L3 Blindleistung -'},                  	active: cfg_L3_ext_active, updateType: cfg_rtMavg, updatePeriod: cfg_rtP, length: 4, factor: 1 / 10,      	type: 'number', role: 'value.power', unit: 'var'},
 			0x00400800: {id: 'L3.qsurpluscounter', name: {'en':'L3 Meter Q-reactive work -','de':'L3 Zähler Blindarbeit -'},   	active: cfg_L3_ext_active, updateType: 'last', updatePeriod: cfg_nrtP, length: 8, factor: 1 / 3600000, 	type: 'number', role: 'value.energy', unit: 'varh'},
-			0x00450400: {id: 'L3.sregard',         name: {'en':'L3 S-apparent power +','de':'L3 Scheinleistung +'},                	active: cfg_L3_ext_active, updateType: 'mean', updatePeriod: cfg_rtP, length: 4, factor: 1 / 10,      	type: 'number', role: 'value.power', unit: 'VA'},
+			0x00450400: {id: 'L3.sregard',         name: {'en':'L3 S-apparent power +','de':'L3 Scheinleistung +'},                	active: cfg_L3_ext_active, updateType: cfg_rtMavg, updatePeriod: cfg_rtP, length: 4, factor: 1 / 10,      	type: 'number', role: 'value.power', unit: 'VA'},
 			0x00450800: {id: 'L3.sregardcounter',  name: {'en':'L3 Meter S-apparent work +','de':'L3 Zähler Scheinarbeit +'}, 	active: cfg_L3_ext_active, updateType: 'last', updatePeriod: cfg_nrtP, length: 8, factor: 1 / 3600000, 	type: 'number', role: 'value.energy', unit: 'VAh'},
-			0x00460400: {id: 'L3.ssurplus',        name: {'en':'L3 S-apparent power -','de':'L3 Scheinleistung -'},                 	active: cfg_L3_ext_active, updateType: 'mean', updatePeriod: cfg_rtP, length: 4, factor: 1 / 10,      	type: 'number', role: 'value.power', unit: 'VA'},
+			0x00460400: {id: 'L3.ssurplus',        name: {'en':'L3 S-apparent power -','de':'L3 Scheinleistung -'},                 	active: cfg_L3_ext_active, updateType: cfg_rtMavg, updatePeriod: cfg_rtP, length: 4, factor: 1 / 10,      	type: 'number', role: 'value.power', unit: 'VA'},
 			0x00460800: {id: 'L3.ssurpluscounter', name: {'en':'L3 Meter S-apparent work -','de':'L3 Zähler Scheinarbeit -'},  	active: cfg_L3_ext_active, updateType: 'last', updatePeriod: cfg_nrtP, length: 8, factor: 1 / 3600000, 	type: 'number', role: 'value.energy', unit: 'VAh'},
-			0x00470400: {id: 'L3.amperage',        name: {'en':'L3 Amperage','de':'L3 Stromstärke'},                              	active: cfg_L3_ext_active, updateType: 'mean', updatePeriod: cfg_rtP, length: 4, factor: 1 / 1000,    	type: 'number', role: 'value.current', unit: 'A'},
-			0x00480400: {id: 'L3.voltage',         name: {'en':'L3 Voltage','de':'L3 Spannung'},                                  	active: cfg_L3_ext_active, updateType: 'mean', updatePeriod: cfg_rtP, length: 4, factor: 1 / 1000,    	type: 'number', role: 'value.voltage', unit: 'V'},
-			0x00490400: {id: 'L3.cosphi',          name: {'en':'L3 Power factor','de':'L3 Leistungsfaktor'},                      	active: cfg_L3_ext_active, updateType: 'median', updatePeriod: cfg_rtP, length: 4, factor: 1 / 1000,    type: 'number', role: 'value.phase', unit: 'Φ'},
+			0x00470400: {id: 'L3.amperage',        name: {'en':'L3 Amperage','de':'L3 Stromstärke'},                              	active: cfg_L3_ext_active, updateType: cfg_rtMavg, updatePeriod: cfg_rtP, length: 4, factor: 1 / 1000,    	type: 'number', role: 'value.current', unit: 'A'},
+			0x00480400: {id: 'L3.voltage',         name: {'en':'L3 Voltage','de':'L3 Spannung'},                                  	active: cfg_L3_ext_active, updateType: cfg_rtMavg, updatePeriod: cfg_rtP, length: 4, factor: 1 / 1000,    	type: 'number', role: 'value.voltage', unit: 'V'},
+			0x00490400: {id: 'L3.cosphi',          name: {'en':'L3 Power factor','de':'L3 Leistungsfaktor'},                      	active: cfg_L3_ext_active, updateType: cfg_rtMmed, updatePeriod: cfg_rtP, length: 4, factor: 1 / 1000,    type: 'number', role: 'value.phase', unit: 'Φ'},
 
 			0x90000000: {id: 'sw_version_raw',     name: {'en':'Software version raw','de':'Softwareversion kodiert'},                                	active: true,              updateType: 'once', updatePeriod: 0, length: 4, factor: 1 ,          		type: 'number', role: 'info.firmware', unit: ''},
 		};

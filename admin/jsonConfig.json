@@ -95,7 +95,7 @@
                 "rtP": {
                     "newLine": true,
                     "type": "number",
-                    "min": 1,
+                    "min": 0,
                     "max": 30,
                     "sm": 12,
                     "md": 6,
