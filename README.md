@@ -89,8 +89,7 @@ In addition to the states in non-extended mode, the following values are availab
 -->
 
 ## Changelog
-
-### __WORK IN PROGRESS__
+### 1.0.0 (2023-08-19)
 
 - (pdbjjens) Change: node>=16, js-contoller>=4 and admin>=6 required
 - (pdbjjens) Change: Configurable Energy Meters per adapter instance
@@ -122,10 +121,6 @@ In addition to the states in non-extended mode, the following values are availab
 - (TGuybrush) Bug fixes
 - Prevent warnings regarding non-existent objects upon adapter instance creation and start-up under js-controller 3.2.x
 - Improved check of SMA Energy Meter multicast messages to prevent ghost devices and warnings regarding unknown OBIS values.
-
-### 0.6.3 (2021-03-04)
-
-- (TGuybrush) The adapter binds now to all external IPv4 addresses.
 
 ## Legal Notices
 

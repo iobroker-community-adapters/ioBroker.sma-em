@@ -1,4 +1,8 @@
 # Older changes
+## 0.6.3 (2021-03-04)
+
+- (TGuybrush) The adapter binds now to all external IPv4 addresses.
+
 ## 0.6.1-beta.0 (2021-01-18)
 
 - (TGuybrush) Bug fixes
