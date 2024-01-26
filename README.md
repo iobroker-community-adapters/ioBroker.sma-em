@@ -89,6 +89,11 @@ In addition to the states in non-extended mode, the following values are availab
 -->
 
 ## Changelog
+
+### __WORK IN PROGRESS__ - 2024 maintenance release
+
+- (pdbjjens) Updated dependencies
+
 ### 1.0.0 (2023-08-19)
 
 - (pdbjjens) Change: node>=16, js-contoller>=4 and admin>=6 required
@@ -134,7 +139,7 @@ The authors are in no way endorsed by or affiliated with SMA Solar Technology AG
 
 The MIT License (MIT)
 
-Copyright (c) 2023 IoBroker-Community
+Copyright (c) 2024 IoBroker-Community
 
 Permission is hereby granted, free of charge, to any person obtaining a copy
 of this software and associated documentation files (the "Software"), to deal
