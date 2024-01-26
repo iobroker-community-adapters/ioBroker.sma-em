@@ -89,6 +89,7 @@ In addition to the states in non-extended mode, the following values are availab
 -->
 
 ## Changelog
+
 ### 1.0.1 (2024-01-26) - 2024 maintenance release
 
 - (pdbjjens) Updated dependencies
