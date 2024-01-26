@@ -1,4 +1,10 @@
 # Older changes
+## 0.6.4 (2021-08-19)
+
+- (TGuybrush) Bug fixes
+- Prevent warnings regarding non-existent objects upon adapter instance creation and start-up under js-controller 3.2.x
+- Improved check of SMA Energy Meter multicast messages to prevent ghost devices and warnings regarding unknown OBIS values.
+
 ## 0.6.3 (2021-03-04)
 
 - (TGuybrush) The adapter binds now to all external IPv4 addresses.

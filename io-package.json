@@ -1,8 +1,21 @@
 {
   "common": {
     "name": "sma-em",
-    "version": "1.0.0",
+    "version": "1.0.1",
     "news": {
+      "1.0.1": {
+        "en": "Updated dependencies",
+        "de": "Aktualisierte Abhängigkeiten",
+        "ru": "Обновленные зависимости",
+        "pt": "Dependências atualizadas",
+        "nl": "Bijgewerkte afhankelijkheden",
+        "fr": "Dépendances actualisées",
+        "it": "Dipendenze aggiornate",
+        "es": "Dependencias actualizadas",
+        "pl": "Aktualizacja zależności",
+        "uk": "Оновлені залежності",
+        "zh-cn": "更新的依赖关系"
+      },
       "1.0.0": {
         "en": "Change: node>=16, js-contoller>=4 and admin>=6 required\nChange: Configurable Energy Meters per adapter instance\nChange: Selectable own network device IP to listen for multicast messages\nChange: Objects \"last_message\" and \"TimeTick\" were removed\nNew: Support ioBroker discovery\nNew: Detect SMA-EM 1.0 (SUSy 270)\nNew: Detect new SHM 2.0 with SUSy 501\nFix: Catch interface errors",
         "de": "Änderung: node>=16, js-contoller>=4 und admin>=6 erforderlich\nÄnderung: Konfigurierbare Energiezähler pro Adapter-Instanz\nÄnderung: Auswählbares eigene Netzwerkgeräte-IP zum Lauschen auf Multicast-Nachrichten\nÄnderung: Objekte last_message und TimeTick wurden entfernt\nNeu: Unterstützung für ioBroker Discovery\nNeu: Erkennen von SMA-EM 1.0 (SUSy 270)\nNeu: Erkennen von neuen SHM 2.0 mit SUSy 501\nFix: Schnittstellenfehler abgefangen",
@@ -80,19 +93,6 @@
         "pl": "Adapter łączy się teraz ze wszystkimi zewnętrznymi adresami IPv4.",
         "zh-cn": "适配器现在绑定到所有外部IPv4地址。",
         "uk": "Тепер адаптер прив’язується до всіх зовнішніх адрес IPv4."
-      },
-      "0.6.1-beta.0": {
-        "en": "Bug fixes\nSoftware Version string, last part is the revision as character (e.g. R = release)\nPotential Warning during the first start\nRevised units to follow the SI standardization (DIN 1301)\nTop level hierarchy object description indicates if the device is a SMA Energy Meter or a SMA Home Manger 2.\nReleased to the latest repo, fixed some typo's + news and translations",
-        "de": "Fehlerbehebung\nSoftwareversionszeichenfolge, letzter Teil ist die Revision als Zeichen (z. B. R = Release)\nMögliche Warnung beim ersten Start\nÜberarbeitete Einheiten gemäß SI-Normung (DIN 1301)\nDie Beschreibung des Hierarchieobjekts der obersten Ebene gibt an, ob das Gerät ein SMA-Energiezähler oder ein SMA-Home-Manager 2 ist.\nIm neuesten Repo veröffentlicht, einige Tippfehler + Neuigkeiten und Übersetzungen behoben",
-        "ru": "Исправление ошибок\nСтрока версии программного обеспечения, последняя часть - это версия в виде символа (например, R = выпуск)\nВозможное предупреждение при первом запуске\nПересмотренные единицы измерения в соответствии со стандартизацией SI (DIN 1301)\nОписание объекта иерархии верхнего уровня указывает, является ли устройство измерителем энергии SMA или SMA Home Manger 2.\nВыпущено в последний репо, исправлены некоторые опечатки + новости и переводы",
-        "pt": "Correções de bugs\nString da versão do software, a última parte é a revisão como caractere (por exemplo, R = versão)\nAviso potencial durante a primeira partida\nUnidades revisadas para seguir a padronização SI (DIN 1301)\nA descrição do objeto de hierarquia de nível superior indica se o dispositivo é um SMA Energy Meter ou um SMA Home Manger 2.\nLiberado para o repo mais recente, corrigiu alguns erros de digitação + notícias e traduções",
-        "nl": "Bugfixes\nSoftwareversie string, laatste deel is de revisie als teken (bijv.R = release)\nMogelijke waarschuwing tijdens de eerste start\nHerziene eenheden om de SI-normering te volgen (DIN 1301)\nDe objectbeschrijving van de hoogste hiërarchie geeft aan of het apparaat een SMA Energy Meter of een SMA Home Manger 2 is.\nUitgebracht naar de nieuwste repo, enkele typefouten, nieuws en vertalingen gerepareerd",
-        "fr": "Corrections de bogues\nChaîne de version du logiciel, la dernière partie est la révision sous forme de caractère (par exemple, R = version)\nAvertissement potentiel lors du premier démarrage\nUnités révisées pour suivre la normalisation SI (DIN 1301)\nLa description de l'objet de la hiérarchie de niveau supérieur indique si l'appareil est un SMA Energy Meter ou un SMA Home Manger 2.\nPublié dans le dernier référentiel, correction de quelques fautes de frappe + nouvelles et traductions",
-        "it": "Correzioni di bug\nStringa della versione del software, l'ultima parte è la revisione come carattere (ad esempio R = versione)\nPotenziale avvertenza durante il primo avvio\nUnità riviste per seguire la standardizzazione SI (DIN 1301)\nLa descrizione dell'oggetto gerarchia di primo livello indica se il dispositivo è uno SMA Energy Meter o uno SMA Home Manger 2.\nRilasciato nell'ultimo repository, corretti + notizie e traduzioni di errori di battitura",
-        "es": "Corrección de errores\nCadena de versión de software, la última parte es la revisión como carácter (por ejemplo, R = lanzamiento)\nAdvertencia potencial durante el primer arranque\nUnidades revisadas para seguir la estandarización SI (DIN 1301)\nLa descripción del objeto de la jerarquía de nivel superior indica si el dispositivo es un SMA Energy Meter o un SMA Home Manger 2.\nLanzado al último repositorio, se corrigieron algunos errores tipográficos + noticias y traducciones",
-        "pl": "Poprawki błędów\nCiąg wersji oprogramowania, ostatnia część to wersja jako znak (np. R = wydanie)\nPotencjalne ostrzeżenie podczas pierwszego uruchomienia\nZmienione jednostki zgodne ze standardem SI (DIN 1301)\nOpis obiektu w hierarchii najwyższego poziomu wskazuje, czy urządzenie jest licznikiem energii SMA czy SMA Home Manger 2.\nWydany do najnowszego repozytorium, naprawiono niektóre literówki + wiadomości i tłumaczenia",
-        "zh-cn": "Bug修复\n软件版本字符串，最后一部分是作为字符的修订版（例如R =版本）\n首次启动时的潜在警告\n经修订的单位遵循SI标准化（DIN 1301）\n顶层层次结构对象说明指示该设备是SMA电能表还是SMA Home Manger 2。\n发布到最新的仓库中，修复了一些错字+新闻和翻译",
-        "uk": "Виправлення помилок\nРядок версії програмного забезпечення, остання частина — це версія як символ (наприклад, R = випуск)\nПотенційне попередження під час першого запуску\nПереглянуті одиниці відповідно до стандартизації SI (DIN 1301)\nОпис об’єкта ієрархії верхнього рівня вказує, чи є пристрій SMA Energy Meter або SMA Home Manger 2.\nВипущено до останнього репо, виправлено деякі помилки + новини та переклади"
       }
     },
     "titleLang": {

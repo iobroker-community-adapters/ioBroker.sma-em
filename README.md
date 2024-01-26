@@ -89,8 +89,7 @@ In addition to the states in non-extended mode, the following values are availab
 -->
 
 ## Changelog
-
-### __WORK IN PROGRESS__ - 2024 maintenance release
+### 1.0.1 (2024-01-26) - 2024 maintenance release
 
 - (pdbjjens) Updated dependencies
 
@@ -120,12 +119,6 @@ In addition to the states in non-extended mode, the following values are availab
 - Updated dependencies
 - Compatibility check for js-controller 4.0
 - Prevent onUnload warnings
-
-### 0.6.4 (2021-08-19)
-
-- (TGuybrush) Bug fixes
-- Prevent warnings regarding non-existent objects upon adapter instance creation and start-up under js-controller 3.2.x
-- Improved check of SMA Energy Meter multicast messages to prevent ghost devices and warnings regarding unknown OBIS values.
 
 ## Legal Notices
 
