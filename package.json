@@ -25,7 +25,7 @@
     "url": "https://github.com/iobroker-community-adapters/ioBroker.sma-em"
   },
   "engines": {
-    "node": ">= 16"
+    "node": ">= 18"
   },
   "dependencies": {
     "@iobroker/adapter-core": "^3.0.3"
