@@ -133,11 +133,14 @@
     "readme": "https://github.com/iobroker-community-adapters/ioBroker.sma-em/blob/master/README.md",
     "loglevel": "info",
     "type": "energy",
-    "license": "MIT",
+    "licenseInformation": {
+      "license": "MIT",
+      "type": "free"
+    },
     "compact": true,
     "connectionType": "local",
     "dataSource": "push",
-    "materialize": true,
+    "tier": 2,
     "adminUI": {
       "config": "json"
     },
@@ -161,12 +164,12 @@
     ],
     "dependencies": [
       {
-        "js-controller": ">=4.0.15"
+        "js-controller": ">=5.0.19"
       }
     ],
     "globalDependencies": [
       {
-        "admin": ">=6.3.5"
+        "admin": ">=6.13.16"
       }
     ]
   },

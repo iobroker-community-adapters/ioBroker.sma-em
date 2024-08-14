@@ -59,7 +59,7 @@ class SmaEm extends utils.Adapter {
 		// Initialize your adapter here
 
 		// Reset the connection indicator during startup
-		await this.setStateAsync('info.connection', false, true);
+		await this.setState('info.connection', false, true);
 
 		if (!this.config.OIP) {
 			this.log.error(`Own IP is empty - please check instance configuration of ${this.namespace}`);
@@ -124,12 +124,6 @@ class SmaEm extends utils.Adapter {
 			cfg_nrtP = 30;
 		}
 		
-		if (this.config.nrtP && (this.config.nrtP >= 30 && this.config.nrtP <= 3600) ) {   
-			cfg_nrtP = this.config.nrtP;
-		} else {
-			cfg_nrtP = 30;
-		}
-
 		// set averaging methods
 		if (this.config.rtP && (this.config.rtP > 0) ) {   
 			cfg_rtMavg = 'mean';
@@ -233,7 +227,7 @@ class SmaEm extends utils.Adapter {
 		client.bind(this.config.BPO, () => {
 			const networkInterfaces = this.findIPv4IPs(this.config.OIP);
 			if (networkInterfaces.length !== 0) {
-				this.log.info('Options selected: Details L1 ' + this.config.L1 + ' Details L2 ' + this.config.L2 + ' Details L3 ' + this.config.L3 + ' Extended Mode ' + this.config.ext + ' RealTime Interval ' + this.config.rtP + ' non-Realtime Interval ' + this.config.nrtP + ' Language: ' + language);
+				this.log.info('Options selected: Details L1: ' + this.config.L1 + ' Details L2: ' + this.config.L2 + ' Details L3: ' + this.config.L3 + ' Extended Mode: ' + this.config.ext + ' RealTime Interval: ' + cfg_rtP + ' non-Realtime Interval: ' + cfg_nrtP + ' Language: ' + language);
 				for (const dev of networkInterfaces) {
 				
 					try {			
@@ -313,7 +307,7 @@ class SmaEm extends utils.Adapter {
 						serNumsActive.set(ser_str, {...serNumsActive.get(ser_str), checkRate: false});
 						this.log.info('New device discovered: ' + serNumsActive.get(ser_str).devDescr + ' with IP/port: ' + serNumsActive.get(ser_str).devIp + '/' + serNumsActive.get(ser_str).devPort + ' message rate: ' + serNumsActive.get(ser_str).throttleFactor + '/sec');
 						// Update connection state.
-						await this.setStateAsync('info.connection', true, true);
+						await this.setState('info.connection', true, true);
 	
 						// Create the states tree for the device depending on its serial number and wait for finish
 						await this.createPoints(message, ser_str, obis_points, protocol_points, derived_points);
@@ -322,7 +316,7 @@ class SmaEm extends utils.Adapter {
 				}
 
 				// Update connection state.
-				await this.setStateAsync('info.connection', true, true);
+				await this.setState('info.connection', true, true);
 				// Update values by evaluating UDP packet content.
 				await this.updatePoints(ser_str, message, obis_points);
 
@@ -330,7 +324,7 @@ class SmaEm extends utils.Adapter {
 				for (const p in protocol_points) {
 					if(protocol_points[p].update === false) {
 						const val = message.readUIntBE(protocol_points[p].addr, protocol_points[p].length);
-						await this.setStateAsync(ser_str + '.' + p, val, true);
+						await this.setState(ser_str + '.' + p, val, true);
 					}
 				}
 				
@@ -569,7 +563,7 @@ class SmaEm extends utils.Adapter {
 					}
 					if (cachePath.updCounter == 0) {
 						cachePath.updCounter = cachePath.updPeriod;
-						await this.setStateAsync(id_path + '.' + points[obis_num].id, cachePath.updValue[0], true);
+						await this.setState(id_path + '.' + points[obis_num].id, cachePath.updValue[0], true);
 						cachePath.updValue = [];
 					}
 					break;
@@ -586,7 +580,7 @@ class SmaEm extends utils.Adapter {
 								nums = [...arr].sort((a, b) => a - b);
 							return arr.length % 2 >= 1 ? nums[mid] : (nums[mid - 1] + nums[mid]) / 2;
 						};
-						await this.setStateAsync(id_path + '.' + points[obis_num].id, median(cachePath.updValue), true);
+						await this.setState(id_path + '.' + points[obis_num].id, median(cachePath.updValue), true);
 						cachePath.updValue = [];
 					}
 					break;
@@ -603,7 +597,7 @@ class SmaEm extends utils.Adapter {
 					if (cachePath.updCounter == 0) {
 						cachePath.updCounter = cachePath.updPeriod;
 						cachePath.updValue[0] = cachePath.updValue[0]/cachePath.updCounter;
-						await this.setStateAsync(id_path + '.' + points[obis_num].id, cachePath.updValue[0], true);
+						await this.setState(id_path + '.' + points[obis_num].id, cachePath.updValue[0], true);
 						cachePath.updValue = [];
 					}
 					break;
@@ -611,14 +605,14 @@ class SmaEm extends utils.Adapter {
 					//Update this value only once at the detection of a new device
 					if (cachePath.updCounter === 0 && (cachePath.updValue.length === 0 || cachePath.updValue[0] !== val)) {
 						cachePath.updValue[0] = val;
-						await this.setStateAsync(id_path + '.' + points[obis_num].id, val, true);
+						await this.setState(id_path + '.' + points[obis_num].id, val, true);
 						if ( (points[obis_num].id) === 'sw_version_raw') {
 							const tmpVal =  cachePath.updValue[0];
 							let sw = ((tmpVal >> 24) & 0xFF).toString();
 							sw += '.' + ((tmpVal >> 16) & 0xFF).toString();
 							sw += '.' + ((tmpVal >> 8) & 0xFF).toString();
 							sw += '.' + String.fromCharCode(tmpVal & 0xFF);	
-							await this.setStateAsync(id_path + '.sw_version', sw, true);
+							await this.setState(id_path + '.sw_version', sw, true);
 							//this.log.debug ( id_path + '.' + points[obis_num].id + JSON.stringify(cachePath) + sw);
 
 						}
@@ -626,7 +620,7 @@ class SmaEm extends utils.Adapter {
 					break;
 				case 'each':
 					//Update this value each message (currently not used since this would increase system load)
-					await this.setStateAsync(id_path + '.' + points[obis_num].id, val, true);	
+					await this.setState(id_path + '.' + points[obis_num].id, val, true);	
 					break;
 				default:
 					this.log.error('Unknown update type');
@@ -651,7 +645,8 @@ class SmaEm extends utils.Adapter {
 					// Read IPv4 address properties of each device by filtering for the IPv4 external interfaces
 					// @ts-ignore
 					ifaces[dev].forEach(details => {
-						if (!details.internal && details.family === 'IPv4') {
+						// @ts-ignore
+						if (!details.internal && (details.family === 'IPv4' || details.family === 4)) {
 							net_devs.push({name: dev, ipaddr: details.address});
 						}
 					});
@@ -663,7 +658,8 @@ class SmaEm extends utils.Adapter {
 					// Search address properties of each device for selected own IP 
 					// @ts-ignore
 					ifaces[dev].forEach(details => {
-						if (details.address === ownIP && !details.internal && details.family === 'IPv4') {
+						// @ts-ignore
+						if (details.address === ownIP && !details.internal && (details.family === 'IPv4' || details.family === 4)) {
 							net_devs.push({name: dev, ipaddr: details.address});
 						}
 					});
