@@ -1,8 +1,21 @@
 {
   "common": {
     "name": "sma-em",
-    "version": "1.0.1",
+    "version": "1.1.0",
     "news": {
+      "1.1.0": {
+        "en": "Change: node>=18, js-contoller>=5 and admin>=6 required\nChange: Removed .npmignore\nNew: Updated dependencies\nFix: IP family property changed from string to number in nodejs 18.0.0-18.4.0",
+        "de": "Änderung: node>=18, js-contoller>=5 und admin>=6 erforderlich\nÄnderung: .npmignore entfernt\nNeu: Aktualisierte Abhängigkeiten\nFix: IP-Familieneigenschaft von String auf Nummer in nodejs 18.0.0-18.4.0 geändert",
+        "ru": "Изменение: node>=18, js-contoller>=5 и admin>=6 требуется\nИзменение: Удалено .npmignore\nНовые: Обновленные зависимости\nFix: Свойство семейства IP изменено с строки на номер в nodejs 18.0.0-18.4.0",
+        "pt": "Alteração: node>=18, js-contoller>=5 e admin>=6 requerido\nMudança: Removido .npmignore\nNovo: Dependências atualizadas\nFix: Propriedade da família IP mudou de string para número em nodejs 18.0.0-18.4.0",
+        "nl": "Verandering: node>=18, js-contoller>=5 en admin>=6 vereist\nWijzigen: verwijderd .npmignore\nNieuw: Bijgewerkte afhankelijkheden\nFix: IP familie eigenschap veranderd van string naar nummer in nodejs 18.0.0-18.4.0",
+        "fr": "Changement: noeud>=18, js-contoller>=5 et admin>=6 requis\nChangement : supprimé .npmignore\nNouveau: Dépendances actualisées\nCorrection : La propriété de la famille IP a changé de chaîne en nombre dans les nodejs 18.0.0-18.4.0",
+        "it": "Modifica: nodo>=18, js-contoller>=5 e admin>=6 richiesto\nModifica: Removed .npmignore\nNuovo: dipendenze aggiornate\nFisso: proprietà della famiglia IP cambiato da stringa a numero in nodejs 18.0.0-18.4.0",
+        "es": "Cambio: node confianza=18, js-contoller=5 y administración=6 requerido\nCambio: Quitado .npmignore\nNuevas: dependencias actualizadas\nFijación: la propiedad familiar IP cambió de cadena a número en nodejs 18.0.0-18.4.0",
+        "pl": "Zmiana: węzeł > = 18, js- contoller > = 5 i admin > = 6 wymagane\nZmiana: Usunięto .npmignore\nNowy: Aktualizacja zależności\nFix: właściwość rodziny IP zmieniona z łańcucha na numer w nodejs 18.0.0- 18.4.0",
+        "uk": "Зміна: вершина>=18, js-contoller>=5 і admin>=6\nЗміна: Видалити .npmignore\nНовий: Оновлені залежності\nВиправлення: IP сімейне майно змінено з рядка до номеру в nodejs 18.0.0-18.4.0",
+        "zh-cn": "更改:节点18、js-contoller%5和管理员6\n更改: 删除 .npmignore\n新建:更新的依赖关系\nFix:IP家族财产在节点18.0.0-18.4.0中从字符串改为数字"
+      },
       "1.0.1": {
         "en": "Updated dependencies",
         "de": "Aktualisierte Abhängigkeiten",
@@ -80,19 +93,6 @@
         "pl": "Poprawki błędów\nZapobiegaj ostrzeżeniom dotyczącym nieistniejących obiektów podczas tworzenia instancji adaptera i uruchamiania w js-controller 3.2.x\nUdoskonalone sprawdzanie wiadomości multicastowych SMA Energy Meter w celu zapobiegania urządzeniom-widmo i ostrzeżeniom dotyczącym nieznanych wartości OBIS.",
         "zh-cn": "Bug修复\n防止在 js-controller 3.2.x 下创建和启动适配器实例时出现关于不存在对象的警告\n改进了对 SMA Energy Meter 多播消息的检查，以防止出现关于未知 OBIS 值的幽灵设备和警告。",
         "uk": "Виправлення помилок\nЗапобігання попереджень щодо неіснуючих об’єктів під час створення екземпляра адаптера та запуску в js-controller 3.2.x\nПокращена перевірка багатоадресних повідомлень SMA Energy Meter для запобігання привидам пристроїв і попереджень щодо невідомих значень OBIS."
-      },
-      "0.6.3": {
-        "en": "The adapter binds now to all external IPv4 addresses.",
-        "de": "Der Adapter wird jetzt an alle externen IPv4-Adressen gebunden.",
-        "ru": "Теперь адаптер привязывается ко всем внешним IPv4-адресам.",
-        "pt": "O adaptador agora se liga a todos os endereços IPv4 externos.",
-        "nl": "De adapter bindt nu aan alle externe IPv4-adressen.",
-        "fr": "L'adaptateur se lie désormais à toutes les adresses IPv4 externes.",
-        "it": "L'adattatore si associa ora a tutti gli indirizzi IPv4 esterni.",
-        "es": "El adaptador se une ahora a todas las direcciones IPv4 externas.",
-        "pl": "Adapter łączy się teraz ze wszystkimi zewnętrznymi adresami IPv4.",
-        "zh-cn": "适配器现在绑定到所有外部IPv4地址。",
-        "uk": "Тепер адаптер прив’язується до всіх зовнішніх адрес IPv4."
       }
     },
     "titleLang": {

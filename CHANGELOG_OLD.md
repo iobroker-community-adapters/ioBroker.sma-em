@@ -1,4 +1,10 @@
 # Older changes
+## 0.6.5 (2022-02-19)
+
+- Updated dependencies
+- Compatibility check for js-controller 4.0
+- Prevent onUnload warnings
+
 ## 0.6.4 (2021-08-19)
 
 - (TGuybrush) Bug fixes

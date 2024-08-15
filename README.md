@@ -89,8 +89,7 @@ In addition to the states in non-extended mode, the following values are availab
 -->
 
 ## Changelog
-
-### __WORK IN PROGRESS__ - 2024H2 maintenance release
+### 1.1.0 (2024-08-15) - 2024H2 maintenance release
 
 - (pdbjjens) Change: node>=18, js-contoller>=5 and admin>=6 required
 - (pdbjjens) Change: Removed .npmignore
@@ -121,12 +120,6 @@ In addition to the states in non-extended mode, the following values are availab
 
 - (pdbjjens) Updated dependencies
 - (pdbjjens) New: Use adapter-dev instead of gulp translate
-
-### 0.6.5 (2022-02-19)
-
-- Updated dependencies
-- Compatibility check for js-controller 4.0
-- Prevent onUnload warnings
 
 ## Legal Notices
 
