@@ -1,6 +1,9 @@
 {
     "i18n": true,
     "type": "tabs",
+    "tabsStyle": {
+        "width": "calc(100% - 100px)"
+    },
     "items": {
         "_options": {
             "type": "panel",
@@ -8,10 +11,11 @@
             "items": {
                 "BIP": {
                     "type": "text",
-                    "xs":12,
+                    "xs": 12,
                     "sm": 12,
                     "md": 6,
                     "lg": 6,
+                    "xl": 6,
                     "label": "Multicast-IP",
                     "help": "Multicast IP of EMETER Protocol (Do not change)"
                 },
@@ -19,10 +23,11 @@
                     "type": "number",
                     "min": 1,
                     "max": 65535,
-                    "xs":12,
+                    "xs": 12,
                     "sm": 12,
                     "md": 6,
                     "lg": 6,
+                    "xl": 6,
                     "label": "Multicast-Port",
                     "help": "Multicast Port of EMETER Protocol (Do not change)"
                 },
@@ -32,28 +37,32 @@
                     "listenOnAllPorts": true,
                     "onlyIp4": true,
                     "noInternal": true,
-                    "sm":12,
-                    "md":6,
-                    "lg":6,
-                    "xs":12,
+                    "xs": 12,
+                    "sm": 12,
+                    "md": 6,
+                    "lg": 6,
+                    "xl": 6,
                     "newLine": true,
                     "help": "Select Network Interface IP to listen for Multicasts"
                 },
                 "ipVal": {
-                    "type":"pattern",
+                    "type": "pattern",
                     "label": "Selected Network Interface IP",
-                    "pattern":"${data.OIP}",
-                    "sm":12,
-                    "md":6,
-                    "lg":6,
-                    "xs":12,
+                    "pattern": "${data.OIP}",
+                    "xs": 12,
+                    "sm": 12,
+                    "md": 6,
+                    "lg": 6,
+                    "xl": 6,
                     "help": "IP 0.0.0.0 means listen to all available Network Interfaces"
                 },
                 "EMIP": {
                     "type": "text",
+                    "xs": 12,
                     "sm": 12,
-                    "md": 6,
-                    "lg": 6,
+                    "md": 12,
+                    "lg": 12,
+                    "xl": 12,
                     "newLine": true,
                     "label": "Energy Meter IP",
                     "help": "Enter the IP of a specific Energy Meter - IP 0.0.0.0 selects all Energy Meters"
@@ -66,30 +75,38 @@
             "items": {
                 "L1": {
                     "type": "checkbox",
+                    "xs": 12,
                     "sm": 12,
                     "md": 6,
                     "lg": 6,
+                    "xl": 6,
                     "label": "Details-L1"
                 },
                 "L2": {
                     "type": "checkbox",
+                    "xs": 12,
                     "sm": 12,
                     "md": 6,
                     "lg": 6,
+                    "xl": 6,
                     "label": "Details-L2"
                 },
                 "L3": {
                     "type": "checkbox",
+                    "xs": 12,
                     "sm": 12,
                     "md": 6,
                     "lg": 6,
+                    "xl": 6,
                     "label": "Details-L3"
                 },
                 "ext": {
                     "type": "checkbox",
+                    "xs": 12,
                     "sm": 12,
                     "md": 6,
                     "lg": 6,
+                    "xl": 6,
                     "label": "Extended Mode"
                 },
                 "rtP": {
@@ -97,9 +114,11 @@
                     "type": "number",
                     "min": 0,
                     "max": 30,
+                    "xs": 12,
                     "sm": 12,
                     "md": 6,
                     "lg": 6,
+                    "xl": 6,
                     "label": "Realtime Update Interval",
                     "help": "Update Interval for Realtime Data (in Seconds)"
                 },
@@ -107,9 +126,11 @@
                     "type": "number",
                     "min": 30,
                     "max": 3600,
+                    "xs": 12,
                     "sm": 12,
                     "md": 6,
                     "lg": 6,
+                    "xl": 6,
                     "label": "non-Realtime Update Interval",
                     "help": "Update Interval for non-Realtime Data (in Seconds)"
                 }
@@ -117,4 +138,3 @@
         }
     }
 }
-
