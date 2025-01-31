@@ -1,8 +1,21 @@
 {
   "common": {
     "name": "sma-em",
-    "version": "1.1.0",
+    "version": "1.2.0",
     "news": {
+      "1.2.0": {
+        "en": "Change: Migration to ESLint 9\nResponsive Design added",
+        "de": "Änderung: Migration auf ESLint 9\nResponsive Design hinzugefügt",
+        "ru": "Изменение: Миграция в ESLint 9\nResponsive Design",
+        "pt": "Mudança: Migração para ESLint 9\nDesign responsivo adicionado",
+        "nl": "Wijziging: migratie naar ESLint 9\nResponsive Design toegevoegd",
+        "fr": "Changement: Migration vers ESLint 9\nDesign sensible ajouté",
+        "it": "Cambiamento: migrazione a ESLint 9\nResponsive Design aggiunto",
+        "es": "Cambio: Migración a ESLint 9\nDiseño responsable añadido",
+        "pl": "Zmiana: migracja do ESLint 9\nDodano projekt odpowiedzialny",
+        "uk": "Зміна: Міграція до ESLint 9\nДодано адаптивний дизайн",
+        "zh-cn": "变化:向ESLint 9迁移\n添加响应设计"
+      },
       "1.1.0": {
         "en": "Change: node>=18, js-contoller>=5 and admin>=6 required\nChange: Removed .npmignore\nNew: Updated dependencies\nFix: IP family property changed from string to number in nodejs 18.0.0-18.4.0",
         "de": "Änderung: node>=18, js-contoller>=5 und admin>=6 erforderlich\nÄnderung: .npmignore entfernt\nNeu: Aktualisierte Abhängigkeiten\nFix: IP-Familieneigenschaft von String auf Nummer in nodejs 18.0.0-18.4.0 geändert",
@@ -80,19 +93,6 @@
         "pl": "Zaktualizowane zależności\nSprawdzenie zgodności dla js-controller 4.0\nZapobiegaj ostrzeżeniom onUnload",
         "zh-cn": "更新的依赖项\njs-controller 4.0 的兼容性检查\n防止 onUnload 警告",
         "uk": "Оновлені залежності\nПеревірка сумісності для js-контролера 4.0\nЗапобігання попереджень onUnload"
-      },
-      "0.6.4": {
-        "en": "Bug fixes\nPrevent warnings regarding non-existent objects upon adapter instance creation and start-up under js-controller 3.2.x\nImproved check of SMA Energy Meter multicast messages to prevent ghost devices and warnings regarding unknown OBIS values.",
-        "de": "Fehlerbehebung\nVerhindern Sie Warnungen bezüglich nicht vorhandener Objekte beim Erstellen und Starten der Adapterinstanz unter js-controller 3.2.x\nVerbesserte Prüfung von SMA Energy Meter Multicast-Meldungen, um Geistergeräte und Warnungen bei unbekannten OBIS-Werten zu verhindern.",
-        "ru": "Исправление ошибок\nПредотвращение предупреждений о несуществующих объектах при создании и запуске экземпляра адаптера под js-controller 3.2.x\nУлучшена проверка многоадресных сообщений SMA Energy Meter для предотвращения появления фантомных устройств и предупреждений о неизвестных значениях OBIS.",
-        "pt": "Correções de bugs\nEvita avisos relativos a objetos inexistentes na criação da instância do adaptador e inicialização sob js-controller 3.2.x\nMelhoria na verificação das mensagens multicast do SMA Energy Meter para evitar dispositivos fantasmas e avisos sobre valores desconhecidos do OBIS.",
-        "nl": "Bugfixes\nVoorkom waarschuwingen met betrekking tot niet-bestaande objecten bij het maken en opstarten van de adapterinstantie onder js-controller 3.2.x\nVerbeterde controle van SMA Energy Meter multicast-berichten om spookapparaten en waarschuwingen met betrekking tot onbekende OBIS-waarden te voorkomen.",
-        "fr": "Corrections de bugs\nEmpêcher les avertissements concernant les objets inexistants lors de la création et du démarrage de l'instance d'adaptateur sous js-controller 3.2.x\nVérification améliorée des messages de multidiffusion SMA Energy Meter pour empêcher les appareils fantômes et les avertissements concernant les valeurs OBIS inconnues.",
-        "it": "Correzioni di bug\nImpedisci avvisi relativi a oggetti inesistenti alla creazione e all'avvio dell'istanza dell'adattatore in js-controller 3.2.x\nControllo migliorato dei messaggi multicast di SMA Energy Meter per evitare dispositivi fantasma e avvisi relativi a valori OBIS sconosciuti.",
-        "es": "Corrección de errores\nEvitar advertencias sobre objetos inexistentes durante la creación y el inicio de la instancia del adaptador bajo js-controller 3.2.x\nComprobación mejorada de los mensajes de multidifusión de SMA Energy Meter para evitar dispositivos fantasmas y advertencias sobre valores OBIS desconocidos.",
-        "pl": "Poprawki błędów\nZapobiegaj ostrzeżeniom dotyczącym nieistniejących obiektów podczas tworzenia instancji adaptera i uruchamiania w js-controller 3.2.x\nUdoskonalone sprawdzanie wiadomości multicastowych SMA Energy Meter w celu zapobiegania urządzeniom-widmo i ostrzeżeniom dotyczącym nieznanych wartości OBIS.",
-        "zh-cn": "Bug修复\n防止在 js-controller 3.2.x 下创建和启动适配器实例时出现关于不存在对象的警告\n改进了对 SMA Energy Meter 多播消息的检查，以防止出现关于未知 OBIS 值的幽灵设备和警告。",
-        "uk": "Виправлення помилок\nЗапобігання попереджень щодо неіснуючих об’єктів під час створення екземпляра адаптера та запуску в js-controller 3.2.x\nПокращена перевірка багатоадресних повідомлень SMA Energy Meter для запобігання привидам пристроїв і попереджень щодо невідомих значень OBIS."
       }
     },
     "titleLang": {

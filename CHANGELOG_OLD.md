@@ -1,4 +1,9 @@
 # Older changes
+## 0.6.6 (2023-02-28)  2023 maintenance release
+
+- (pdbjjens) Updated dependencies
+- (pdbjjens) New: Use adapter-dev instead of gulp translate
+
 ## 0.6.5 (2022-02-19)
 
 - Updated dependencies

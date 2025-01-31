@@ -89,8 +89,7 @@ In addition to the states in non-extended mode, the following values are availab
 -->
 
 ## Changelog
-
-### __WORK IN PROGRESS__ - 2025H1 maintenance release
+### 1.2.0 (2025-01-31) - 2025H1 maintenance release
 
 - (pdbjjens) Change: Migration to ESLint 9
 - (simatec) Responsive Design added
@@ -121,11 +120,6 @@ In addition to the states in non-extended mode, the following values are availab
 
 - (pdbjjens) New: Configurable data point update intervals to reduce system load
 - (pdbjjens) New: Use JSON config
-
-### 0.6.6 (2023-02-28)  2023 maintenance release
-
-- (pdbjjens) Updated dependencies
-- (pdbjjens) New: Use adapter-dev instead of gulp translate
 
 ## Legal Notices
 
