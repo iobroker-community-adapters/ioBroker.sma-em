@@ -90,8 +90,9 @@ In addition to the states in non-extended mode, the following values are availab
 
 ## Changelog
 
-### __WORK IN PROGRESS__
+### __WORK IN PROGRESS__ - 2025H1 maintenance release
 
+- (pdbjjens) Change: Migration to ESLint 9
 - (simatec) Responsive Design added
 
 ### 1.1.0 (2024-08-15) - 2024H2 maintenance release
@@ -138,7 +139,7 @@ The authors are in no way endorsed by or affiliated with SMA Solar Technology AG
 
 The MIT License (MIT)
 
-Copyright (c) 2024 IoBroker-Community
+Copyright (c) 2025 IoBroker-Community
 
 Permission is hereby granted, free of charge, to any person obtaining a copy
 of this software and associated documentation files (the "Software"), to deal
