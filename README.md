@@ -20,7 +20,14 @@ It supports the SMA-EMETER-protocol-2. Thus also compatible energy meters from o
 SMA Energy Meter and Sunny Home Manager 2 multicast datagrams with their energy measurement data to the network once or more times per second.
 The SMA Energy Meter Adapter receives these multicast messages and stores them as iobroker states.
 
-RELEASE NOTES: Version 1.1.x includes some Breaking Changes:
+RELEASE NOTES:
+
+Version 1.3.x includes a Breaking Change:
+
+- node>=20, js-controller>=7.0.7 and admin>=7.6.17 required  
+  Upgrade your ioBroker to at least this software level, if you want to install this adapter.
+
+Version 1.1.x includes some Breaking Changes:
 
 - node>=18, js-contoller>=5 and admin>=6 required  
   Upgrade your ioBroker to at least this software level, if you want to use this adapter.
@@ -90,9 +97,11 @@ In addition to the states in non-extended mode, the following values are availab
 
 ## Changelog
 
-### **WORK IN PROGRESS**
+### **WORK IN PROGRESS** - 2025H2 maintenance release
 
-- (pdbjjens) Change: node>=20, js-controller>=7 and admin>=7 required
+- (pdbjjens) Change: node>=20, js-controller>=7.0.7 and admin>=7.6.17 required
+- (pdbjjens) Fix: Correctly identify new SMA EMETER (#795)
+- (pdbjjens) Change: Cleanup devDependencies
 
 ### 1.2.0 (2025-01-31) - 2025H1 maintenance release
 
