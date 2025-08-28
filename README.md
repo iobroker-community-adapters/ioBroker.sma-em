@@ -96,8 +96,7 @@ In addition to the states in non-extended mode, the following values are availab
 -->
 
 ## Changelog
-
-### **WORK IN PROGRESS** - 2025H2 maintenance release
+### 1.3.0 (2025-08-28) - 2025H2 maintenance release
 
 - (pdbjjens) Change: node>=20, js-controller>=7.0.7 and admin>=7.6.17 required
 - (pdbjjens) Fix: Correctly identify new SMA EMETER (#795)
@@ -129,11 +128,6 @@ In addition to the states in non-extended mode, the following values are availab
 - (pdbjjens) New: Detect SMA-EM 1.0 (SUSy 270)
 - (arteck) New: Detect new SHM 2.0 with SUSy 501
 - (ticaki) Fix: Catch interface errors
-
-### 0.7.0 (2023-03-14)
-
-- (pdbjjens) New: Configurable data point update intervals to reduce system load
-- (pdbjjens) New: Use JSON config
 
 ## Legal Notices
 

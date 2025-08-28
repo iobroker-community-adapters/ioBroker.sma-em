@@ -1,4 +1,9 @@
 # Older changes
+## 0.7.0 (2023-03-14)
+
+- (pdbjjens) New: Configurable data point update intervals to reduce system load
+- (pdbjjens) New: Use JSON config
+
 ## 0.6.6 (2023-02-28)  2023 maintenance release
 
 - (pdbjjens) Updated dependencies

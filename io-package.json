@@ -1,8 +1,21 @@
 {
   "common": {
     "name": "sma-em",
-    "version": "1.2.0",
+    "version": "1.3.0",
     "news": {
+      "1.3.0": {
+        "en": "Change: node>=20, js-controller>=7.0.7 and admin>=7.6.17 required\nFix: Correctly identify new SMA EMETER (#795)\nChange: Cleanup devDependencies",
+        "de": "Änderung: node>=20, js-controller>=7.0.7 und admin>=7.6.17 erforderlich\nFix: Neues SMA EMETER korrekt identifizieren (#795)\nÄnderung: Cleanup devDependencies",
+        "ru": "Изменение: node>=20, js-контроллер>=7.0.7 и admin>=7.6.17 требуется\nИсправление: правильно идентифицируйте новый SMA EMETER (#795)\nОбновление: Cleanup devDependencies",
+        "pt": "Alteração: nó>=20, js-controlador>=7.07 e admin>=7.6.17 necessários\nCorrigir: Identificar corretamente o novo EMETER SMA (#795)\nAlteração: Limpeza devDependências",
+        "nl": "Verandering: node>=20, js-controller>=7.7 en admin>=7.617 vereist\nFix: juiste identificatie van nieuwe SMA EMETER (#795)\nVerandering: Opruimen van devDependencies",
+        "fr": "Changement : noeud>=20, js-controller>=7.0.7 et admin>=7.6.17 requis\nCorrection : Identifier correctement le nouveau SMA EMETER (#795)\nChangement: Dépendances de nettoyage",
+        "it": "Modifica: nodo>=20, js-controller>=7.0.7 e admin>=7.6.17 richiesto\nFix: identificare correttamente il nuovo SMA EMETER (#795)\nCambiamento: Cleanup devDependencies",
+        "es": "Cambio: node confianza=20, js-controller confianza=7.0.7 y administración=7.6.17 requerido\nFijación: identifique correctamente el nuevo EMETRO SMA (#795)\nCambio: DevDependencies de limpieza",
+        "pl": "Zmiana: węzeł > = 20, kontroler js- > = 7.0.7 i admin > = 7.6.17 wymagane\nFix: Prawidłowo zidentyfikować nowy SMA EMETER (# 795)\nZmiana: Oczyszczenie devDevendences",
+        "uk": "Зміна: вершина>=20, js-controller>=7.0.7 і admin>=7.6.17 потрібно\nВиправлення: Правильно визначити новий SMA EMETER (#795)\nЗміна: Прибиральники",
+        "zh-cn": "变化:节点20、js控制器7.0.7和管理员7.6.17\n固定 : 正确识别新的 SMA EMETER (# 795)\n变化: 清理依赖性"
+      },
       "1.2.0": {
         "en": "Change: Migration to ESLint 9\nResponsive Design added",
         "de": "Änderung: Migration auf ESLint 9\nResponsive Design hinzugefügt",
@@ -80,19 +93,6 @@
         "pl": "Zależność od upoważnienia\nNowy: Zastosowanie adapter-dev zamiast gulpów",
         "uk": "Оновлені залежності\nНовий: Використовуйте адаптер-dev замість гіпульти перекладу",
         "zh-cn": "A. 最新依赖情况\n新的:使用适应器而不是固体字。"
-      },
-      "0.6.5": {
-        "en": "Updated dependencies\nCompatibility check for js-controller 4.0\nPrevent onUnload warnings",
-        "de": "Aktualisierte Abhängigkeiten\nKompatibilitätsprüfung für js-controller 4.0\nOnUnload-Warnungen verhindern",
-        "ru": "Обновленные зависимости\nПроверка совместимости для js-контроллера 4.0\nПредотвратить предупреждения при выгрузке",
-        "pt": "Dependências atualizadas\nVerificação de compatibilidade para js-controller 4.0\nPrevenir avisos onUnload",
-        "nl": "Bijgewerkte afhankelijkheden\nCompatibiliteitscontrole voor js-controller 4.0\nVoorkom onUnload-waarschuwingen",
-        "fr": "Dépendances mises à jour\nVérification de compatibilité pour js-controller 4.0\nEmpêcher les avertissements onUnload",
-        "it": "Dipendenze aggiornate\nVerifica di compatibilità per js-controller 4.0\nPrevieni avvisi di scaricamento",
-        "es": "Dependencias actualizadas\nVerificación de compatibilidad para js-controller 4.0\nEvitar advertencias de descarga",
-        "pl": "Zaktualizowane zależności\nSprawdzenie zgodności dla js-controller 4.0\nZapobiegaj ostrzeżeniom onUnload",
-        "zh-cn": "更新的依赖项\njs-controller 4.0 的兼容性检查\n防止 onUnload 警告",
-        "uk": "Оновлені залежності\nПеревірка сумісності для js-контролера 4.0\nЗапобігання попереджень onUnload"
       }
     },
     "titleLang": {
