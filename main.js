@@ -959,7 +959,7 @@ class SmaEm extends utils.Adapter {
                 let dev_descr = `Unkown SMA device S/N: ${ser_str}`;
                 if (susy == 372 || susy == 501) {
                     dev_descr = `Sunny Home Manager 2.0 S/N: ${ser_str}`;
-                } else if (susy == 349) {
+                } else if (susy == 349 || susy == 502) {
                     dev_descr = `SMA Energy Meter 2.0 S/N: ${ser_str}`;
                 } else if (susy == 270) {
                     dev_descr = `SMA Energy Meter 1.0 S/N: ${ser_str}`;
