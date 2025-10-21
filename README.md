@@ -10,7 +10,7 @@
 [![NPM version](http://img.shields.io/npm/v/iobroker.sma-em.svg)](https://www.npmjs.com/package/iobroker.sma-em)
 **Tests:** ![Test and Release](https://github.com/iobroker-community-adapters/iobroker.sma-em/workflows/Test%20and%20Release/badge.svg)  
 
-[![NPM](https://nodei.co/npm/iobroker.sma-em.png?downloads=true)](https://nodei.co/npm/iobroker.sma-em/)
+[![NPM](https://nodei.co/npm/iobroker.sma-em.svg?data=d,s)](https://www.npmjs.com/package/iobroker.sma-em/)
 
 ### Info
 
@@ -92,10 +92,17 @@ In addition to the states in non-extended mode, the following values are availab
 
 <!--
     Placeholder for the next version (at the beginning of the line):
-    ### __WORK IN PROGRESS__
+    ### **WORK IN PROGRESS**
 -->
 
 ## Changelog
+
+### **WORK IN PROGRESS**
+
+- (pdbjjens) Fix: Add GitHub as npm Trusted Publisher
+- (pdbjjens) Change: Update dependencies
+- (pdbjjens) Change: Update npm badge
+
 ### 1.3.0 (2025-08-28) - 2025H2 maintenance release
 
 - (pdbjjens) Change: node>=20, js-controller>=7.0.7 and admin>=7.6.17 required
