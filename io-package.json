@@ -1,8 +1,21 @@
 {
   "common": {
     "name": "sma-em",
-    "version": "1.3.0",
+    "version": "1.3.1-alpha.0",
     "news": {
+      "1.3.1-alpha.0": {
+        "en": "Fix: Add GitHub as npm Trusted Publisher\nChange: Update dependencies\nChange: Update npm badge",
+        "de": "Fix: GitHub als npm Trusted Publisher hinzufügen\nÄnderung: Abhängigkeiten aktualisieren\nÄnderung: Update npm badge",
+        "ru": "Добавить GitHub в качестве npm Trusted Publisher\nИзменение: Обновление зависимостей\nОбновление npm Badge",
+        "pt": "Corrigir: Adicionar GitHub como editor confiável npm\nAlteração: Atualizar dependências\nAlteração: Actualizar o crachá npm",
+        "nl": "Fix: GitHub toevoegen als npm Trusted Publisher\nWijzigingen: afhankelijkheden bijwerken\nWijzigen: Npm-badge bijwerken",
+        "fr": "Correction : Ajouter GitHub comme éditeur fiable npm\nChangement : Mise à jour des dépendances\nChangement : Mettre à jour le badge npm",
+        "it": "Fix: Aggiungi GitHub come npm Trusted Publisher\nModifica: Aggiornare le dipendenze\nCambiamento: Aggiorna il badge npm",
+        "es": "Fijación: Añadir GitHub como npm Fideicomiso Editor\nCambio: Actualizar las dependencias\nCambio: Actualización de la placa Npm",
+        "pl": "Fix: Dodaj GitHub jako npm zaufanego wydawcy\nZmiana: Uaktualnij zależności\nZmiana: Uaktualnij odznakę npm",
+        "uk": "Виправлення: Додати GitHub як npm Trusted Publisher\nЗміна: Зміна залежності оновлення\nЗміна: Update npm значок",
+        "zh-cn": "修正: 将 GitHub 添加为 npm 信任的发布器\n更改:更新依赖关系\n更改: 更新 npm 徽章"
+      },
       "1.3.0": {
         "en": "Change: node>=20, js-controller>=7.0.7 and admin>=7.6.17 required\nFix: Correctly identify new SMA EMETER (#795)\nChange: Cleanup devDependencies",
         "de": "Änderung: node>=20, js-controller>=7.0.7 und admin>=7.6.17 erforderlich\nFix: Neues SMA EMETER korrekt identifizieren (#795)\nÄnderung: Cleanup devDependencies",
@@ -80,19 +93,6 @@
         "pl": "Nowy: Zawartość danych\nZastosowanie JSON",
         "uk": "Новий: Налаштування інтервалів оновлення точки даних для зменшення навантаження системи\nНовий: Використовуйте JSON config",
         "zh-cn": "新的:可靠数据点更新间隔,以减少系统装载量\n新的:使用联合信息中心"
-      },
-      "0.6.6": {
-        "en": "Updated dependencies\nNew: Use adapter-dev instead of gulp translate",
-        "de": "Aktualisierte Abhängigkeiten\nNeu: Verwenden Sie Adapter-dev anstelle von gulp translate",
-        "ru": "Обновленные зависимости\nНовый: Используйте адаптер-dev вместо gulp перевести",
-        "pt": "Dependências atualizadas\nNovo: Use o adaptador-dev em vez de gulp traduzir",
-        "nl": "Verouderde afhankelijkheid\nGebruik adapter-dev in plaats van gulp vertaal",
-        "fr": "Mise à jour des dépendances\nNouveau: Utilisez adaptateur-dev au lieu de traduire gulp",
-        "it": "Dipendenze aggiornate\nNuovo: Utilizzare adattatore-dev invece di gulp tradurre",
-        "es": "Dependencias actualizadas\nNuevo: Usar adaptador-dev en lugar de traducir gulp",
-        "pl": "Zależność od upoważnienia\nNowy: Zastosowanie adapter-dev zamiast gulpów",
-        "uk": "Оновлені залежності\nНовий: Використовуйте адаптер-dev замість гіпульти перекладу",
-        "zh-cn": "A. 最新依赖情况\n新的:使用适应器而不是固体字。"
       }
     },
     "titleLang": {

@@ -96,8 +96,7 @@ In addition to the states in non-extended mode, the following values are availab
 -->
 
 ## Changelog
-
-### **WORK IN PROGRESS**
+### 1.3.1-alpha.0 (2025-10-21)
 
 - (pdbjjens) Fix: Add GitHub as npm Trusted Publisher
 - (pdbjjens) Change: Update dependencies
@@ -124,17 +123,6 @@ In addition to the states in non-extended mode, the following values are availab
 ### 1.0.1 (2024-01-26) - 2024 maintenance release
 
 - (pdbjjens) Updated dependencies
-
-### 1.0.0 (2023-08-19)
-
-- (pdbjjens) Change: node>=16, js-contoller>=4 and admin>=6 required
-- (pdbjjens) Change: Configurable Energy Meters per adapter instance
-- (pdbjjens) Change: Selectable own network device IP to listen for multicast messages
-- (pdbjjens) Change: Objects "last_message" and "TimeTick" were removed
-- (pdbjjens) New: Support ioBroker discovery
-- (pdbjjens) New: Detect SMA-EM 1.0 (SUSy 270)
-- (arteck) New: Detect new SHM 2.0 with SUSy 501
-- (ticaki) Fix: Catch interface errors
 
 ## Legal Notices
 
