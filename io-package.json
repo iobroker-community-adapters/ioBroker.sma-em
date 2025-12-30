@@ -153,14 +153,9 @@
       ]
     },
     "authors": [
-      {
-        "name": "Marcolotti",
-        "email": "info@ct-j.de"
-      },
-      {
-        "name": "pdbjjens",
-        "email": "jjensen@t-online.de"
-      }
+      "Marcolotti <info@ct-j.de>",
+      "pdbjjens <jjensen@t-online.de>",
+      "iobroker-community-adapters <iobroker-community-adapters@gmx.de>"
     ],
     "dependencies": [
       {
