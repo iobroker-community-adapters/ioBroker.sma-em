@@ -2,15 +2,10 @@
   "name": "iobroker.sma-em",
   "version": "1.3.1-alpha.0",
   "description": "ioBroker SMA-Energy Meter / Sunny Home Manager Adapter",
-  "author": {
-    "name": "Marcolotti",
-    "email": "info@ct-j.de"
-  },
+  "author": "Marcolotti <info@ct-j.de>",
   "contributors": [
-    {
-      "name": "Marcolotti",
-      "email": "info@ct-j.de"
-    }
+    "Marcolotti <info@ct-j.de>",
+    "iobroker-community-adapters <iobroker-community-adapters@gmx.de>"
   ],
   "homepage": "https://github.com/iobroker-community-adapters/ioBroker.sma-em",
   "license": "MIT",
