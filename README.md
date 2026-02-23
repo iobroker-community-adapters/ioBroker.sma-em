@@ -96,6 +96,10 @@ In addition to the states in non-extended mode, the following values are availab
 -->
 
 ## Changelog
+
+### **WORK IN PROGRESS**
+- (copilot) Adapter requires admin >= 7.7.22 now
+
 ### 1.3.1-alpha.0 (2025-10-21)
 
 - (pdbjjens) Fix: Add GitHub as npm Trusted Publisher
