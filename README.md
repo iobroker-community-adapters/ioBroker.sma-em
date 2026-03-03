@@ -24,7 +24,7 @@ RELEASE NOTES:
 
 Version 1.3.x includes a Breaking Change:
 
-- node>=20, js-controller>=7.0.7 and admin>=7.6.17 required  
+- node>=20, js-controller>=7.0.7 and admin>=7.7.22 required  
   Upgrade your ioBroker to at least this software level, if you want to install this adapter.
 
 Version 1.1.x includes some Breaking Changes:
@@ -97,8 +97,10 @@ In addition to the states in non-extended mode, the following values are availab
 
 ## Changelog
 
-### **WORK IN PROGRESS**
+### **WORK IN PROGRESS** - 2026H1 maintenance release
+
 - (copilot) Adapter requires admin >= 7.7.22 now
+- (pdbjjens) **Fixed**: update release-script (#845)
 
 ### 1.3.1-alpha.0 (2025-10-21)
 
