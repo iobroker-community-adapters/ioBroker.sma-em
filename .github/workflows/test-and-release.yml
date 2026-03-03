@@ -23,13 +23,14 @@ jobs:
     steps:
       - uses: ioBroker/testing-action-check@v1
         with:
-          node-version: '20.x'
+          node-version: '22.x'
           # Uncomment the following line if your adapter cannot be installed using 'npm ci'
           # install-command: 'npm install'
           lint: true
 
   # Runs adapter tests on all supported node versions and OSes
   adapter-tests:
+    needs: [check-and-lint]
     if: contains(github.event.head_commit.message, '[skip ci]') == false
 
     runs-on: ${{ matrix.os }}
@@ -52,10 +53,10 @@ jobs:
 
   # Deploys the final package to NPM
   deploy:
+    needs: [check-and-lint, adapter-tests]
     permissions:
       contents: write
       id-token: write
-    needs: [check-and-lint, adapter-tests]
 
     # Trigger this step only when a commit on any branch is tagged with a version number
     if: |
@@ -68,7 +69,7 @@ jobs:
     steps:
       - uses: ioBroker/testing-action-deploy@v1
         with:
-          node-version: '20.x'
+          node-version: '22.x'
           # Uncomment the following line if your adapter cannot be installed using 'npm ci'
           # install-command: 'npm install'
           # npm-token: ${{ secrets.NPM_TOKEN }}  # Commented out for migration to Trusted Publishing
