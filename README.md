@@ -96,8 +96,7 @@ In addition to the states in non-extended mode, the following values are availab
 -->
 
 ## Changelog
-
-### **WORK IN PROGRESS** - 2026H1 maintenance release
+### 1.3.1 (2026-03-03) - 2026H1 maintenance release
 
 - (copilot) Adapter requires admin >= 7.7.22 now
 - (pdbjjens) **Fixed**: update release-script (#845)
@@ -125,10 +124,6 @@ In addition to the states in non-extended mode, the following values are availab
 - (pdbjjens) Change: Removed .npmignore
 - (pdbjjens) New: Updated dependencies
 - (pdbjjens) Fix: IP family property changed from string to number in nodejs 18.0.0-18.4.0
-
-### 1.0.1 (2024-01-26) - 2024 maintenance release
-
-- (pdbjjens) Updated dependencies
 
 ## Legal Notices
 

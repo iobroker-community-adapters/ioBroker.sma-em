@@ -1,4 +1,8 @@
 # Older changes
+## 1.0.1 (2024-01-26) - 2024 maintenance release
+
+- (pdbjjens) Updated dependencies
+
 ## 1.0.0 (2023-08-19)
 
 - (pdbjjens) Change: node>=16, js-contoller>=4 and admin>=6 required

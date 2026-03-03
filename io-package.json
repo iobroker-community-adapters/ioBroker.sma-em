@@ -1,8 +1,21 @@
 {
   "common": {
     "name": "sma-em",
-    "version": "1.3.1-alpha.0",
+    "version": "1.3.1",
     "news": {
+      "1.3.1": {
+        "en": "Adapter requires admin >= 7.7.22 now\n**Fixed**: update release-script (#845)",
+        "de": "Adapter benötigt jetzt admin >= 7.7.\n**Fixed**: Update-Release-script (#845)",
+        "ru": "Адаптер требует администратора >= 7.7.22\n**Fixed**: Update Release-Script (#845)",
+        "pt": "Adaptador requer admin >= 7.7.22 agora\n**fixed**: update release-script (# 845)",
+        "nl": "Adapter vereist admin < 7.7.22 nu\n**Fixed**: update release-script (#845)",
+        "fr": "Adaptateur nécessite admin >= 7.7.22 maintenant\n**Fixed**: mise à jour de la version-script (#845)",
+        "it": "Adattatore richiede admin >= 7.7.22 ora\n**Fixed**: update release-script (#845)",
+        "es": "El adaptador requiere admin= 7.7.22 ahora\n**Fixed**: actualización de la versión-script (#845)",
+        "pl": "Adapter wymaga admin > = 7.7.22\n* *Fixed* *: update release- script (# 845) ",
+        "uk": "Адаптер вимагає адмін >= 7.7.22 тепер\n**Fixed***: реєстрація релізу (#845)",
+        "zh-cn": "适任者需要管理员 \\ 7.7.22 现在\n** Fixed**:更新发布标记(# 845)"
+      },
       "1.3.1-alpha.0": {
         "en": "Fix: Add GitHub as npm Trusted Publisher\nChange: Update dependencies\nChange: Update npm badge",
         "de": "Fix: GitHub als npm Trusted Publisher hinzufügen\nÄnderung: Abhängigkeiten aktualisieren\nÄnderung: Update npm badge",
@@ -80,19 +93,6 @@
         "pl": "Zmiany: węzeł >=16, js-contoller>=4 i admin>=6 wymagane\nZmiana: Zmiana konfigurowalna energetyka na adapter\nZmiana: Wybrane własne urządzenie sieciowe IP do słuchania multicastu wiadomości\nZmiany: Obiekty i TimeTick zostały usunięte\nNowy: Wspieranie ioBrokera\nSMA-EM 1.0 (SUSy 270) (ang.)\nNowy: Detect new SHM 2.0 with SUSy 501 (ang.)\nFix: Catch Inter błąd",
         "uk": "Зміна: вершина>=16, js-contoller>=4 і admin>=6 потрібно\nЗміна: Налаштування лічильників енергії на екземплярі адаптера\nЗміна: Вибір власного мережевого пристрою IP для прослуховування багатоподаткових повідомлень\nЗмінено: Об'єкти останнього_повідомлення та часу\nНовий: Підтримка ioBroker Відкриття\nНовий: Detect SMA-EM 1.0 (SUSy 270)\nНовий: Виявлення нового SHM 2.0 з SUSy 501\nВиправлення: помилки інтерфейсу Catch",
         "zh-cn": "变化:不需要>=16, js-contoller>=4和专用>=6\n变化:每个适应的能源金属\n变化:可选择的网络装置IP听取多广播信息\n改革:最后一个主题和时间图\n新:支助io Broker发现\n新:Detect SMA-EM 1.0(SUSy 270)\nNew: Detect newSHM2.0 with SUSy 501\nFix:零星接口"
-      },
-      "0.7.0": {
-        "en": "New: Configurable data point update intervals to reduce system load\nNew: Use JSON config",
-        "de": "Neu: Konfigurierbare Datenpunkt-Updateintervalle zur Reduzierung der Systemlast\nNeu: Verwenden Sie JSON config",
-        "ru": "Новый: Конфигурируемые интервалы обновления данных для уменьшения нагрузки системы\nНовое: Используйте JSON config",
-        "pt": "Novo: intervalos de atualização de ponto de dados configuráveis para reduzir a carga do sistema\nNovo: Use JSON config",
-        "nl": "Bevestigde data punt updates om het systeem te verminderen\nGebruik JSON configuur",
-        "fr": "Nouveau: Intervalles de mise à jour des points de données configurables pour réduire la charge du système\nNouveau: Utilisez la configuration JSON",
-        "it": "Novità: Intervalli di aggiornamento del punto di dati configurabili per ridurre il carico del sistema\nNuovo: Utilizzare JSON config",
-        "es": "Nuevo: intervalos de actualización de puntos de datos configurables para reducir la carga del sistema\nNuevo: Usar config JSON",
-        "pl": "Nowy: Zawartość danych\nZastosowanie JSON",
-        "uk": "Новий: Налаштування інтервалів оновлення точки даних для зменшення навантаження системи\nНовий: Використовуйте JSON config",
-        "zh-cn": "新的:可靠数据点更新间隔,以减少系统装载量\n新的:使用联合信息中心"
       }
     },
     "titleLang": {
