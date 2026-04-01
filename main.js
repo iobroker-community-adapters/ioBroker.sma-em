@@ -6,7 +6,7 @@
  */
 
 const utils = require('@iobroker/adapter-core');
-const dgram = require('dgram');
+const dgram = require('node:dgram');
 
 // global variables
 let stopped = true;
@@ -1350,7 +1350,7 @@ class SmaEm extends utils.Adapter {
 
     findIPv4IPs(ownIP) {
         // Get all network devices
-        const ifaces = require('os').networkInterfaces();
+        const ifaces = require('node:os').networkInterfaces();
         const net_devs = [];
 
         if (ownIP === '0.0.0.0') {
