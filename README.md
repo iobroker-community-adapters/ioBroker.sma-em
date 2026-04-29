@@ -96,6 +96,9 @@ In addition to the states in non-extended mode, the following values are availab
 -->
 
 ## Changelog
+### **WORK IN PROGRESS**
+- (copilot) Adapter requires node.js >= 22 now
+
 ### 1.3.1 (2026-03-03) - 2026H1 maintenance release
 
 - (copilot) Adapter requires admin >= 7.7.22 now
