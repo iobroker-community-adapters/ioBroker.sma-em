@@ -128,6 +128,8 @@ In addition to the states in non-extended mode, the following values are availab
 - (pdbjjens) New: Updated dependencies
 - (pdbjjens) Fix: IP family property changed from string to number in nodejs 18.0.0-18.4.0
 
+[Older changelogs can be found there](CHANGELOG_OLD.md)
+
 ## Legal Notices
 
 SMA and Sunny Home Manager are registered trademarks of SMA Solar Technology AG <https://www.sma.de/en.html>
