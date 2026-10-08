@@ -101,6 +101,12 @@ In addition to the states in non-extended mode, the following values are availab
 -->
 
 ## Changelog
+### **WORK IN PROGRESS**
+
+- Fixed overlapping UDP handlers corrupting realtime aggregation buffers while state writes were pending.
+- Publish measurement snapshots in bounded parallel batches using the original adapter receipt timestamp; report delayed, failed, or superseded publications.
+- Guard device initialization against incoming packets. See [publication diagnostics](docs/state-publication.md) for timestamp semantics and regression checks.
+
 ### 1.4.0 (2026-09-11) - 2026H2 maintenance release
 
 - (copilot) Adapter requires node.js >= 22 now
