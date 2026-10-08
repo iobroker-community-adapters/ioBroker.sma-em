@@ -7,6 +7,7 @@
 
 const utils = require('@iobroker/adapter-core');
 const dgram = require('node:dgram');
+const { StatePublisher } = require('./lib/state-publisher');
 
 // global variables
 let stopped = true;
@@ -47,6 +48,11 @@ class SmaEm extends utils.Adapter {
         super({
             ...options,
             name: 'sma-em',
+        });
+        this.statePublisher = new StatePublisher({
+            writeState: (id, state) => this.setState(id, state),
+            onWarning: message => this.log.warn(message),
+            onError: message => this.log.error(message),
         });
         this.on('ready', this.onReady.bind(this));
         this.on('unload', this.onUnload.bind(this));
@@ -943,93 +949,147 @@ class SmaEm extends utils.Adapter {
 
         // Event handler in case of UDP packet was received.
         client.on('message', async (message, rinfo) => {
+            // This is adapter receipt time, not the meter's measurement time.
+            // Capture it before any asynchronous operation can delay processing.
+            const receivedAt = Date.now();
             // Check if packet is an SMA energy meter packet or if adapter stopped
-            if ((await this.check_message_type(message, rinfo)) === false || stopped) {
+            if (this.check_message_type(message, rinfo) === false || stopped) {
                 return;
             } // discard message
 
-            // Extract serial number as integer of the device in the received message
-            const ser = message.readUIntBE(protocol_points['SMASerial'].addr, protocol_points['SMASerial'].length);
-            const ser_str = ser.toString();
-            // Extract Time Ticker from current message
-            const tTick = message.readUIntBE(protocol_points['TimeTick'].addr, protocol_points['TimeTick'].length);
+            try {
+                // Extract serial number as integer of the device in the received message
+                const ser = message.readUIntBE(protocol_points['SMASerial'].addr, protocol_points['SMASerial'].length);
+                const ser_str = ser.toString();
+                // Extract Time Ticker from current message
+                const tTick = message.readUIntBE(protocol_points['TimeTick'].addr, protocol_points['TimeTick'].length);
 
-            // Check if points must be created and determine message rate
-            if (!serNumsActive.has(ser_str)) {
-                // determine device type
-                const susy = message.readUIntBE(protocol_points['SMASusyID'].addr, protocol_points['SMASusyID'].length);
-                let dev_descr = `Unkown SMA device S/N: ${ser_str}`;
-                if (susy == 372 || susy == 501) {
-                    dev_descr = `Sunny Home Manager 2.0 S/N: ${ser_str}`;
-                } else if (susy == 349 || susy == 502) {
-                    dev_descr = `SMA Energy Meter 2.0 S/N: ${ser_str}`;
-                } else if (susy == 270) {
-                    dev_descr = `SMA Energy Meter 1.0 S/N: ${ser_str}`;
-                }
-                // Add the newly discovered device to the map of active SMA EMs
-                // with serial number as key and details describing the device
-                serNumsActive.set(ser_str, {
-                    serNum: ser,
-                    suSy: susy,
-                    devDescr: dev_descr,
-                    devIp: rinfo.address,
-                    devPort: rinfo.port,
-                    tTickOld: tTick,
-                    throttleFactor: 1,
-                    checkRate: true,
-                });
-                return;
-            } else {
-                if (serNumsActive.get(ser_str).checkRate === true) {
-                    //this.log.debug('checkRate: ' + serNumsActive.get(ser_str).checkRate);
-                    const tTOld = serNumsActive.get(ser_str).tTickOld;
-                    const tTTemp = tTOld + 950;
-                    if (tTick < tTOld || tTTemp < tTOld) {
-                        // check for Ticker overflow if so, restart
-                        serNumsActive.set(ser_str, { ...serNumsActive.get(ser_str), throttleFactor: 1 });
-                        serNumsActive.set(ser_str, { ...serNumsActive.get(ser_str), tTickOld: tTick });
-                        this.log.debug(`Overflow happened - restart: ${serNumsActive.get(ser_str).throttleFactor}`);
-                        return;
+                // Check if points must be created and determine message rate
+                if (!serNumsActive.has(ser_str)) {
+                    // determine device type
+                    const susy = message.readUIntBE(
+                        protocol_points['SMASusyID'].addr,
+                        protocol_points['SMASusyID'].length,
+                    );
+                    let dev_descr = `Unkown SMA device S/N: ${ser_str}`;
+                    if (susy == 372 || susy == 501) {
+                        dev_descr = `Sunny Home Manager 2.0 S/N: ${ser_str}`;
+                    } else if (susy == 349 || susy == 502) {
+                        dev_descr = `SMA Energy Meter 2.0 S/N: ${ser_str}`;
+                    } else if (susy == 270) {
+                        dev_descr = `SMA Energy Meter 1.0 S/N: ${ser_str}`;
                     }
-                    //this.log.debug('ThrottleF: ' + serNumsActive.get(ser_str).throttleFactor);
-                    const tF = serNumsActive.get(ser_str).throttleFactor;
-                    //this.log.debug('ThrottleF: tF=' + tF + ' tTickOld ' + serNumsActive.get(ser_str).tTickOld + ' tTick ' + tTick + ' tTTemp ' + tTTemp);
-
-                    if (tTick < tTTemp) {
-                        serNumsActive.set(ser_str, { ...serNumsActive.get(ser_str), throttleFactor: tF + 1 });
-                        //serNumsActive.set(ser_str, {...serNumsActive.get(ser_str), tTickOld: tTick});
-                        //this.log.debug('ThrottleF after inc: ' + serNumsActive.get(ser_str).throttleFactor );
-                        return; //drop message
-                    } else {
-                        serNumsActive.set(ser_str, { ...serNumsActive.get(ser_str), checkRate: false });
-                        this.log.info(
-                            `New device discovered: ${serNumsActive.get(ser_str).devDescr} with IP/port: ${
-                                serNumsActive.get(ser_str).devIp
-                            }/${serNumsActive.get(ser_str).devPort} message rate: ${
-                                serNumsActive.get(ser_str).throttleFactor
-                            }/sec`,
+                    // Add the newly discovered device to the map of active SMA EMs
+                    // with serial number as key and details describing the device
+                    serNumsActive.set(ser_str, {
+                        serNum: ser,
+                        suSy: susy,
+                        devDescr: dev_descr,
+                        devIp: rinfo.address,
+                        devPort: rinfo.port,
+                        tTickOld: tTick,
+                        throttleFactor: 1,
+                        checkRate: true,
+                        initializing: false,
+                        initializationSkipped: 0,
+                        lastPacketAt: receivedAt,
+                        lastGapWarningAt: 0,
+                    });
+                    return;
+                } else {
+                    const device = serNumsActive.get(ser_str);
+                    const gapMs = receivedAt - device.lastPacketAt;
+                    device.lastPacketAt = receivedAt;
+                    if (gapMs > 10000 && receivedAt - device.lastGapWarningAt >= 30000) {
+                        device.lastGapWarningAt = receivedAt;
+                        this.log.warn(
+                            `SMA ${ser_str}: UDP receipt gap ${gapMs} ms; receivedAt=${receivedAt}. ` +
+                                'This measures adapter receipt, not state publication delay.',
                         );
-                        // Update connection state.
-                        await this.setState('info.connection', true, true);
-
-                        // Create the states tree for the device depending on its serial number and wait for finish
-                        await this.createPoints(message, ser_str, obis_points, protocol_points, derived_points);
+                    }
+                    if (device.initializing) {
+                        device.initializationSkipped += 1;
                         return;
                     }
-                }
+                    if (serNumsActive.get(ser_str).checkRate === true) {
+                        //this.log.debug('checkRate: ' + serNumsActive.get(ser_str).checkRate);
+                        const tTOld = serNumsActive.get(ser_str).tTickOld;
+                        const tTTemp = tTOld + 950;
+                        if (tTick < tTOld || tTTemp < tTOld) {
+                            // check for Ticker overflow if so, restart
+                            serNumsActive.set(ser_str, { ...serNumsActive.get(ser_str), throttleFactor: 1 });
+                            serNumsActive.set(ser_str, { ...serNumsActive.get(ser_str), tTickOld: tTick });
+                            this.log.debug(`Overflow happened - restart: ${serNumsActive.get(ser_str).throttleFactor}`);
+                            return;
+                        }
+                        //this.log.debug('ThrottleF: ' + serNumsActive.get(ser_str).throttleFactor);
+                        const tF = serNumsActive.get(ser_str).throttleFactor;
+                        //this.log.debug('ThrottleF: tF=' + tF + ' tTickOld ' + serNumsActive.get(ser_str).tTickOld + ' tTick ' + tTick + ' tTTemp ' + tTTemp);
 
-                // Update connection state.
-                await this.setState('info.connection', true, true);
-                // Update values by evaluating UDP packet content.
-                await this.updatePoints(ser_str, message, obis_points);
-
-                // Write protocol values only once
-                for (const p in protocol_points) {
-                    if (protocol_points[p].update === false) {
-                        const val = message.readUIntBE(protocol_points[p].addr, protocol_points[p].length);
-                        await this.setState(`${ser_str}.${p}`, val, true);
+                        if (tTick < tTTemp) {
+                            serNumsActive.set(ser_str, { ...serNumsActive.get(ser_str), throttleFactor: tF + 1 });
+                            //serNumsActive.set(ser_str, {...serNumsActive.get(ser_str), tTickOld: tTick});
+                            //this.log.debug('ThrottleF after inc: ' + serNumsActive.get(ser_str).throttleFactor );
+                            return; //drop message
+                        } else {
+                            // Do not expose an unfinished update cache to another packet.
+                            device.initializing = true;
+                            this.log.info(
+                                `New device discovered: ${serNumsActive.get(ser_str).devDescr} with IP/port: ${
+                                    serNumsActive.get(ser_str).devIp
+                                }/${serNumsActive.get(ser_str).devPort} message rate: ${
+                                    serNumsActive.get(ser_str).throttleFactor
+                                }/sec`,
+                            );
+                            // Create the states tree for the device depending on its serial number and wait for finish
+                            try {
+                                await this.createPoints(message, ser_str, obis_points, protocol_points, derived_points);
+                                if (stopped) {
+                                    return;
+                                }
+                                device.checkRate = false;
+                                // Fixed protocol values are published once after discovery.
+                                const updates = [
+                                    { id: 'info.connection', state: { val: true, ack: true, ts: receivedAt } },
+                                ];
+                                for (const p in protocol_points) {
+                                    if (protocol_points[p].update === false) {
+                                        updates.push({
+                                            id: `${ser_str}.${p}`,
+                                            state: {
+                                                val: message.readUIntBE(
+                                                    protocol_points[p].addr,
+                                                    protocol_points[p].length,
+                                                ),
+                                                ack: true,
+                                                ts: receivedAt,
+                                            },
+                                        });
+                                    }
+                                }
+                                this.statePublisher.enqueue(updates);
+                            } finally {
+                                device.initializing = false;
+                                if (device.initializationSkipped > 0) {
+                                    this.log.warn(
+                                        `SMA ${ser_str}: skipped ${device.initializationSkipped} UDP packets during object initialization; ` +
+                                            'no measurement values were published for these packets.',
+                                    );
+                                    device.initializationSkipped = 0;
+                                }
+                            }
+                            return;
+                        }
                     }
+
+                    // Parse and aggregate the entire packet before the first write await.
+                    await this.updatePoints(ser_str, message, obis_points, receivedAt, [
+                        { id: 'info.connection', state: { val: true, ack: true, ts: receivedAt } },
+                    ]);
                 }
+            } catch (error) {
+                const reason = error instanceof Error ? error.message : String(error);
+                this.log.error(`SMA UDP packet processing failed: ${reason}; receivedAt=${receivedAt}`);
             }
         });
 
@@ -1045,7 +1105,10 @@ class SmaEm extends utils.Adapter {
         });
     }
 
-    async check_message_type(message, rinfo) {
+    check_message_type(message, rinfo) {
+        if (message.length < 28) {
+            return false;
+        }
         if (this.config.EMIP === rinfo.address || this.config.EMIP === '0.0.0.0') {
             // Check SMA ident string at the first 3 bytes of the message
             if (message.toString('ascii', 0, 3) != 'SMA') {
@@ -1073,6 +1136,7 @@ class SmaEm extends utils.Adapter {
             this.log.info('cleaned everything up...');
             // disable udp message reception
             stopped = true;
+            this.statePublisher.close();
             client.close();
             callback();
             // eslint-disable-next-line @typescript-eslint/no-unused-vars
@@ -1209,144 +1273,126 @@ class SmaEm extends utils.Adapter {
         await Promise.all(proms);
     }
 
-    // Update the values of active points
-    async updatePoints(id_path, message, points) {
-        // Start with the first obis entry
+    // Aggregate each received sample synchronously; publication may await the database.
+    async updatePoints(id_path, message, points, receivedAt = Date.now(), additionalUpdates = []) {
+        // Decode/bounds-check all available fields before mutating aggregation caches.
+        // A truncated OBIS field must not publish a plausible partial snapshot.
+        const samples = [];
         let pos = 28;
-
-        // Extract obis number
         while (pos < message.length) {
-            // Get obis value as 32 bit number
+            if (pos + 4 > message.length) {
+                throw new Error(`Truncated OBIS header at byte ${pos}`);
+            }
             const obis_num = message.readUInt32BE(pos);
-
-            // Check if obis number is known
+            if (obis_num === 0 && pos === message.length - 4) {
+                break;
+            }
             if (!(obis_num in points)) {
-                // OBIS = 0x0 at the end of the message indicates end of message
-                if (obis_num === 0 && pos === message.length - 4) {
-                    break;
-                }
-
-                this.log.warn(
-                    `Unkown OBIS value ${obis_num} found in UDP packet. Skip it and going to the next OBIS value.`,
-                );
-
-                // Extract length from obis number, second byte is the length
+                this.log.warn(`Unknown OBIS value ${obis_num} found in UDP packet; skipping it.`);
                 const offset = message.readUInt8(pos + 2);
-
-                // Only 4 or 8 is allowed for offset since all know OBIS values have the length 4 or 8
-                // Add 4 for the OBIS value itself.
-                if (offset === 4 || offset === 8) {
-                    pos += offset + 4;
-                } else {
-                    pos += 4 + 4;
+                const length = offset === 4 || offset === 8 ? offset : 4;
+                if (pos + 4 + length > message.length) {
+                    throw new Error(`Truncated unknown OBIS value at byte ${pos}`);
                 }
+                pos += 4 + length;
                 continue;
             }
-
-            // Get expected message length of current obis value and set read address to message start.
-            const length = points[obis_num].length;
+            const point = points[obis_num];
+            const length = point.length;
+            if (length !== 4 && length !== 8) {
+                throw new Error(`Only OBIS message lengths 4 or 8 are supported; got ${length}`);
+            }
             pos += 4;
-
-            // If point is marked as inactive skip it and go to the next point.
-            if (points[obis_num].active === false) {
-                pos += length;
-                continue;
+            if (pos + length > message.length) {
+                throw new Error(`Truncated OBIS value ${obis_num} at byte ${pos}`);
             }
-
-            // Read obis message value as 32 or 64 bit unsigned int value.
-            let val = 0;
-            if (length === 4) {
-                val = message.readUInt32BE(pos);
-            } else if (length === 8) {
-                val = message.readBigUInt64BE(pos);
-            } else {
-                this.log.error(`Only OBIS message length of 4 or 8 is supported, current length is ${length}`);
+            if (point.active !== false) {
+                const raw = length === 4 ? message.readUInt32BE(pos) : message.readBigUInt64BE(pos);
+                const id = `${id_path}.${point.id}`;
+                const cache = updCache.get(id);
+                if (!cache) {
+                    throw new Error(`Update cache not ready for ${id}`);
+                }
+                samples.push({ point, cache, id, val: Number(raw) * point.factor });
             }
+            pos += length;
+        }
 
-            // Convert raw value to final value
-            val = Number(val) * points[obis_num].factor;
-
-            // throttle states update
-            const cachePath = updCache.get(`${id_path}.${points[obis_num].id}`);
-
-            switch (points[obis_num].updateType) {
+        const updates = [...additionalUpdates];
+        const publish = (id, val) => updates.push({ id, state: { val, ack: true, ts: receivedAt } });
+        for (const { point, cache, id, val } of samples) {
+            switch (point.updateType) {
                 case 'last':
-                    // for non-realtime values like meters write the last value of the update interval
-                    if (cachePath.updCounter >= 1) {
-                        cachePath.updValue[0] = val;
-                        cachePath.updCounter -= 1;
+                    if (cache.updCounter >= 1) {
+                        cache.updValue[0] = val;
+                        cache.updCounter -= 1;
                     }
-                    if (cachePath.updCounter == 0) {
-                        cachePath.updCounter = cachePath.updPeriod;
-                        await this.setState(`${id_path}.${points[obis_num].id}`, cachePath.updValue[0], true);
-                        cachePath.updValue = [];
+                    if (cache.updCounter === 0) {
+                        const value = cache.updValue[0];
+                        cache.updCounter = cache.updPeriod;
+                        cache.updValue = [];
+                        publish(id, value);
                     }
                     break;
                 case 'median':
-                    // for realtime values like frequency or phase write the median value of the update interval
-                    if (cachePath.updCounter >= 1) {
-                        cachePath.updValue.push(val);
-                        cachePath.updCounter -= 1;
+                    if (cache.updCounter >= 1) {
+                        cache.updValue.push(val);
+                        cache.updCounter -= 1;
                     }
-                    if (cachePath.updCounter == 0) {
-                        cachePath.updCounter = cachePath.updPeriod;
-                        const median = arr => {
-                            const mid = Math.floor(arr.length / 2),
-                                nums = [...arr].sort((a, b) => a - b);
-                            return arr.length % 2 >= 1 ? nums[mid] : (nums[mid - 1] + nums[mid]) / 2;
-                        };
-                        await this.setState(`${id_path}.${points[obis_num].id}`, median(cachePath.updValue), true);
-                        cachePath.updValue = [];
+                    if (cache.updCounter === 0) {
+                        const values = [...cache.updValue].sort((a, b) => a - b);
+                        const mid = Math.floor(values.length / 2);
+                        const value = values.length % 2 ? values[mid] : (values[mid - 1] + values[mid]) / 2;
+                        cache.updCounter = cache.updPeriod;
+                        cache.updValue = [];
+                        publish(id, value);
                     }
                     break;
                 case 'mean':
-                    // for realtime values like instantaneous power write the mean value of the update interval
-                    if (cachePath.updCounter >= 1) {
-                        if (cachePath.updValue.length === 0) {
-                            cachePath.updValue[0] = val;
+                    if (cache.updCounter >= 1) {
+                        if (cache.updValue.length === 0) {
+                            cache.updValue[0] = val;
                         } else {
-                            cachePath.updValue[0] += val;
+                            cache.updValue[0] += val;
                         }
-                        cachePath.updCounter -= 1;
+                        cache.updCounter -= 1;
                     }
-                    if (cachePath.updCounter == 0) {
-                        cachePath.updCounter = cachePath.updPeriod;
-                        cachePath.updValue[0] = cachePath.updValue[0] / cachePath.updCounter;
-                        await this.setState(`${id_path}.${points[obis_num].id}`, cachePath.updValue[0], true);
-                        cachePath.updValue = [];
+                    if (cache.updCounter === 0) {
+                        const value = cache.updValue[0] / cache.updPeriod;
+                        cache.updCounter = cache.updPeriod;
+                        cache.updValue = [];
+                        publish(id, value);
                     }
                     break;
                 case 'once':
-                    //Update this value only once at the detection of a new device
-                    if (
-                        cachePath.updCounter === 0 &&
-                        (cachePath.updValue.length === 0 || cachePath.updValue[0] !== val)
-                    ) {
-                        cachePath.updValue[0] = val;
-                        await this.setState(`${id_path}.${points[obis_num].id}`, val, true);
-                        if (points[obis_num].id === 'sw_version_raw') {
-                            const tmpVal = cachePath.updValue[0];
-                            let sw = ((tmpVal >> 24) & 0xff).toString();
-                            sw += `.${((tmpVal >> 16) & 0xff).toString()}`;
-                            sw += `.${((tmpVal >> 8) & 0xff).toString()}`;
-                            sw += `.${String.fromCharCode(tmpVal & 0xff)}`;
-                            await this.setState(`${id_path}.sw_version`, sw, true);
-                            //this.log.debug ( id_path + '.' + points[obis_num].id + JSON.stringify(cachePath) + sw);
+                    if (cache.updCounter === 0 && (cache.updValue.length === 0 || cache.updValue[0] !== val)) {
+                        // Keep the last value for change detection, but never read it after an await.
+                        cache.updValue[0] = val;
+                        publish(id, val);
+                        if (point.id === 'sw_version_raw') {
+                            const version = [
+                                (val >> 24) & 0xff,
+                                (val >> 16) & 0xff,
+                                (val >> 8) & 0xff,
+                                String.fromCharCode(val & 0xff),
+                            ].join('.');
+                            publish(`${id_path}.sw_version`, version);
                         }
                     }
                     break;
                 case 'each':
-                    //Update this value each message (currently not used since this would increase system load)
-                    await this.setState(`${id_path}.${points[obis_num].id}`, val, true);
+                    publish(id, val);
                     break;
                 default:
-                    this.log.error('Unknown update type');
+                    this.log.error(`Unknown update type ${point.updateType} for ${id}`);
                     break;
             }
-
-            // Set read address to next obis value
-            pos += length;
         }
+        // The publisher owns immutable snapshots and bounds its waiting state map.
+        // Every telegram was aggregated, even if a pending publication is superseded.
+        // Do not attach a waiter per packet to a drain that can stay busy forever.
+        // The publisher owns/logs asynchronous failures; idle() is available for tests.
+        this.statePublisher.enqueue(updates);
     }
 
     findIPv4IPs(ownIP) {
