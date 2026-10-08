@@ -967,7 +967,10 @@ class SmaEm extends utils.Adapter {
                 // Check if points must be created and determine message rate
                 if (!serNumsActive.has(ser_str)) {
                     // determine device type
-                    const susy = message.readUIntBE(protocol_points['SMASusyID'].addr, protocol_points['SMASusyID'].length);
+                    const susy = message.readUIntBE(
+                        protocol_points['SMASusyID'].addr,
+                        protocol_points['SMASusyID'].length,
+                    );
                     let dev_descr = `Unkown SMA device S/N: ${ser_str}`;
                     if (susy == 372 || susy == 501) {
                         dev_descr = `Sunny Home Manager 2.0 S/N: ${ser_str}`;
@@ -1054,7 +1057,10 @@ class SmaEm extends utils.Adapter {
                                         updates.push({
                                             id: `${ser_str}.${p}`,
                                             state: {
-                                                val: message.readUIntBE(protocol_points[p].addr, protocol_points[p].length),
+                                                val: message.readUIntBE(
+                                                    protocol_points[p].addr,
+                                                    protocol_points[p].length,
+                                                ),
                                                 ack: true,
                                                 ts: receivedAt,
                                             },

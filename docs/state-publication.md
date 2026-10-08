@@ -74,7 +74,7 @@ The tests use the actual adapter implementation with a fake UDP socket and
 mock database writes. They never open a network socket or connect to ioBroker.
 
 ```sh
-node --test main.publication.test.js state-publisher.test.js
+npm run test:unit
 ```
 
 These files also support the existing Mocha test discovery. They cover common
