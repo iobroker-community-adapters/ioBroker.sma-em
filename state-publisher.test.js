@@ -62,6 +62,46 @@ describe('StatePublisher', () => {
         assert.equal(publisher.getStats().maxActiveStates, 2);
     });
 
+    it('coalesces identical connection heartbeats silently but preserves latest timestamp', async () => {
+        const gate = deferred();
+        const writes = [];
+        const warnings = [];
+        const publisher = new StatePublisher({ writeState(id, state) {
+            writes.push({ id, ...state });
+            if (writes.length === 1) { return gate.promise; }
+        }, now: () => 1500, onWarning: message => warnings.push(message) });
+        const finished = publisher.enqueue([update('info.connection', true, 1000)]);
+        await tick();
+        void publisher.enqueue([update('info.connection', true, 1100)]);
+        void publisher.enqueue([update('info.connection', true, 1200)]);
+        assert.equal(warnings.length, 0);
+        assert.equal(publisher.getStats().coalescedValues, 1);
+        gate.resolve();
+        await finished;
+        assert.equal(writes.at(-1).ts, 1200);
+        assert.equal(warnings.length, 0);
+    });
+
+    it('still warns when a queued connection status changes', async () => {
+        const warnings = [];
+        const publisher = new StatePublisher({ writeState() {}, now: () => 1500,
+            onWarning: message => warnings.push(message) });
+        const finished = publisher.enqueue([update('info.connection', false, 1000)]);
+        void publisher.enqueue([update('info.connection', true, 1100)]);
+        await finished;
+        assert.equal(warnings.length, 1);
+        assert.match(warnings[0], /states=info.connection/);
+    });
+
+    it('still warns for slow identical connection heartbeats', async () => {
+        const warnings = [];
+        const publisher = new StatePublisher({ writeState() {}, now: () => 4000,
+            onWarning: message => warnings.push(message) });
+        await publisher.enqueue([update('info.connection', true, 1000)]);
+        assert.equal(warnings.length, 1);
+        assert.match(warnings[0], /slow=1/);
+    });
+
     it('catches synchronous throws and rejected writes and continues with a newer batch', async () => {
         const errors = [];
         let fail = true;
