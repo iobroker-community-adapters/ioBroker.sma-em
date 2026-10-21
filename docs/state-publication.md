@@ -49,12 +49,19 @@ timestamps and coverage of all required fields.
   than 10 seconds after the preceding one. This measures the listener's receipt
   times, including any local event-loop delay. It does not by itself prove
   network packet loss. It is not a continuous no-packet watchdog.
-- `SMA state publication delayed/coalesced ...`: completion age at least
-  2 seconds, or replacement of waiting values. It includes affected state IDs,
-  coalescing counts, active/queued states, outstanding age, and the maximum
-  observed receipt-to-completion time. Warnings are limited to one per
-  30 seconds. A blocked batch can still be reported when incoming telegrams
-  supersede waiting values.
+- `SMA state publication delayed/coalesced ...`: isolated completion delays
+  are debug diagnostics. A slow completion exceeds the greater of 2 seconds
+  and the configured realtime interval. Warnings remain for superseded distinct
+  waiting values, three slow measurement batches within the greater of 30 seconds
+  and three realtime intervals, or a measurement completion/outstanding batch age
+  of at least the greater of 10 seconds and three realtime intervals. Multiple
+  slow states in one batch count as one incident; slow connection heartbeats do
+  not count towards repeated measurement incidents. No autonomous timer is added:
+  outstanding work is checked when new updates arrive.
+  Warnings are limited to one per 30 seconds; suppressed diagnostics go to debug.
+  Completed transient diagnostics are cleared immediately, preventing a stale
+  follow-up warning after recovery. The log distinguishes the recent maximum
+  completion delay from the lifetime maximum. Counters count states, not outages.
 - `SMA state publication failed ...`: actual database failures, counted and
   logged, without manufacturing replacement zero values or fresh timestamps.
   Subsequent telegrams can continue to be published.

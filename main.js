@@ -52,6 +52,7 @@ class SmaEm extends utils.Adapter {
         this.statePublisher = new StatePublisher({
             writeState: (id, state) => this.setState(id, state),
             onWarning: message => this.log.warn(message),
+            onDebug: message => this.log.debug(message),
             onError: message => this.log.error(message),
         });
         this.on('ready', this.onReady.bind(this));
@@ -128,6 +129,8 @@ class SmaEm extends utils.Adapter {
         } else {
             cfg_nrtP = 30;
         }
+
+        this.statePublisher.updateIntervalMs = cfg_rtP * 1000;
 
         // set averaging methods
         if (this.config.rtP && this.config.rtP > 0) {

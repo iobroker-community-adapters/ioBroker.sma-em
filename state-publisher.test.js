@@ -93,13 +93,14 @@ describe('StatePublisher', () => {
         assert.match(warnings[0], /states=info.connection/);
     });
 
-    it('still warns for slow identical connection heartbeats', async () => {
+    it('reports isolated slow connection heartbeats only at debug level', async () => {
         const warnings = [];
+        const debug = [];
         const publisher = new StatePublisher({ writeState() {}, now: () => 4000,
-            onWarning: message => warnings.push(message) });
+            onDebug: message => debug.push(message), onWarning: message => warnings.push(message) });
         await publisher.enqueue([update('info.connection', true, 1000)]);
-        assert.equal(warnings.length, 1);
-        assert.match(warnings[0], /slow=1/);
+        assert.equal(warnings.length, 0);
+        assert.match(debug[0], /slow=1/);
     });
 
     it('catches synchronous throws and rejected writes and continues with a newer batch', async () => {
@@ -143,6 +144,64 @@ describe('StatePublisher', () => {
         await publisher.enqueue([update('a', 4, 1000)]);
         assert.equal(warnings.length, 2);
         assert.match(warnings[1], /maxReceiveToCompletionMs=34000/);
+    });
+
+    it('debugs isolated delays without a stale warning after recovery', async () => {
+        let now = 4000;
+        const warnings = [], debug = [];
+        const publisher = new StatePublisher({ writeState() {}, now: () => now,
+            onWarning: m => warnings.push(m), onDebug: m => debug.push(m) });
+        await publisher.enqueue([update('a', 1, 1000), update('b', 1, 1000)]);
+        now = 35000;
+        await publisher.enqueue([update('a', 2, now)]);
+        assert.equal(warnings.length, 0);
+        assert.equal(debug.length, 1);
+        assert.match(debug[0], /queued=0, active=0/);
+    });
+
+    it('counts repeated slow batches rather than individual states and expires old incidents', async () => {
+        let now = 4000;
+        const warnings = [];
+        const publisher = new StatePublisher({ writeState() {}, now: () => now,
+            onWarning: m => warnings.push(m) });
+        for (let i = 0; i < 3; i++) {
+            await publisher.enqueue([update('a', i, now - 3000), update('b', i, now - 3000)]);
+            now += 4000;
+        }
+        assert.equal(warnings.length, 1);
+        now += 60000;
+        await publisher.enqueue([update('a', 4, now - 3000)]);
+        assert.equal(warnings.length, 1);
+    });
+
+    it('scales slow and severe thresholds with the configured realtime interval', async () => {
+        const warnings = [], debug = [];
+        const publisher = new StatePublisher({ writeState() {}, now: () => 40000, updateIntervalMs: 6000,
+            onWarning: m => warnings.push(m), onDebug: m => debug.push(m) });
+        await publisher.enqueue([update('a', 1, 35000)]);
+        assert.equal(debug.length, 0);
+        await publisher.enqueue([update('a', 2, 33000)]);
+        assert.equal(debug.length, 1);
+        assert.equal(warnings.length, 0);
+        await publisher.enqueue([update('a', 3, 20000)]);
+        assert.equal(warnings.length, 1);
+    });
+
+    it('warns about a sustained blocked batch even with only identical heartbeats arriving', async () => {
+        let now = 1000;
+        const gate = deferred(), warnings = [];
+        let writes = 0;
+        const publisher = new StatePublisher({ writeState() { if (++writes === 1) return gate.promise; },
+            now: () => now, onWarning: m => warnings.push(m) });
+        const done = publisher.enqueue([update('a', 1, now)]);
+        await tick();
+        now = 12000;
+        void publisher.enqueue([update('info.connection', true, now)]);
+        assert.equal(warnings.length, 1);
+        assert.match(warnings[0], /oldestOutstandingAgeMs=11000/);
+        gate.resolve();
+        await done;
+        assert.equal(warnings.length, 1);
     });
 
     it('does not block close and discards queued/new values without dispatching them', async () => {

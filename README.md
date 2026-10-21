@@ -98,6 +98,8 @@ In addition to the states in non-extended mode, the following values are availab
 <!--
     Placeholder for the next version (at the beginning of the line):
     ### **WORK IN PROGRESS**
+
+- Keep isolated publication delays at debug level; warn on repeated or severe delays and superseded values using realtime-interval-aware thresholds.
 -->
 
 ## Changelog
