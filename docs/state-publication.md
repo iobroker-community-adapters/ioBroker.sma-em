@@ -23,11 +23,20 @@ which a pending write for a value of 100 allowed the next telegram's value of
 
 ## Bounded publication under load
 
-The publisher has one parallel batch in flight and at most one waiting value
-per state. It waits for all writes in the older batch to settle before starting
-another batch, preventing its own older writes from overtaking newer ones.
-Database waiters do not accumulate in UDP handlers: handlers finish after
-parsing/enqueueing, and the publisher owns asynchronous write errors.
+The publisher has at most one write in flight and one latest waiting snapshot
+per state ID. Once a write settles, the newest waiting result for that same
+state may be dispatched. Other states do not wait: a blocked `info.connection`
+write or one device's measurement cannot impose a publisher-wide barrier on
+otherwise writable states. This preserves ordering of this publisher's writes
+**per state**, not across different states or devices.
+
+The active and pending maps are each bounded by the number of known state IDs.
+There is no new waiter or worker chain per incoming telegram. All callers share
+one idle promise, which resolves only when all active and pending work settles.
+Errors release the affected state's slot so newer real measurements can proceed.
+Unload discards pending work without cancelling or waiting for active writes.
+If the backend stalls every state write, this publisher cannot eliminate that
+backend delay; it only removes the avoidable dependency between independent IDs.
 
 When publication cannot keep up, a newer waiting result replaces the older
 waiting result for that state. This is counted as `coalescedValues` and logged;
@@ -50,15 +59,21 @@ timestamps and coverage of all required fields.
   times, including any local event-loop delay. It does not by itself prove
   network packet loss. It is not a continuous no-packet watchdog.
 - `SMA state publication delayed/coalesced ...`: isolated completion delays
-  are debug diagnostics. A slow completion exceeds the greater of 2 seconds
+  are debug diagnostics. A slow completion reaches at least the greater of 2 seconds
   and the configured realtime interval. Warnings remain for superseded distinct
-  waiting values, three slow measurement batches within the greater of 30 seconds
-  and three realtime intervals, or a measurement completion/outstanding batch age
-  of at least the greater of 10 seconds and three realtime intervals. Multiple
-  slow states in one batch count as one incident; slow connection heartbeats do
-  not count towards repeated measurement incidents. No autonomous timer is added:
+  waiting values, three slow completions of the same measurement state within
+  the greater of 30 seconds and three realtime intervals, or a measurement
+  completion/outstanding write age of at least the greater of 10 seconds and
+  three realtime intervals. Slow completions of different states are not counted
+  as repetitions of one
+  measurement; slow connection heartbeats do not count towards repeated
+  measurement incidents. At most three recent slow completion times per affected
+  state are retained. No autonomous timer is added:
   outstanding work is checked when new updates arrive.
-  Warnings are limited to one per 30 seconds; suppressed diagnostics go to debug.
+  Warnings are limited to one per 30 seconds; additional events in that period
+  go to debug. Similar warning/debug records can therefore describe separate
+  replacements or completions during the same backlog episode. Completion
+  diagnostics from one microtask turn are combined without waiting for other IDs.
   Completed transient diagnostics are cleared immediately, preventing a stale
   follow-up warning after recovery. The log distinguishes the recent maximum
   completion delay from the lifetime maximum. Counters count states, not outages.
@@ -87,7 +102,11 @@ npm run test:unit
 These files also support the existing Mocha test discovery. They cover common
 receipt timestamps, overlapping telegrams, aggregation intervals, 64-bit
 counters, firmware changes, zero values, truncated telegrams, delayed/failed
-writes, queue bounds, and device initialization.
+writes, queue bounds, and device initialization. Blocked-heartbeat and blocked-
+measurement regressions verify independent progress, per-state ordering,
+latest-value coalescing, failure recovery, reentrant enqueueing and shutdown.
+An adapter-level test checks both devices and aggregation timestamps while the
+connection-state write remains blocked.
 
 Before an upstream merge, run the repository's full lint, package, integration,
 and supported Node/OS CI matrix. These isolated tests do not constitute a live

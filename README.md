@@ -99,6 +99,8 @@ In addition to the states in non-extended mode, the following values are availab
     Placeholder for the next version (at the beginning of the line):
     ### **WORK IN PROGRESS**
 
+- Publish independent states without a batch-wide barrier: a slow connection-status or measurement write no longer blocks other state IDs; retain per-state ordering and bounded latest-value queues.
+
 - Keep isolated publication delays at debug level; warn on repeated or severe delays and superseded values using realtime-interval-aware thresholds.
 -->
 

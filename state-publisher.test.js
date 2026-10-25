@@ -14,7 +14,7 @@ const update = (id, val, ts = 1000) => ({ id, state: { val, ack: true, ts } });
 const tick = async () => { await Promise.resolve(); await Promise.resolve(); };
 
 describe('StatePublisher', () => {
-    it('writes a batch in parallel with independent snapshots and original timestamps', async () => {
+    it('writes independent states in parallel with detached snapshots and original timestamps', async () => {
         const gates = [deferred(), deferred()];
         const writes = [];
         const publisher = new StatePublisher({ writeState(id, state) {
@@ -35,7 +35,7 @@ describe('StatePublisher', () => {
         assert.equal(publisher.getStats().maxDelayMs, 100);
     });
 
-    it('coalesces waiting values, bounds the queue and waits for every old write', async () => {
+    it("coalesces waiting values and waits only for the same state's old write", async () => {
         const firstA = deferred();
         const firstB = deferred();
         const writes = [];
@@ -53,8 +53,9 @@ describe('StatePublisher', () => {
         assert.equal(publisher.getStats().activeStates, 2);
         assert.equal(publisher.getStats().coalescedValues, 196);
         firstA.resolve();
-        await tick();
-        assert.equal(writes.length, 2);
+        for (let i = 0; i < 12; i++) await Promise.resolve();
+        assert.equal(writes.length, 3);
+        assert.equal(writes[2].id, 'a');
         firstB.resolve();
         await finished;
         assert.deepEqual(writes.map(({ id, val, ts }) => [id, val, ts]), [['a', 1, 1000], ['b', 1, 1000], ['a', 100, 100000], ['b', 100, 100000]]);
@@ -103,7 +104,7 @@ describe('StatePublisher', () => {
         assert.match(debug[0], /slow=1/);
     });
 
-    it('catches synchronous throws and rejected writes and continues with a newer batch', async () => {
+    it('catches synchronous throws and rejected writes and continues with newer measurements', async () => {
         const errors = [];
         let fail = true;
         const written = [];
@@ -114,7 +115,7 @@ describe('StatePublisher', () => {
         }, onError: message => errors.push(message), now: () => 1000 });
         await publisher.enqueue([update('a', 1), update('b', 1)]);
         assert.equal(publisher.getStats().failures, 2);
-        assert.equal(errors.length, 1);
+        assert.equal(errors.length, 2);
         fail = false;
         await publisher.enqueue([update('a', 2, 2000), update('b', 2, 2000)]);
         assert.deepEqual(written.map(value => value.val), [2, 2]);
@@ -159,7 +160,7 @@ describe('StatePublisher', () => {
         assert.match(debug[0], /queued=0, active=0/);
     });
 
-    it('counts repeated slow batches rather than individual states and expires old incidents', async () => {
+    it('counts repeated slow completions per state and expires old incidents', async () => {
         let now = 4000;
         const warnings = [];
         const publisher = new StatePublisher({ writeState() {}, now: () => now,
@@ -187,7 +188,7 @@ describe('StatePublisher', () => {
         assert.equal(warnings.length, 1);
     });
 
-    it('warns about a sustained blocked batch even with only identical heartbeats arriving', async () => {
+    it('warns about a sustained blocked write even with only identical heartbeats arriving', async () => {
         let now = 1000;
         const gate = deferred(), warnings = [];
         let writes = 0;
@@ -254,5 +255,142 @@ describe('StatePublisher', () => {
         await finished;
         assert.deepEqual(written.val.items, [1, 2, 4]);
         assert.deepEqual(snapshot.state.val.items, [1, 2, 3]);
+    });
+});
+
+describe('Independent state publication', () => {
+    const settle = async () => { for (let i = 0; i < 12; i++) await Promise.resolve(); };
+
+    it('publishes both devices while a connection heartbeat remains blocked', async () => {
+        const gate = deferred(), writes = [];
+        const publisher = new StatePublisher({ now: () => 1000, writeState(id, state) {
+            writes.push({ id, ...state });
+            if (id === 'info.connection') return gate.promise;
+        } });
+        const done = publisher.enqueue([update('info.connection', true)]);
+        await settle();
+        void publisher.enqueue([update('shm.pregard', 100), update('sem.pregard', 200)]);
+        await settle();
+        try {
+            assert.deepEqual(writes.map(x => x.id), ['info.connection', 'shm.pregard', 'sem.pregard']);
+            assert.equal(publisher.getStats().activeStates, 1);
+        } finally { gate.resolve(); await done; }
+    });
+
+    it('lets a fast state advance while another measurement is blocked, preserving per-state order', async () => {
+        const gate = deferred(), writes = [];
+        const publisher = new StatePublisher({ now: () => 1000, writeState(id, state) {
+            writes.push({ id, ...state });
+            if (id === 'a' && state.val === 1) return gate.promise;
+        } });
+        const done = publisher.enqueue([update('a', 1), update('b', 1)]);
+        await settle();
+        for (let i = 2; i <= 10; i++) {
+            void publisher.enqueue([update('a', i), update('b', i)]);
+            await settle();
+        }
+        try {
+            assert.deepEqual(writes.filter(x => x.id === 'a').map(x => x.val), [1]);
+            assert.deepEqual(writes.filter(x => x.id === 'b').map(x => x.val), [1,2,3,4,5,6,7,8,9,10]);
+            assert.equal(publisher.getStats().queuedStates, 1);
+        } finally { gate.resolve(); await done; }
+        assert.deepEqual(writes.filter(x => x.id === 'a').map(x => x.val), [1, 10]);
+    });
+});
+
+describe('Per-state publisher lifecycle and diagnostics', () => {
+    const settle = async () => { for (let i = 0; i < 12; i++) await Promise.resolve(); };
+
+    it('bounds all-blocked work to one active and one waiting snapshot per state', async () => {
+        const gates = new Map(['a', 'b', 'info.connection'].map(id => [id, deferred()]));
+        const writes = [], inFlight = new Set();
+        let overlap = false;
+        const publisher = new StatePublisher({ now: () => 1000, writeState(id, state) {
+            if (inFlight.has(id)) overlap = true;
+            inFlight.add(id);
+            writes.push({ id, ...state });
+            return gates.get(id).promise.finally(() => inFlight.delete(id));
+        } });
+        const done = publisher.enqueue([...gates.keys()].map(id => update(id, 1, 1000)));
+        await settle();
+        for (let i = 2; i <= 1000; i++) {
+            const shared = publisher.enqueue([...gates.keys()].map(id => update(id, i, i * 1000)));
+            assert.equal(shared, done);
+        }
+        assert.equal(publisher.getStats().activeStates, 3);
+        assert.equal(publisher.getStats().queuedStates, 3);
+        assert.equal(writes.length, 3);
+        for (const gate of gates.values()) gate.resolve();
+        await done;
+        assert.equal(overlap, false);
+        assert.equal(writes.length, 6);
+        assert.ok(writes.slice(3).every(x => x.val === 1000 && x.ts === 1000000));
+        assert.equal(publisher.getStats().activeStates, 0);
+        assert.equal(publisher.getStats().queuedStates, 0);
+    });
+
+    it('releases a failed state independently and continues its newest queued measurement', async () => {
+        const failed = deferred(), blocked = deferred(), writes = [], errors = [];
+        const publisher = new StatePublisher({ now: () => 1000, onError: m => errors.push(m), writeState(id, state) {
+            writes.push({ id, ...state });
+            if (id === 'a' && state.val === 1) return failed.promise;
+            if (id === 'b') return blocked.promise;
+        } });
+        const done = publisher.enqueue([update('a', 1), update('b', 1)]);
+        await settle();
+        void publisher.enqueue([update('a', 2), update('a', 3)]);
+        failed.reject(new Error('test database failure'));
+        await settle();
+        try {
+            assert.deepEqual(writes.filter(x => x.id === 'a').map(x => x.val), [1, 3]);
+            assert.equal(errors.length, 1);
+            assert.match(errors[0], /a: Error: test database failure/);
+            assert.equal(publisher.getStats().activeStates, 1);
+        } finally { blocked.resolve(); await done; }
+    });
+
+    it('reserves a state before reentrant enqueue and does not strand completion-time work', async () => {
+        const writes = [];
+        let publisher;
+        publisher = new StatePublisher({ now: () => 1000, writeState(id, state) {
+            writes.push({ id, ...state });
+            if (state.val === 1) void publisher.enqueue([update(id, 2)]);
+            return Promise.resolve().then(() => {
+                if (state.val === 2) void publisher.enqueue([update(id, 3)]);
+            });
+        } });
+        await publisher.enqueue([update('a', 1)]);
+        assert.deepEqual(writes.map(x => x.val), [1, 2, 3]);
+        assert.equal(publisher.getStats().queuedStates, 0);
+        assert.equal(publisher.getStats().activeStates, 0);
+    });
+
+    it('does not interpret many unrelated slow states as repeated delay of one measurement', async () => {
+        const warnings = [], debug = [];
+        const publisher = new StatePublisher({ now: () => 4000, writeState() {},
+            onWarning: m => warnings.push(m), onDebug: m => debug.push(m) });
+        await publisher.enqueue(Array.from({ length: 20 }, (_, i) => update(`state${i}`, i, 1000)));
+        assert.equal(warnings.length, 0);
+        assert.equal(debug.length, 1);
+        assert.match(debug[0], /slow=20/);
+    });
+
+    it('close discards waiting states without cancelling in-flight independent writes', async () => {
+        const gates = [deferred(), deferred()], writes = [];
+        const publisher = new StatePublisher({ now: () => 1000, writeState(id, state) {
+            writes.push({ id, ...state });
+            return gates[id === 'a' ? 0 : 1].promise;
+        } });
+        const done = publisher.enqueue([update('a', 1), update('b', 1)]);
+        await settle();
+        void publisher.enqueue([update('a', 2), update('b', 2), update('c', 2)]);
+        assert.equal(publisher.close().discardedValues, 3);
+        gates[0].resolve();
+        await settle();
+        assert.equal(publisher.getStats().activeStates, 1);
+        gates[1].resolve();
+        await done;
+        assert.equal(writes.length, 2);
+        assert.equal(publisher.getStats().activeStates, 0);
     });
 });

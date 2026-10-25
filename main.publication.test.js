@@ -382,3 +382,33 @@ describe('SMA UDP device initialization', () => {
         assert.equal(updates, 1);
     });
 });
+
+describe('Adapter measurements with a blocked connection publication', () => {
+    it('continues aggregating and publishing both devices with truthful timestamps', async () => {
+        const { adapter, updCache } = loadAdapter();
+        const gate = deferred(), writes = [];
+        adapter.setState = (id, state) => {
+            writes.push({ id, ...state });
+            if (id === 'info.connection') return gate.promise;
+            return Promise.resolve();
+        };
+        const points = { 0x00010400: point('pregard', 'mean', 2) };
+        seedCache(updCache, points, '123456');
+        seedCache(updCache, points, '654321');
+        const done = adapter.statePublisher.enqueue([{ id: 'info.connection', state: { val: true, ack: true, ts: 1000 } }]);
+        await settleMicrotasks();
+        for (let i = 1; i <= 4; i++) {
+            for (const serial of [123456, 654321]) {
+                await adapter.updatePoints(String(serial), packet([[0x00010400, i * 100]], { serial }), points, i * 1000);
+            }
+            await settleMicrotasks();
+        }
+        try {
+            for (const serial of [123456, 654321]) {
+                const states = writes.filter(x => x.id === `${serial}.pregard`);
+                assert.deepEqual(states.map(x => [x.val, x.ts, x.ack]), [[150, 2000, true], [350, 4000, true]]);
+            }
+            assert.equal(adapter.statePublisher.getStats().activeStates, 1);
+        } finally { gate.resolve(); await done; }
+    });
+});
