@@ -394,3 +394,79 @@ describe('Per-state publisher lifecycle and diagnostics', () => {
         assert.equal(publisher.getStats().activeStates, 0);
     });
 });
+
+describe('Publication timing diagnostics', () => {
+    const settle = async () => { for (let i = 0; i < 12; i++) await Promise.resolve(); };
+    const timing = message => JSON.parse(message.split('timing=')[1]);
+
+    it('separates original receipt-to-start wait from monotonic write duration', async () => {
+        let wall = 1000, mono = 0, calls = 0;
+        const gate = deferred(), messages = [];
+        const publisher = new StatePublisher({ now: () => wall, monotonicNow: () => mono,
+            onWarning: m => messages.push(m), onDebug: m => messages.push(m),
+            getEventLoopDelayMs: () => 125,
+            writeState() {
+                if (++calls === 1) return gate.promise;
+                wall = 4500; mono = 3500;
+            } });
+        const done = publisher.enqueue([update('a', 1, 1000)]);
+        await settle();
+        wall = 2000; mono = 1000;
+        void publisher.enqueue([update('a', 2, 2000)]);
+        wall = 4000; mono = 3000;
+        gate.resolve();
+        await done;
+        const samples = messages.map(timing);
+        const first = samples.find(x => x.slowestWrite?.receivedAt === 1000);
+        const second = samples.find(x => x.slowestWrite?.receivedAt === 2000);
+        assert.deepEqual(first.slowestWrite, { id: 'a', receivedAt: 1000, startedAt: 1000,
+            finishedAt: 4000, waitBeforeWriteMs: 0, writeDurationMs: 3000, failed: false });
+        assert.deepEqual(second.slowestWrite, { id: 'a', receivedAt: 2000, startedAt: 4000,
+            finishedAt: 4500, waitBeforeWriteMs: 2000, writeDurationMs: 500, failed: false });
+        assert.equal(first.eventLoopDelayMaxMs, 125);
+        assert.equal(publisher.getStats().maxWaitBeforeWriteMs, 2000);
+        assert.equal(publisher.getStats().maxWriteDurationMs, 3000);
+    });
+
+    it('reports age of an unfinished write without claiming a completed duration', async () => {
+        let wall = 1000, mono = 0;
+        const gate = deferred(), messages = [];
+        const publisher = new StatePublisher({ now: () => wall, monotonicNow: () => mono,
+            onWarning: m => messages.push(m), onDebug: m => messages.push(m), writeState() { return gate.promise; } });
+        const done = publisher.enqueue([update('a', 1)]);
+        await settle();
+        wall = 12000; mono = 11000;
+        void publisher.enqueue([update('a', 2, wall)]);
+        const diagnostic = timing(messages[0]);
+        assert.equal(diagnostic.maxInFlightWriteAgeMs, 11000);
+        assert.equal(diagnostic.maxWriteDurationMs, null);
+        assert.equal(diagnostic.slowestWrite, null);
+        gate.resolve();
+        await done;
+        assert.equal(publisher.writeStarted.size, 0);
+    });
+
+    it('uses a monotonic duration even when the wall clock moves backwards', async () => {
+        let wall = 1000, mono = 10;
+        const publisher = new StatePublisher({ now: () => wall, monotonicNow: () => mono,
+            writeState() { wall = -1000; mono = 3010; } });
+        await publisher.enqueue([update('a', 1)]);
+        assert.equal(publisher.getStats().maxWriteDurationMs, 3000);
+        assert.equal(publisher.getStats().maxWaitBeforeWriteMs, 0);
+        assert.equal(publisher.getStats().maxDelayMs, 0);
+    });
+
+    it('includes failed write timing and clears recent samples after each diagnostic', async () => {
+        let wall = 1000, mono = 0;
+        const debug = [], errors = [];
+        const publisher = new StatePublisher({ now: () => wall, monotonicNow: () => mono,
+            onDebug: m => debug.push(m), onError: m => errors.push(m),
+            writeState() { wall += 2500; mono += 2500; throw new Error('timed failure'); } });
+        await publisher.enqueue([update('a', 1, wall)]);
+        await publisher.enqueue([update('b', 1, wall)]);
+        assert.equal(errors.length, 2);
+        assert.equal(debug.length, 2);
+        assert.ok(debug.map(timing).every(x => x.count === 1 && x.slowestWrite.failed && x.maxWriteDurationMs === 2500));
+        assert.equal(publisher.writeStarted.size, 0);
+    });
+});

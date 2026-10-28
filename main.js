@@ -7,6 +7,7 @@
 
 const utils = require('@iobroker/adapter-core');
 const dgram = require('node:dgram');
+const { monitorEventLoopDelay } = require('node:perf_hooks');
 const { StatePublisher } = require('./lib/state-publisher');
 
 // global variables
@@ -49,11 +50,18 @@ class SmaEm extends utils.Adapter {
             ...options,
             name: 'sma-em',
         });
+        this.publicationEventLoopDelay = monitorEventLoopDelay({ resolution: 20 });
         this.statePublisher = new StatePublisher({
             writeState: (id, state) => this.setState(id, state),
             onWarning: message => this.log.warn(message),
             onDebug: message => this.log.debug(message),
             onError: message => this.log.error(message),
+            getEventLoopDelayMs: () => {
+                const histogram = this.publicationEventLoopDelay;
+                const maxMs = histogram.count > 0 ? histogram.max / 1e6 : null;
+                histogram.reset();
+                return maxMs;
+            },
         });
         this.on('ready', this.onReady.bind(this));
         this.on('unload', this.onUnload.bind(this));
@@ -63,6 +71,7 @@ class SmaEm extends utils.Adapter {
      * Is called when databases are connected and adapter received configuration.
      */
     async onReady() {
+        this.publicationEventLoopDelay.enable();
         // Initialize your adapter here
 
         // Reset the connection indicator during startup
@@ -1136,6 +1145,7 @@ class SmaEm extends utils.Adapter {
      */
     onUnload(callback) {
         try {
+            this.publicationEventLoopDelay.disable();
             this.log.info('cleaned everything up...');
             // disable udp message reception
             stopped = true;

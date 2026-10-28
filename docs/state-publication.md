@@ -90,6 +90,42 @@ Publisher counters are accessible internally through
 additional high-frequency ioBroker states or SQL recordings. Unload discards
 queued work; already dispatched database writes cannot be cancelled.
 
+## Publication timing probe
+
+Existing publication diagnostics include a bounded `timing` JSON object. No
+additional per-telegram log messages, ioBroker states or SQL recordings are
+created. Aggregation, scheduling and warning thresholds are unchanged.
+
+- `count`: writes completed since the previous emitted diagnostic.
+- `maxWaitBeforeWriteMs`: maximum wall-clock age from the original receipt
+  timestamp to actual invocation of `writeState`. This includes parsing,
+  aggregation/scheduling and per-state queue waiting; it is not pure queue time.
+- `maxWriteDurationMs`: maximum observed duration from invocation to settled
+  `writeState`, measured with a monotonic clock. This includes downstream
+  processing and delays in scheduling the completion callback. It must not be
+  equated with database server execution time.
+- `slowestWrite`: one matching sample with ID, original receipt/start/finish
+  wall-clock timestamps, wait, monotonic write duration and failure flag. The
+  maxima can belong to different writes and must not be added together.
+- `maxInFlightWriteAgeMs`: monotonic age of the oldest currently invoked write.
+  A null completed duration does not imply that an outstanding write is fast.
+- `eventLoopDelayMaxMs`: SMA-process event-loop histogram maximum since the
+  previous emitted diagnostic (20 ms sampling resolution, enabled on ready and
+  disabled on unload). A null value means no histogram samples were available.
+  This measures the SMA process, not the controller or whole host.
+
+Recent timing aggregates reset after each diagnostic; the existing getStats()
+adds lifetime maxima for wait and write duration. No unbounded sample history is
+kept. Wall-clock adjustments can affect receipt-to-start age; only write elapsed
+and in-flight elapsed durations use a monotonic clock.
+
+For a comparison test, collect controller CPU/memory and event-loop statistics
+alongside these diagnostics and note the exact repository-update time. A large
+write duration with low receipt-to-start age localizes the wait to the observed
+write/settlement path, but still does not distinguish controller, transport,
+backend or callback scheduling without correlated evidence. Controller metrics
+are collected externally; this patch does not instrument the controller.
+
 ## Regression verification
 
 The tests use the actual adapter implementation with a fake UDP socket and
