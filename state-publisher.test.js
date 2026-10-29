@@ -83,15 +83,15 @@ describe('StatePublisher', () => {
         assert.equal(warnings.length, 0);
     });
 
-    it('still warns when a queued connection status changes', async () => {
-        const warnings = [];
+    it('debugs a transient queued connection status change', async () => {
+        const warnings = [], debug = [];
         const publisher = new StatePublisher({ writeState() {}, now: () => 1500,
-            onWarning: message => warnings.push(message) });
+            onWarning: message => warnings.push(message), onDebug: message => debug.push(message) });
         const finished = publisher.enqueue([update('info.connection', false, 1000)]);
         void publisher.enqueue([update('info.connection', true, 1100)]);
         await finished;
-        assert.equal(warnings.length, 1);
-        assert.match(warnings[0], /states=info.connection/);
+        assert.equal(warnings.length, 0);
+        assert.match(debug[0], /states=info.connection/);
     });
 
     it('reports isolated slow connection heartbeats only at debug level', async () => {
@@ -122,29 +122,29 @@ describe('StatePublisher', () => {
         assert.equal(publisher.getStats().writtenValues, 2);
     });
 
-    it('keeps delayed timestamps truthful and rate limits slow/coalescing warnings', async () => {
+    it('debugs transient coalescing, preserves timestamps and warns on severe delay', async () => {
         let now = 1000;
-        const warnings = [];
+        const warnings = [], debug = [];
         const gate = deferred();
         let writes = 0;
         const publisher = new StatePublisher({ writeState() { writes++; if (writes === 1) { return gate.promise; } },
-            now: () => now, slowMs: 2000, warningIntervalMs: 30000, onWarning: message => warnings.push(message) });
+            now: () => now, slowMs: 2000, warningIntervalMs: 30000, onWarning: message => warnings.push(message), onDebug: message => debug.push(message) });
         const finished = publisher.enqueue([update('a', 1, 1000)]);
         await tick();
         now = 4000;
         void publisher.enqueue([update('a', 2, 2000)]);
         void publisher.enqueue([update('a', 3, 3000)]);
-        assert.equal(warnings.length, 1);
-        assert.match(warnings[0], /coalesced=1/);
-        assert.match(warnings[0], /states=a/);
+        assert.equal(warnings.length, 0);
+        assert.match(debug[0], /coalesced=1/);
+        assert.match(debug[0], /states=a/);
         gate.resolve();
         await finished;
-        assert.equal(warnings.length, 1);
+        assert.equal(warnings.length, 0);
         assert.equal(publisher.getStats().maxDelayMs, 3000);
         now = 35000;
         await publisher.enqueue([update('a', 4, 1000)]);
-        assert.equal(warnings.length, 2);
-        assert.match(warnings[1], /maxReceiveToCompletionMs=34000/);
+        assert.equal(warnings.length, 1);
+        assert.match(warnings[0], /maxReceiveToCompletionMs=34000/);
     });
 
     it('debugs isolated delays without a stale warning after recovery', async () => {

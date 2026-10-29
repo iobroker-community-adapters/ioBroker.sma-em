@@ -60,8 +60,8 @@ timestamps and coverage of all required fields.
   network packet loss. It is not a continuous no-packet watchdog.
 - `SMA state publication delayed/coalesced ...`: isolated completion delays
   are debug diagnostics. A slow completion reaches at least the greater of 2 seconds
-  and the configured realtime interval. Warnings remain for superseded distinct
-  waiting values, three slow completions of the same measurement state within
+  and the configured realtime interval. Superseded distinct waiting values also remain at debug level; their counters
+  and timing details are retained. Warnings remain for three slow completions of the same measurement state within
   the greater of 30 seconds and three realtime intervals, or a measurement
   completion/outstanding write age of at least the greater of 10 seconds and
   three realtime intervals. Slow completions of different states are not counted
