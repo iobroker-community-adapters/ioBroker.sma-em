@@ -47,6 +47,7 @@
     "main.js"
   ],
   "scripts": {
+    "test:unit": "node --test main.publication.test.js state-publisher.test.js",
     "test:js": "mocha --opts test/mocha.custom.opts",
     "test:package": "mocha test/package --exit",
     "test:integration": "mocha test/integration --exit",
