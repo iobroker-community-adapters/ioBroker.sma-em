@@ -1061,6 +1061,9 @@ class SmaEm extends utils.Adapter {
                                 }
                                 device.checkRate = false;
                                 // Fixed protocol values are published once after discovery.
+                                // Explicitly allow both the boolean heartbeat and numeric protocol values.
+                                // eslint-disable-next-line jsdoc/check-tag-names
+                                /** @type {Array<{ id: string, state: ioBroker.SettableState }>} */
                                 const updates = [
                                     { id: 'info.connection', state: { val: true, ack: true, ts: receivedAt } },
                                 ];
