@@ -1,13 +1,18 @@
 'use strict';
 
 const assert = require('node:assert/strict');
-const { describe, it } = typeof global.describe === 'function' ? global : require('node:test');
+/** @type {{describe: (name: string, fn: () => void) => unknown, it: (name: string, fn: () => void | Promise<void>) => unknown}} */
+const { describe, it } = typeof global.describe === 'function' ? { describe: global.describe, it: global.it } : require('node:test');
 const { StatePublisher } = require('./lib/state-publisher');
 
 function deferred() {
-    let resolve;
-    let reject;
+    /** @type {() => void} */
+    let resolve = () => { throw new Error('Deferred resolver not initialized'); };
+    /** @type {(reason?: unknown) => void} */
+    let reject = (_reason) => { throw new Error('Deferred rejecter not initialized'); };
+    /** @type {Promise<void>} */
     const promise = new Promise((res, rej) => { resolve = res; reject = rej; });
+    // Promise executors run synchronously, so both callbacks are assigned here.
     return { promise, resolve, reject };
 }
 const update = (id, val, ts = 1000) => ({ id, state: { val, ack: true, ts } });
@@ -247,13 +252,19 @@ describe('StatePublisher', () => {
     });
 
     it('preserves nested values independently of caller and writer mutations', async () => {
+        /** @type {{ items: number[] } | undefined} */
         let written;
-        const publisher = new StatePublisher({ writeState(id, state) { written = state; state.val.items.push(4); }, now: () => 1000 });
+        const publisher = new StatePublisher({ writeState(id, state) {
+            // Deliberately exercise runtime snapshot isolation with an object outside ioBroker's scalar state API.
+            written = /** @type {{ items: number[] }} */ (/** @type {unknown} */ (state.val));
+            written.items.push(4);
+        }, now: () => 1000 });
         const snapshot = update('object', { items: [1, 2] });
         const finished = publisher.enqueue([snapshot]);
         snapshot.state.val.items.push(3);
         await finished;
-        assert.deepEqual(written.val.items, [1, 2, 4]);
+        assert.ok(written);
+        assert.deepEqual(written.items, [1, 2, 4]);
         assert.deepEqual(snapshot.state.val.items, [1, 2, 3]);
     });
 });
@@ -309,7 +320,9 @@ describe('Per-state publisher lifecycle and diagnostics', () => {
             if (inFlight.has(id)) overlap = true;
             inFlight.add(id);
             writes.push({ id, ...state });
-            return gates.get(id).promise.finally(() => inFlight.delete(id));
+            const gate = gates.get(id);
+            assert.ok(gate);
+            return gate.promise.finally(() => inFlight.delete(id));
         } });
         const done = publisher.enqueue([...gates.keys()].map(id => update(id, 1, 1000)));
         await settle();

@@ -5,15 +5,18 @@ const fs = require('node:fs');
 const path = require('node:path');
 const vm = require('node:vm');
 const { EventEmitter } = require('node:events');
-const { describe, it } = typeof global.describe === 'function' ? global : require('node:test');
+/** @type {{describe: (name: string, fn: () => void) => unknown, it: (name: string, fn: () => void | Promise<void>) => unknown}} */
+const { describe, it } = typeof global.describe === 'function' ? { describe: global.describe, it: global.it } : require('node:test');
 
 // Exercise the actual adapter implementation without opening a UDP socket or
 // connecting to a production ioBroker installation.
 function loadAdapter() {
-    const socket = new EventEmitter();
-    socket.bind = (_port, callback) => callback();
-    socket.addMembership = () => {};
-    socket.close = () => socket.emit('close');
+    class FakeSocket extends EventEmitter {
+        bind(_port, callback) { callback(); }
+        addMembership() {}
+        close() { return this.emit('close'); }
+    }
+    const socket = new FakeSocket();
 
     class FakeAdapter extends EventEmitter {
         constructor() {
@@ -79,12 +82,16 @@ function loadAdapter() {
 }
 
 function deferred() {
-    let resolve;
-    let reject;
+    /** @type {() => void} */
+    let resolve = () => { throw new Error('Deferred resolver not initialized'); };
+    /** @type {(reason?: unknown) => void} */
+    let reject = (_reason) => { throw new Error('Deferred rejecter not initialized'); };
+    /** @type {Promise<void>} */
     const promise = new Promise((resolvePromise, rejectPromise) => {
         resolve = resolvePromise;
         reject = rejectPromise;
     });
+    // Promise executors run synchronously, so both callbacks are assigned here.
     return { promise, resolve, reject };
 }
 
@@ -275,7 +282,9 @@ describe('SMA telegram publication through the actual updatePoints implementatio
     }
 
     it('preserves odd and even median windows without retaining a completed window', async () => {
-        for (const [period, input, expected] of [[3, [900, 100, 500], 500], [2, [900, 100], 500]]) {
+        /** @type {Array<[number, number[], number]>} */
+        const cases = [[3, [900, 100, 500], 500], [2, [900, 100], 500]];
+        for (const [period, input, expected] of cases) {
             const { adapter, updCache } = loadAdapter();
             const points = { 0x00010400: point('cosphi', 'median', period) };
             seedCache(updCache, points);
@@ -294,7 +303,7 @@ describe('SMA telegram publication through the actual updatePoints implementatio
         seedCache(updCache, points);
         const publications = collectPublications(adapter);
         for (let index = 1; index <= 30; index++) {
-            await adapter.updatePoints('123456', packet([[0x00010800, 10000000000n + BigInt(index), 8]]), points, index * 1000);
+            await adapter.updatePoints('123456', packet([[0x00010800, BigInt(10000000000) + BigInt(index), 8]]), points, index * 1000);
         }
         assert.deepEqual(publishedStates(publications), [
             { id: '123456.pregardcounter', val: 10000000.03, ack: true, ts: 30000 },
