@@ -20,7 +20,7 @@
     "url": "https://github.com/iobroker-community-adapters/ioBroker.sma-em"
   },
   "engines": {
-    "node": ">= 22"
+    "node": ">=22.19.0"
   },
   "dependencies": {
     "@iobroker/adapter-core": "^3.4.3"
@@ -32,9 +32,9 @@
     "@alcalzone/release-script-plugin-manual-review": "^5.2.0",
     "@iobroker/adapter-dev": "^1.5.0",
     "@iobroker/eslint-config": "^2.3.4",
-    "@iobroker/testing": "^6.2.2",
+    "@iobroker/testing": "^6.3.1",
     "@tsconfig/node22": "^22.0.6",
-    "@types/node": "^22.20.4"
+    "@types/node": "^22.20.5"
   },
   "main": "main.js",
   "files": [
