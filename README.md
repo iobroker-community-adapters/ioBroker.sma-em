@@ -103,7 +103,12 @@ In addition to the states in non-extended mode, the following values are availab
 ## Changelog
 
 ### **WORK IN PROGRESS**
+
 - (copilot) Adapter requires node.js >= 22.19.0 now
+- (fuchs-1978) Fixed: Incorrect measurement averages when telegram processing overlaps.
+- (fuchs-1978) Fixed: Delayed state updates now retain their original reception timestamps and publish the latest waiting values.
+- (fuchs-1978) Improved: Added diagnostics for reception gaps and delayed state updates; brief publication delays are logged at debug level.
+
 ### 1.4.0 (2026-09-11) - 2026H2 maintenance release
 
 - (copilot) Adapter requires node.js >= 22 now
